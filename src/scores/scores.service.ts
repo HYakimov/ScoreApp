@@ -39,7 +39,7 @@ export class ScoresService {
     async updateById(id: number, firstName: string, lastName: string, age: number, score: number): Promise<void> {
         const updateData = this.scoresRepository.create({ firstName, lastName, age, score });
         updateData.getValidation();
-        const scoreToUpdate = await this.scoresRepository.findOne({ where: { id } }); // typeorm stupid
+        const scoreToUpdate = await this.scoresRepository.findOne({ where: { id } });
         if (!scoreToUpdate) {
             throw CustomException.NotFound(`Score with ID ${id} not found.`);
         }
