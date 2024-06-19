@@ -1,4 +1,4 @@
-import { Controller, Delete, Post, Get, Body, Res, HttpStatus, Param, Query, Put } from '@nestjs/common';
+import { Controller, Delete, Post, Get, Body, Res, HttpStatus, Param, Query, Put, InternalServerErrorException } from '@nestjs/common';
 import { ScoresService } from './scores.service';
 import { Score } from './score.entity';
 

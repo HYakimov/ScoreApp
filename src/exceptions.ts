@@ -12,8 +12,4 @@ export class CustomException extends HttpException {
   static NotFound(message: string = 'Not Found') {
     return new CustomException(message, HttpStatus.NOT_FOUND);
   }
-
-  static InternalServerError(message: string = 'Internal Server Error') {
-    return new CustomException(message, HttpStatus.INTERNAL_SERVER_ERROR);
-  }
 }

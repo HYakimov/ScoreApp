@@ -20,31 +20,31 @@ export class Score {
   @Column()
   score: number;
 
-  public getValidation() {
+  public getValidation(): void {
     return this.formatAndValidateData();
   }
 
-  private formatAndValidateData() {
+  private formatAndValidateData(): void {
     this.validateName(this.firstName, 'First name');
     this.validateName(this.lastName, 'Last name');
     this.validateAge(this.age);
     this.validateScore(this.score);
   }
 
-  private validateName(name: string, fieldName: string) {
+  private validateName(name: string, fieldName: string): void {
     const containsDigits = /\d/.test(name);
     if (containsDigits) {
       throw CustomException.BadRequest(`${fieldName} must contain only letters.`);
     }
   }
 
-  private validateAge(age: number) {
+  private validateAge(age: number): void {
     if (age < MIN_AGE || age > MAX_AGE) {
       throw CustomException.BadRequest("Minimum age is " + MIN_AGE + " and maximum age is " + MAX_AGE + ".");
     }
   }
 
-  private validateScore(score: number) {
+  private validateScore(score: number): void {
     if (score < MIN_SCORE || score > MAX_SCORE) {
       throw CustomException.BadRequest("Minimum score is " + MIN_SCORE + " and maximum score is " + MAX_SCORE + ".");
     }
