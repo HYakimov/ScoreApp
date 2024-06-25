@@ -3,10 +3,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ScoresService } from './scores.service';
 import { ScoresController } from './scores.controller';
 import { Score } from './score.entity';
+import { EventsGateway } from 'src/events.gateway';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Score])],
-  providers: [ScoresService],
+  providers: [ScoresService, EventsGateway],
   controllers: [ScoresController],
 })
 export class ScoresModule { }
