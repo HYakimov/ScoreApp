@@ -1,7 +1,6 @@
 import {
     WebSocketGateway,
     WebSocketServer,
-    SubscribeMessage,
     OnGatewayInit,
     OnGatewayConnection,
     OnGatewayDisconnect,
@@ -26,7 +25,7 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
         console.log('Client disconnected:', client.id);
     }
 
-    sendUpdate(data: any) {
-        this.server.emit('update', data);
+    sendUpdate() {
+        this.server.emit('update');
     }
 }  

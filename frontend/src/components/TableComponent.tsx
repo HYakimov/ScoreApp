@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencilAlt, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FormData } from "../App";
@@ -16,7 +16,6 @@ interface TableProps {
 }
 
 const TableComponent: React.FC<TableProps> = ({ loadTable, onEdit, tableData, currentPage, totalPages, onPageChange, onSortChange }) => {
-  const pageInputRef = useRef<HTMLInputElement>(null);
 
   const clearTable = () => {
     fetch("http://localhost:3000/data", {
@@ -31,7 +30,6 @@ const TableComponent: React.FC<TableProps> = ({ loadTable, onEdit, tableData, cu
       .catch((error) => {
         console.error("There was a problem with your fetch operation:", error);
       });
-    loadTable();
   };
 
   const handleDelete = async (id: string) => {
@@ -43,33 +41,9 @@ const TableComponent: React.FC<TableProps> = ({ loadTable, onEdit, tableData, cu
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-      loadTable();
     } catch (error) {
       console.error("Error:", error);
     }
-  };
-
-  const handlePageChange = (page: number) => {
-    if (page >= 1 && page <= totalPages) {
-      onPageChange(page);
-    }
-  };
-
-  const handlePrevPage = () => {
-    if (currentPage > 1) {
-      handlePageChange(currentPage - 1);
-    }
-  };
-
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      handlePageChange(currentPage + 1);
-    }
-  };
-
-  const handleGoToPage = () => {
-    const pageNumber = parseInt(pageInputRef.current?.value || "") || 1;
-    handlePageChange(pageNumber);
   };
 
   const handleSortByAge = () => {

@@ -4,10 +4,9 @@ import { FormData } from '../App';
 
 interface FormComponentProps {
   editFormData?: FormData | null;
-  refreshTableOnSubmit: () => void;
 }
 
-const FormComponent: React.FC<FormComponentProps> = ({ editFormData, refreshTableOnSubmit }) => {
+const FormComponent: React.FC<FormComponentProps> = ({ editFormData }) => {
   const [formData, setFormData] = useState<FormData>({
     firstName: '',
     lastName: '',
@@ -39,7 +38,6 @@ const FormComponent: React.FC<FormComponentProps> = ({ editFormData, refreshTabl
       await submitNewData();
     }
     setFormData({ firstName: '', lastName: '', age: '', score: '', id: '' });
-    refreshTableOnSubmit();
   }
 
   const updateData = async () => {

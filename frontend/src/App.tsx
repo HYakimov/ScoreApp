@@ -25,17 +25,16 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
-    const socket = io('http://localhost:3000');
-    const handleUpdate = (data: any) => {
+    const socket = io('ws://localhost:3000');
+    const handleUpdate = () => {
       fetchData();
     };
     socket.on('update', handleUpdate);
-    // Clean up the event listener when the component unmounts or on dependency change
+
     return () => {
-      socket.off('update', handleUpdate);
-      socket.disconnect(); // Disconnect the socket when component unmounts, if needed
+      socket.disconnect();
     };
-  }, []); // Empty dependency array ensures this effect runs only once
+  }, []);
 
   useEffect(() => {
     fetchData(currentPage, currentSortBy);
@@ -61,10 +60,6 @@ const App: React.FC = () => {
     }
   }
 
-  const handleSubmit = () => {
-    fetchData();
-  };
-
   const handleLoadTable = () => {
     fetchData();
   }
@@ -73,7 +68,6 @@ const App: React.FC = () => {
     <div className="main-page">
       <div className="child">
         <FormComponent
-          refreshTableOnSubmit={handleSubmit}
           editFormData={editFormData}
         />
       </div>

@@ -36,7 +36,7 @@ export class ScoresService {
         const newScore = this.scoresRepository.create({ firstName, lastName, age, score });
         newScore.getValidation();
         await this.scoresRepository.save(newScore);
-        this.eventsGateway.sendUpdate('');
+        this.eventsGateway.sendUpdate();
     }
 
     async updateById(id: number, firstName: string, lastName: string, age: number, score: number): Promise<void> {
@@ -47,13 +47,13 @@ export class ScoresService {
             throw CustomException.NotFound(`Score with ID ${id} not found.`);
         }
         await this.scoresRepository.update(id, updateData);
-        this.eventsGateway.sendUpdate('');
+        this.eventsGateway.sendUpdate();
 
     }
 
     async deleteAll(): Promise<void> {
         await this.scoresRepository.clear();
-        this.eventsGateway.sendUpdate('');
+        this.eventsGateway.sendUpdate();
     }
 
     async deleteById(id: number): Promise<void> {
@@ -61,6 +61,6 @@ export class ScoresService {
         if (result.affected < 1) {
             throw CustomException.NotFound(`Entry with ID ${id} not found.`)
         }
-        this.eventsGateway.sendUpdate('');
+        this.eventsGateway.sendUpdate();
     }
 }
