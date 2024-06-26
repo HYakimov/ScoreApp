@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import "../styles/PaginationComponent.css";
 
 interface PaginationProps {
@@ -8,7 +8,6 @@ interface PaginationProps {
 }
 
 const PaginationComponent: React.FC<PaginationProps> = ({ currentPage, totalPages, onPageChange }) => {
-    const pageInputRef = useRef<HTMLInputElement>(null);
 
     const handlePageChange = (page: number) => {
         if (page >= 1 && page <= totalPages) {
@@ -30,7 +29,7 @@ const PaginationComponent: React.FC<PaginationProps> = ({ currentPage, totalPage
 
     const renderPageNumbers = () => {
         const pageNumbers = [];
-        const range = 2;
+        const range = 1;
         const startPage = Math.max(currentPage - range, 1);
         const endPage = Math.min(currentPage + range, totalPages);
 

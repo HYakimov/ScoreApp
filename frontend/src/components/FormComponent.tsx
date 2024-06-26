@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import '../styles/FormComponent.css';
 import { FormData } from '../App';
+import HttpService from '../HttpService';
 
 interface FormComponentProps {
   editFormData?: FormData | null;
@@ -33,43 +34,12 @@ const FormComponent: React.FC<FormComponentProps> = ({ editFormData }) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (formData.id != '') {
-      await updateData();
+      await HttpService.put(`/data/${formData.id}`, formData);
     } else {
-      await submitNewData();
+      await HttpService.post("/data", formData);
     }
     setFormData({ firstName: '', lastName: '', age: '', score: '', id: '' });
   }
-
-  const updateData = async () => {
-    try {
-      const response = await fetch(`http://localhost:3000/data/${formData.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-    } catch (error) {
-      console.error('There was a problem with the fetch operation:', error);
-    }
-  };
-
-  const submitNewData = async () => {
-    try {
-      const response = await fetch('http://localhost:3000/data', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-    } catch (error) {
-      console.error('There was a problem with the fetch operation:', error);
-    }
-  };
 
   return (
     <form onSubmit={handleSubmit} className="form">

@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { paginationLimit } from './constants/PaginationConstants';
+import { baseUrl } from './constants/HttpConstants';
 import FormComponent from './components/FormComponent';
 import TableComponent from './components/TableComponent';
+import HttpService from './HttpService';
 import io from 'socket.io-client';
 import './styles/App.css';
 
@@ -18,14 +21,13 @@ const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [currentSortBy, setCurrentSortBy] = useState('');
-  const limit: number = 3;
 
   const handleEditForm = (formData: FormData) => {
     setEditFormData(formData);
   };
 
   useEffect(() => {
-    const socket = io('ws://localhost:3000');
+    const socket = io(baseUrl);
     const handleUpdate = () => {
       fetchData();
     };
@@ -41,27 +43,24 @@ const App: React.FC = () => {
   }, [currentPage, currentSortBy]);
 
   const fetchData = async (page: number = 1, sortBy: string = "") => {
-    let url = `http://localhost:3000/data?page=${page}&limit=${limit}`;
+    let url = `/data?page=${page}&limit=${paginationLimit}`;
     if (sortBy === '') {
       setCurrentSortBy(sortBy);
     } else if (currentSortBy) {
       url += `&sortBy=${currentSortBy}`;
     }
     try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      const data = await response.json();
+      const data = await HttpService.get(url);
       setTableData(data.data);
-      setTotalPages(Math.ceil(data.totalCount / limit));
+      setTotalPages(Math.ceil(data.totalCount / paginationLimit));
     } catch (error) {
-      console.error("There was a problem with the fetch operation:", error);
+      console.error("Error fetching data:", error);
     }
   }
 
-  const handleLoadTable = () => {
-    fetchData();
+  const handleLoadTable = async () => {
+    setCurrentPage(1);
+    setCurrentSortBy('');
   }
 
   return (

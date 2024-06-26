@@ -4,6 +4,7 @@ import { faPencilAlt, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FormData } from "../App";
 import "../styles/TableComponent.css";
 import PaginationComponent from "./PaginationComponent";
+import HttpService from "../HttpService";
 
 interface TableProps {
   loadTable: () => void;
@@ -18,40 +19,19 @@ interface TableProps {
 const TableComponent: React.FC<TableProps> = ({ loadTable, onEdit, tableData, currentPage, totalPages, onPageChange, onSortChange }) => {
 
   const clearTable = () => {
-    fetch("http://localhost:3000/data", {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-      })
-      .catch((error) => {
-        console.error("There was a problem with your fetch operation:", error);
-      });
+    HttpService.delete(`/data`)
   };
 
-  const handleDelete = async (id: string) => {
-    try {
-      const response = await fetch(`http://localhost:3000/data/${id}`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-      });
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    }
+  const handleDelete = (id: string) => {
+    HttpService.deleteById(`/data/${id}`);
   };
 
   const handleSortByAge = () => {
-    onSortChange("age");
+    onSortChange(`age`);
   };
 
   const handleSortByScore = () => {
-    onSortChange("score");
+    onSortChange(`score`);
   };
 
   function getBackgroundColor(score: string) {
