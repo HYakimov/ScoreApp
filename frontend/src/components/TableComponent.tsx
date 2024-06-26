@@ -24,14 +24,17 @@ const TableComponent: React.FC<TableProps> = ({ loadTable, onEdit, tableData, cu
 
   const handleDelete = (id: string) => {
     HttpService.deleteById(`/data/${id}`);
+    onPageChange(1);
   };
 
   const handleSortByAge = () => {
     onSortChange(`age`);
+    onPageChange(1);
   };
 
   const handleSortByScore = () => {
     onSortChange(`score`);
+    onPageChange(1);
   };
 
   function getBackgroundColor(score: string) {
