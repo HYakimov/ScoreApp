@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import '../styles/FormComponent.css';
 import { FormData } from '../App';
-import HttpService from '../HttpService';
+import HttpHelperService from '../HttpHelperService';
 
 interface FormComponentProps {
   editFormData?: FormData | null;
@@ -33,11 +33,7 @@ const FormComponent: React.FC<FormComponentProps> = ({ editFormData }) => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (formData.id != '') {
-      await HttpService.put(`/data/${formData.id}`, formData);
-    } else {
-      await HttpService.post("/data", formData);
-    }
+    await HttpHelperService.submit(formData);
     setFormData({ firstName: '', lastName: '', age: '', score: '', id: '' });
   }
 

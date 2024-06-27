@@ -28,4 +28,8 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     sendUpdate() {
         this.server.emit('update');
     }
+
+    onNewEntryOrEdit(id: number) {
+        this.server.emit('newOrEdit', { id: id });
+    }
 }  

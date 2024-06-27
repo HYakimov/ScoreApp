@@ -35,8 +35,8 @@ export class ScoresService {
     async create(firstName: string, lastName: string, age: number, score: number): Promise<void> {
         const newScore = this.scoresRepository.create({ firstName, lastName, age, score });
         newScore.getValidation();
-        await this.scoresRepository.save(newScore);
-        this.eventsGateway.sendUpdate();
+        const savedScore = await this.scoresRepository.save(newScore);
+        this.eventsGateway.onNewEntryOrEdit(savedScore.id);
     }
 
     async updateById(id: number, firstName: string, lastName: string, age: number, score: number): Promise<void> {
@@ -47,7 +47,7 @@ export class ScoresService {
             throw CustomException.NotFound(`Score with ID ${id} not found.`);
         }
         await this.scoresRepository.update(id, updateData);
-        this.eventsGateway.sendUpdate();
+        this.eventsGateway.onNewEntryOrEdit(id);
 
     }
 

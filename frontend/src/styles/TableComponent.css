@@ -66,3 +66,17 @@
     display: flex;
     justify-content: center;
 }
+
+@keyframes glow {
+    0% {
+        background-color: red;
+    }
+
+    100% {
+        background-color: transparent;
+    }
+}
+
+.table-row-highlight {
+    animation: glow 2s ease;
+}

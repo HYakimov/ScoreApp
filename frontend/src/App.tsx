@@ -3,9 +3,9 @@ import { paginationLimit } from './constants/PaginationConstants';
 import { baseUrl } from './constants/HttpConstants';
 import FormComponent from './components/FormComponent';
 import TableComponent from './components/TableComponent';
-import HttpService from './HttpService';
 import io from 'socket.io-client';
 import './styles/App.css';
+import HttpHelperService from './HttpHelperService';
 
 export interface FormData {
   firstName: string;
@@ -21,6 +21,8 @@ const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [currentSortBy, setCurrentSortBy] = useState('');
+  const [highlightedRow, setHighlightedRow] = useState(-1);
+  let idOfHighlightedRow: number;
 
   const handleEditForm = (formData: FormData) => {
     setEditFormData(formData);
@@ -31,7 +33,13 @@ const App: React.FC = () => {
     const handleUpdate = () => {
       fetchData();
     };
+    const handleNewAndEdit = (data: { id: number }) => {
+      idOfHighlightedRow = data.id;
+      fetchData();
+    };
+
     socket.on('update', handleUpdate);
+    socket.on('newOrEdit', handleNewAndEdit);
 
     return () => {
       socket.disconnect();
@@ -42,17 +50,17 @@ const App: React.FC = () => {
     fetchData(currentPage, currentSortBy);
   }, [currentPage, currentSortBy]);
 
-  const fetchData = async (page: number = 1, sortBy: string = "") => {
-    let url = `/data?page=${page}&limit=${paginationLimit}`;
+  const fetchData = async (page: number = 1, sortBy: string = '') => {
     if (sortBy === '') {
       setCurrentSortBy(sortBy);
-    } else if (currentSortBy) {
-      url += `&sortBy=${currentSortBy}`;
     }
     try {
-      const data = await HttpService.get(url);
+      const data = await HttpHelperService.get(page, currentSortBy);
       setTableData(data.data);
       setTotalPages(Math.ceil(data.totalCount / paginationLimit));
+      setHighlightedRow(idOfHighlightedRow);
+      setTimeout(() => setHighlightedRow(-1), 1000);
+      setTimeout(() => idOfHighlightedRow = -1, 1000);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -79,6 +87,7 @@ const App: React.FC = () => {
           totalPages={totalPages}
           onPageChange={setCurrentPage}
           onSortChange={setCurrentSortBy}
+          highlightedRow={highlightedRow}
         />
       </div>
     </div>

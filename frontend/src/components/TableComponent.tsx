@@ -4,7 +4,7 @@ import { faPencilAlt, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FormData } from "../App";
 import "../styles/TableComponent.css";
 import PaginationComponent from "./PaginationComponent";
-import HttpService from "../HttpService";
+import HttpHelperService from "../HttpHelperService";
 
 interface TableProps {
   loadTable: () => void;
@@ -14,16 +14,17 @@ interface TableProps {
   totalPages: number;
   onPageChange: (page: number) => void;
   onSortChange: (sortBy: string) => void;
+  highlightedRow: number;
 }
 
-const TableComponent: React.FC<TableProps> = ({ loadTable, onEdit, tableData, currentPage, totalPages, onPageChange, onSortChange }) => {
+const TableComponent: React.FC<TableProps> = ({ loadTable, onEdit, tableData, currentPage, totalPages, onPageChange, onSortChange, highlightedRow }) => {
 
-  const clearTable = () => {
-    HttpService.delete(`/data`)
+  const clearTable = async () => {
+    await HttpHelperService.delete();
   };
 
-  const handleDelete = (id: string) => {
-    HttpService.deleteById(`/data/${id}`);
+  const handleDelete = async (id: string) => {
+    await HttpHelperService.deleteById(id);
     onPageChange(1);
   };
 
@@ -61,16 +62,23 @@ const TableComponent: React.FC<TableProps> = ({ loadTable, onEdit, tableData, cu
           </thead>
           <tbody>
             {tableData.map((item, index) => (
-              <tr key={index} style={{ background: getBackgroundColor(item.score) }}>
-                <td style={{ borderBottomLeftRadius: index === tableData.length - 1 ? "15px" : "0", }}>
+              <tr
+                key={item.id}
+                // style={{ background: getBackgroundColor(item.score) }}
+                className={`${highlightedRow == parseInt(item.id) ? 'table-row-highlight' : ''}`}
+              >
+                <td style={{ borderBottomLeftRadius: index === tableData.length - 1 ? "15px" : "0" }}>
                   {item.firstName}
                 </td>
                 <td>{item.lastName}</td>
                 <td>{item.age}</td>
                 <td>{item.score}</td>
-                <td><FontAwesomeIcon icon={faPencilAlt} onClick={() => onEdit(item)} style={{ cursor: "pointer" }} /></td>
-                <td style={{ borderBottomRightRadius: index === tableData.length - 1 ? "15px" : "0", }}>
-                  <FontAwesomeIcon icon={faTimes} onClick={() => handleDelete(item.id)} style={{ cursor: "pointer" }} /></td>
+                <td>
+                  <FontAwesomeIcon icon={faPencilAlt} onClick={() => onEdit(item)} style={{ cursor: "pointer" }} />
+                </td>
+                <td style={{ borderBottomRightRadius: index === tableData.length - 1 ? "15px" : "0" }}>
+                  <FontAwesomeIcon icon={faTimes} onClick={() => handleDelete(item.id)} style={{ cursor: "pointer" }} />
+                </td>
               </tr>
             ))}
           </tbody>

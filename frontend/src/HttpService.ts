@@ -3,7 +3,7 @@ import { DELETE, POST, PUT, baseUrl, jsonHeader } from './constants/HttpConstant
 
 const HttpService = {
 
-    get: async (url: string) => {
+    fetch: async (url: string) => {
         try {
             const response = await fetch(`${baseUrl}${url}`);
             if (!response.ok) {
