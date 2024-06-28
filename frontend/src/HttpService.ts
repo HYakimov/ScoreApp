@@ -1,4 +1,4 @@
-import { FormData } from './App';
+import { FormData } from './components/FormComponent';
 import { DELETE, POST, PUT, baseUrl, jsonHeader } from './constants/HttpConstants';
 
 const HttpService = {

@@ -1,40 +1,39 @@
-import React, { useEffect, useState } from 'react';
 import '../styles/FormComponent.css';
-import { FormData } from '../App';
+import React from 'react';
 import HttpHelperService from '../HttpHelperService';
-
-interface FormComponentProps {
-  editFormData?: FormData | null;
+import { useDispatch, useSelector } from 'react-redux';
+import { setFormData } from '../store/states/formSlice';
+import { RootState } from '../store/store';
+import { useNavigate } from 'react-router-dom';
+import { MainPage } from '../constants/RouteConstants';
+export interface FormData {
+  firstName: string;
+  lastName: string;
+  age: string;
+  score: string;
+  id: string;
 }
 
-const FormComponent: React.FC<FormComponentProps> = ({ editFormData }) => {
-  const [formData, setFormData] = useState<FormData>({
-    firstName: '',
-    lastName: '',
-    age: '',
-    score: '',
-    id: ''
-  });
-
-  useEffect(() => {
-    if (editFormData) {
-      setFormData(editFormData);
-    }
-  }, [editFormData]);
+const FormComponent = () => {
+  const formData = useSelector((state: RootState) => state.form);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    dispatch(setFormData({ ...formData, [name]: value }));
   };
 
   const handleCancel = () => {
-    setFormData({ firstName: '', lastName: '', age: '', score: '', id: '' });
+    dispatch(setFormData({ firstName: '', lastName: '', age: '', score: '', id: '' }));
+    navigate(MainPage);
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     await HttpHelperService.submit(formData);
-    setFormData({ firstName: '', lastName: '', age: '', score: '', id: '' });
+    dispatch(setFormData({ firstName: '', lastName: '', age: '', score: '', id: '' }));
+    navigate(MainPage);
   }
 
   return (

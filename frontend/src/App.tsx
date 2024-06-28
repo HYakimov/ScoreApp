@@ -1,40 +1,34 @@
-import React, { useEffect, useState } from 'react';
-import { paginationLimit } from './constants/PaginationConstants';
-import { baseUrl } from './constants/HttpConstants';
+import './styles/App.css';
 import FormComponent from './components/FormComponent';
 import TableComponent from './components/TableComponent';
 import io from 'socket.io-client';
-import './styles/App.css';
 import HttpHelperService from './HttpHelperService';
+import React, { useEffect } from 'react';
+import { paginationLimit } from './constants/PaginationConstants';
+import { baseUrl } from './constants/HttpConstants';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Navbar from './components/NavBarComponent';
+import { Provider, useDispatch, useSelector } from 'react-redux';
+import store, { RootState } from './store/store';
+import { setTableData, sethigHlightedRow } from './store/states/tableSlice';
+import { setTotalPages } from './store/states/pageSlice';
+import { setSort } from './store/states/sortSlice';
+import { resetSort } from './constants/SortingConstants';
 
-export interface FormData {
-  firstName: string;
-  lastName: string;
-  age: string;
-  score: string;
-  id: string;
-}
-
-const App: React.FC = () => {
-  const [tableData, setTableData] = useState<FormData[]>([]);
-  const [editFormData, setEditFormData] = useState<FormData | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [currentSortBy, setCurrentSortBy] = useState('');
-  const [highlightedRow, setHighlightedRow] = useState(-1);
-  let idOfHighlightedRow: number;
-
-  const handleEditForm = (formData: FormData) => {
-    setEditFormData(formData);
-  };
+const AppContent: React.FC = () => {
+  const dispatch = useDispatch();
+  const currentPage = useSelector((state: RootState) => state.page.value);
+  const currentSortBy = useSelector((state: RootState) => state.sort.value);
 
   useEffect(() => {
     const socket = io(baseUrl);
+
     const handleUpdate = () => {
       fetchData();
     };
+
     const handleNewAndEdit = (data: { id: number }) => {
-      idOfHighlightedRow = data.id;
+      dispatch(sethigHlightedRow(data.id));
       fetchData();
     };
 
@@ -52,46 +46,39 @@ const App: React.FC = () => {
 
   const fetchData = async (page: number = 1, sortBy: string = '') => {
     if (sortBy === '') {
-      setCurrentSortBy(sortBy);
+      dispatch(setSort(resetSort));
     }
     try {
       const data = await HttpHelperService.get(page, currentSortBy);
-      setTableData(data.data);
-      setTotalPages(Math.ceil(data.totalCount / paginationLimit));
-      setHighlightedRow(idOfHighlightedRow);
-      setTimeout(() => setHighlightedRow(-1), 1000);
-      setTimeout(() => idOfHighlightedRow = -1, 1000);
+      dispatch(setTableData(data.data));
+      dispatch(setTotalPages(Math.ceil(data.totalCount / paginationLimit)))
+      setTimeout(() => dispatch(sethigHlightedRow(-1)), 1000);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   }
 
-  const handleLoadTable = async () => {
-    setCurrentPage(1);
-    setCurrentSortBy('');
-  }
-
   return (
     <div className="main-page">
+      <Navbar />
       <div className="child">
-        <FormComponent
-          editFormData={editFormData}
-        />
-      </div>
-      <div className="child">
-        <TableComponent
-          loadTable={handleLoadTable}
-          onEdit={handleEditForm}
-          tableData={tableData}
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={setCurrentPage}
-          onSortChange={setCurrentSortBy}
-          highlightedRow={highlightedRow}
-        />
+        <Routes>
+          <Route path="/form" element={<FormComponent />} />
+          <Route path="/" element={<TableComponent />} />
+        </Routes>
       </div>
     </div>
   );
 };
+
+function App() {
+  return (
+    <Router>
+      <Provider store={store}>
+        <AppContent />
+      </Provider>
+    </Router>
+  );
+}
 
 export default App;

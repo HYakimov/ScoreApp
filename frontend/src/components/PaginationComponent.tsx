@@ -1,17 +1,18 @@
-import React from "react";
 import "../styles/PaginationComponent.css";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../store/store";
+import { setPage } from "../store/states/pageSlice";
 
-interface PaginationProps {
-    currentPage: number;
-    totalPages: number;
-    onPageChange: (page: number) => void;
-}
 
-const PaginationComponent: React.FC<PaginationProps> = ({ currentPage, totalPages, onPageChange }) => {
+const PaginationComponent = () => {
+    const dispatch = useDispatch();
+    const currentPage = useSelector((state: RootState) => state.page.value);
+    const totalPages = useSelector((state: RootState) => state.page.totalPages);
 
     const handlePageChange = (page: number) => {
         if (page >= 1 && page <= totalPages) {
-            onPageChange(page);
+            dispatch(setPage(page));
         }
     };
 

@@ -1,23 +1,24 @@
-import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPencilAlt, faTimes } from "@fortawesome/free-solid-svg-icons";
-import { FormData } from "../App";
 import "../styles/TableComponent.css";
 import PaginationComponent from "./PaginationComponent";
 import HttpHelperService from "../HttpHelperService";
+import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPencilAlt, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { FormData } from "./FormComponent";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../store/store";
+import { setFormData } from "../store/states/formSlice";
+import { useNavigate } from "react-router-dom";
+import { FormPage } from "../constants/RouteConstants";
+import { setPage } from "../store/states/pageSlice";
+import { setSort } from "../store/states/sortSlice";
+import { resetSort, sortByAge, sortByScore } from "../constants/SortingConstants";
 
-interface TableProps {
-  loadTable: () => void;
-  onEdit: (item: FormData) => void;
-  tableData: FormData[];
-  currentPage: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
-  onSortChange: (sortBy: string) => void;
-  highlightedRow: number;
-}
-
-const TableComponent: React.FC<TableProps> = ({ loadTable, onEdit, tableData, currentPage, totalPages, onPageChange, onSortChange, highlightedRow }) => {
+const TableComponent = () => {
+  const dispatch: AppDispatch = useDispatch();
+  const navigate = useNavigate();
+  const tableData = useSelector((state: RootState) => state.table.tableData);
+  const highlightedRow = useSelector((state: RootState) => state.table.highlightedRow);
 
   const clearTable = async () => {
     await HttpHelperService.delete();
@@ -25,18 +26,29 @@ const TableComponent: React.FC<TableProps> = ({ loadTable, onEdit, tableData, cu
 
   const handleDelete = async (id: string) => {
     await HttpHelperService.deleteById(id);
-    onPageChange(1);
+    dispatch(setPage(1));
   };
 
+  const handleEdit = (formData: FormData) => {
+    navigate(FormPage);
+    dispatch(setFormData(formData));
+    dispatch(setPage(1));
+  }
+
   const handleSortByAge = () => {
-    onSortChange(`age`);
-    onPageChange(1);
+    dispatch(setPage(1));
+    dispatch(setSort(sortByAge));
   };
 
   const handleSortByScore = () => {
-    onSortChange(`score`);
-    onPageChange(1);
+    dispatch(setPage(1));
+    dispatch(setSort(sortByScore));
   };
+
+  const handleLoadTable = async () => {
+    dispatch(setPage(1));
+    dispatch(setSort(resetSort));
+  }
 
   function getBackgroundColor(score: string) {
     const hue = Math.round((parseInt(score) / 100) * 120);
@@ -74,7 +86,7 @@ const TableComponent: React.FC<TableProps> = ({ loadTable, onEdit, tableData, cu
                 <td>{item.age}</td>
                 <td>{item.score}</td>
                 <td>
-                  <FontAwesomeIcon icon={faPencilAlt} onClick={() => onEdit(item)} style={{ cursor: "pointer" }} />
+                  <FontAwesomeIcon icon={faPencilAlt} onClick={() => handleEdit(item)} style={{ cursor: "pointer" }} />
                 </td>
                 <td style={{ borderBottomRightRadius: index === tableData.length - 1 ? "15px" : "0" }}>
                   <FontAwesomeIcon icon={faTimes} onClick={() => handleDelete(item.id)} style={{ cursor: "pointer" }} />
@@ -85,14 +97,10 @@ const TableComponent: React.FC<TableProps> = ({ loadTable, onEdit, tableData, cu
         </table>
       </div>
       <div className="pagination-container">
-        <PaginationComponent
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={onPageChange}
-        />
+        <PaginationComponent />
       </div>
       <div className="btn-container">
-        <button className="table-button" onClick={loadTable}> Load Table </button>
+        <button className="table-button" onClick={handleLoadTable}> Load Table </button>
         <button className="table-button" onClick={handleSortByAge}> Sort by Age </button>
         <button className="table-button" onClick={handleSortByScore}> Sort by Score </button>
         <button className="table-button" onClick={clearTable}> Clear Table </button>

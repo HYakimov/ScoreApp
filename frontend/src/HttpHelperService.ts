@@ -1,5 +1,5 @@
 import { paginationLimit } from "./constants/PaginationConstants";
-import { FormData } from './App';
+import { FormData } from './components/FormComponent';
 import HttpService from "./HttpService";
 
 const baseUrl = '/data';
