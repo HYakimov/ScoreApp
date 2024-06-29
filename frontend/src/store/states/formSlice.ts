@@ -1,19 +1,15 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-
-export interface FormData {
-    firstName: string;
-    lastName: string;
-    age: string;
-    score: string;
-    id: string;
-}
+import { FormData } from "../../components/FormComponent";
 
 const initialState = {
     firstName: '',
     lastName: '',
     age: '',
     score: '',
-    id: ''
+    gender: '',
+    country: '',
+    city: '',
+    id: '',
 };
 
 const formDataSlice = createSlice({
