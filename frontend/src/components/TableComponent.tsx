@@ -14,12 +14,15 @@ import { setPage } from "../store/states/pageSlice";
 import { setSort } from "../store/states/sortSlice";
 import { resetSort, sortByAge, sortByScore } from "../constants/SortingConstants";
 import { setCities } from "../store/states/citiesSlice";
+import { paginationLimit } from "../constants/PaginationConstants";
 
 const TableComponent = () => {
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
   const tableData = useSelector((state: RootState) => state.table.tableData);
   const highlightedRow = useSelector((state: RootState) => state.table.highlightedRow);
+  const sortBy = useSelector((state: RootState) => state.sort.value);
+  const page = useSelector((state: RootState) => state.page.value);
 
   const handleClearTable = async () => {
     await HttpHelperService.delete();
@@ -50,6 +53,19 @@ const TableComponent = () => {
   const handleLoadTable = async () => {
     dispatch(setPage(1));
     dispatch(setSort(resetSort));
+  }
+
+  const handleDownloadCsv = async () => {
+    const csvData = await HttpHelperService.downloadCsv(page, paginationLimit, sortBy);
+    const blob = new Blob([csvData], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.href = url;
+    a.download = 'data.csv';
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
   }
 
   const fetchCities = async (countryId: number) => {
@@ -117,6 +133,7 @@ const TableComponent = () => {
         <button className="table-button" onClick={handleSortByAge}> Sort by Age </button>
         <button className="table-button" onClick={handleSortByScore}> Sort by Score </button>
         <button className="table-button" onClick={handleClearTable}> Clear Table </button>
+        <button className="table-button" onClick={handleDownloadCsv}> Download Csv </button>
       </div>
     </div>
   );

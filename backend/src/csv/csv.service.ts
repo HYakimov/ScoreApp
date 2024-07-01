@@ -12,12 +12,15 @@ export class CsvService {
         private readonly scoresRepository: Repository<Score>
     ) { }
 
-    async generateCsv(sortBy: string): Promise<string> {
+    async generateCsv(sortBy: string, page: number, limit: number): Promise<string> {
+        const offset = (page - 1) * limit;
         const data = await this.scoresRepository.find({
-            order: sortBy ? { [sortBy]: 'DESC' } : {}
+            order: sortBy ? { [sortBy]: 'DESC' } : {},
+            skip: offset,
+            take: limit,
         });
         const json2csv = new Parser();
-        
+        console.log(data);
         return json2csv.parse(data);
     }
 }

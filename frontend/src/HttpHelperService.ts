@@ -36,6 +36,10 @@ const HttpHelperService = {
 
     getCities: async (countryId: number) => {
         return await HttpService.fetch(`/cities/${countryId}`);
+    },
+
+    downloadCsv: async (page: number, limit: number, sortBy: string) => {
+        return await HttpService.download(`/download/csv?page=${page}&limit=${limit}&sortBy=${sortBy}`);
     }
 }
 

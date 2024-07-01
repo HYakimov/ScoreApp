@@ -9,6 +9,7 @@ const HttpService = {
             if (!response.ok) {
                 throw new Error("Network response was not ok");
             }
+
             return await response.json();
         } catch (error) {
             console.error("There was a problem with the fetch operation:", error);
@@ -75,6 +76,23 @@ const HttpService = {
             throw error;
         }
     },
+
+    download: async (url: string) => {
+        try {
+            const response = await fetch(`${baseUrl}${url}`, {
+                method: 'GET',
+                headers: jsonHeader,
+            })
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+
+            return await response.text();
+        } catch (error) {
+            console.error("There was a problem with the fetch operation:", error);
+            throw error;
+        }
+    }
 };
 
 export default HttpService;
