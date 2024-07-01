@@ -13,9 +13,9 @@ export class CountryController {
         res.status(HttpStatus.OK).json(result);
     }
 
-    @Get('cities/:country')
-    getCities(@Param('country') country: string, @Res() res): void {
-        const result = this.countryService.getCities(country);
+    @Get('cities/:id')
+    getCities(@Param('id') id: number, @Res() res): void {
+        const result = this.countryService.getCities(id);
         res.status(HttpStatus.OK).json(result);
     }
 

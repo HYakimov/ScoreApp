@@ -18,7 +18,7 @@ const HttpHelperService = {
         await HttpService.delete(baseUrl);
     },
 
-    deleteById: async (id: string) => {
+    deleteById: async (id: number) => {
         await HttpService.deleteById(`${baseUrl}/${id}`);
     },
 
@@ -34,8 +34,8 @@ const HttpHelperService = {
         return await HttpService.fetch(`/countries`);
     },
 
-    getCities: async (country: string) => {
-        return await HttpService.fetch(`/cities/${country}`);
+    getCities: async (countryId: number) => {
+        return await HttpService.fetch(`/cities/${countryId}`);
     }
 }
 

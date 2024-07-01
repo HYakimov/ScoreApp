@@ -13,6 +13,7 @@ import { FormPage } from "../constants/RouteConstants";
 import { setPage } from "../store/states/pageSlice";
 import { setSort } from "../store/states/sortSlice";
 import { resetSort, sortByAge, sortByScore } from "../constants/SortingConstants";
+import { setCities } from "../store/states/citiesSlice";
 
 const TableComponent = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -24,13 +25,14 @@ const TableComponent = () => {
     await HttpHelperService.delete();
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: number) => {
     await HttpHelperService.deleteById(id);
     dispatch(setPage(1));
   };
 
-  const handleEdit = (formData: FormData) => {
+  const handleEdit = (formData: FormData) => { ///////////////////////////
     navigate(FormPage);
+    fetchCities(formData.countryId == null ? 0 : formData.countryId);
     dispatch(setFormData(formData));
     dispatch(setPage(1));
   }
@@ -50,8 +52,13 @@ const TableComponent = () => {
     dispatch(setSort(resetSort));
   }
 
-  function getBackgroundColor(score: string) {
-    const hue = Math.round((parseInt(score) / 100) * 120);
+  const fetchCities = async (countryId: number) => {
+    const data = await HttpHelperService.getCities(countryId);
+    dispatch(setCities(data))
+  }
+
+  function getBackgroundColor(score: number) {
+    const hue = Math.round((score / 100) * 120);
     const hue2 = (hue + 60) % 360;
 
     return `linear-gradient(to right, hsl(${hue}, 100%, 50%), hsl(${hue2}, 100%, 50%))`;
@@ -79,8 +86,8 @@ const TableComponent = () => {
             {tableData.map((item, index) => (
               <tr
                 key={item.id}
-                style={{ background: getBackgroundColor(item.score) }}
-                className={`${highlightedRow == parseInt(item.id) ? 'table-row-highlight' : ''}`}
+                style={{ background: getBackgroundColor(item.score == null ? 0 : item.score) }}
+                className={`${highlightedRow == item.id ? 'table-row-highlight' : ''}`}
               >
                 <td style={{ borderBottomLeftRadius: index === tableData.length - 1 ? "15px" : "0" }}>
                   {item.firstName}
@@ -88,14 +95,14 @@ const TableComponent = () => {
                 <td>{item.lastName}</td>
                 <td>{item.age}</td>
                 <td>{item.score}</td>
-                <td>{item.country}</td>
-                <td>{item.city}</td>
+                <td>{item.countryName}</td>
+                <td>{item.cityName}</td>
                 <td>{item.gender}</td>
                 <td>
                   <FontAwesomeIcon icon={faPencilAlt} onClick={() => handleEdit(item)} style={{ cursor: "pointer" }} />
                 </td>
                 <td style={{ borderBottomRightRadius: index === tableData.length - 1 ? "15px" : "0" }}>
-                  <FontAwesomeIcon icon={faTimes} onClick={() => handleDelete(item.id)} style={{ cursor: "pointer" }} />
+                  <FontAwesomeIcon icon={faTimes} onClick={() => handleDelete(item.id == null ? 0 : item.id)} style={{ cursor: "pointer" }} />
                 </td>
               </tr>
             ))}

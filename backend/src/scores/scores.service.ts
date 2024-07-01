@@ -5,6 +5,8 @@ import { Score } from './score.entity';
 import { CustomException } from 'src/exceptions';
 import { EventsGateway } from 'src/events.gateway';
 import { Country } from 'src/countries/country.entity';
+import { ScoreWithPaginationDto } from './scoreWithPagination.dto';
+import { ScoreDto } from './score.dto';
 
 @Injectable()
 export class ScoresService {
@@ -26,9 +28,7 @@ export class ScoresService {
             take: limit,
             relations: ['country']
         });
-        const data = scores.map(score => ({ ...score, country: score.country.name }));
-
-        return { data, totalCount };
+        return ScoreWithPaginationDto.create(scores, totalCount);
     }
 
     private validatePage(page: number) {
@@ -37,15 +37,15 @@ export class ScoresService {
         }
     }
 
-    async create(scoreDto: any): Promise<void> {
-        const country = await this.countryRepository.findOne({ where: { name: scoreDto.country } });
+    async create(scoreDto: ScoreDto): Promise<void> {
+        const country = await this.countryRepository.findOne({ where: { id: scoreDto.countryId } });
         const score = this.scoresRepository.create({
             firstName: scoreDto.firstName,
             lastName: scoreDto.lastName,
             score: scoreDto.score,
             age: scoreDto.age,
             country: country,
-            city: scoreDto.city,
+            city: scoreDto.cityId,
             gender: scoreDto.gender
         });
         score.getValidation();
@@ -53,15 +53,15 @@ export class ScoresService {
         this.eventsGateway.onNewEntryOrEdit(savedScore.id);
     }
 
-    async updateById(scoreDto: any, id: number): Promise<void> {
-        const country = await this.countryRepository.findOne({ where: { name: scoreDto.country } });
+    async updateById(scoreDto: ScoreDto, id: number): Promise<void> {
+        const country = await this.countryRepository.findOne({ where: { id: scoreDto.countryId } });
         const updateData = this.scoresRepository.create({
             firstName: scoreDto.firstName,
             lastName: scoreDto.lastName,
             score: scoreDto.score,
             age: scoreDto.age,
             country: country,
-            city: scoreDto.city,
+            city: scoreDto.cityId,
             gender: scoreDto.gender
         });
         updateData.getValidation();

@@ -26,7 +26,7 @@ export class Score {
   country: Country;
 
   @Column()
-  city: string;
+  city: number;
 
   @Column()
   gender: string;

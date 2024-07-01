@@ -9,14 +9,16 @@ import { MainPage } from '../constants/RouteConstants';
 import { setCountries } from '../store/states/countriesSlice';
 import { setCities } from '../store/states/citiesSlice';
 export interface FormData {
-  firstName: string,
-  lastName: string,
-  age: string,
-  score: string,
-  gender: string,
-  country: string,
-  city: string,
-  id: string
+  firstName: string
+  lastName: string
+  age: number | null
+  score: number | null
+  countryName: string
+  countryId: number | null
+  cityName: string
+  cityId: number | null
+  gender: string
+  id: number | null
 }
 
 const FormComponent = () => {
@@ -39,7 +41,7 @@ const FormComponent = () => {
   const handleSelectChangeCountry = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
     dispatch(setFormData({ ...formData, [name]: value }));
-    fetchCities(value);
+    fetchCities(parseInt(value));
   };
 
   const handleCancel = () => {
@@ -59,8 +61,8 @@ const FormComponent = () => {
     dispatch(setCountries(data))
   }
 
-  const fetchCities = async (country: string) => {
-    const data = await HttpHelperService.getCities(country);
+  const fetchCities = async (countryId: number) => {
+    const data = await HttpHelperService.getCities(countryId);
     dispatch(setCities(data))
   }
 
@@ -83,33 +85,37 @@ const FormComponent = () => {
       </div>
       <div>
         <label className="label">Age:</label>
-        <input type="number" name="age" value={formData.age} onChange={handleInputChange} required className="input" />
+        <input type="number" name="age" value={formData.age == null ? '' : formData.age} onChange={handleInputChange} required className="input" />
       </div>
       <div>
         <label className="label">Score:</label>
-        <input type="number" name="score" value={formData.score} onChange={handleInputChange} required className="input" />
+        <input type="number" name="score" value={formData.score == null ? '' : formData.score} onChange={handleInputChange} required className="input" />
       </div>
       <div>
         <label className="label">Country:</label>
-        <select name="country" value={formData.country} onChange={handleSelectChangeCountry} required className="input select-input">
-          <option value="">Select a country</option>
+        <select name="countryId" value={formData.countryId == null ? '' : formData.countryId} onChange={handleSelectChangeCountry} required className="input select-input">
+          <option value="">Select Country</option>
           {countries.map(country => (
-            <option key={country.id} value={country.name}>{country.name}</option>
+            <option key={country.id} value={country.id}>{country.name}</option>
           ))}
         </select>
       </div>
       <div>
         <label className="label">City:</label>
-        <select name="city" value={formData.city} onChange={handleSelectChange} required className="input select-input">
-          <option value="">Select a city</option>
+        <select name="cityId" value={formData.cityId == null ? '' : formData.cityId} onChange={handleSelectChange} required className="input select-input">
+          <option value="">Select City</option>
           {cities.map(city => (
-            <option key={city.id} value={city.name}>{city.name}</option>
+            <option key={city.id} value={city.id}>{city.name}</option>
           ))}
         </select>
       </div>
       <div>
         <label className="label">Gender:</label>
-        <input type="text" name="gender" value={formData.gender} onChange={handleInputChange} required className="input" />
+        <select name="gender" value={formData.gender} onChange={handleSelectChange} required className="input select-input" >
+          <option value="">Select Gender</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+        </select>
       </div>
       <div className='btn-container'>
         <button type="submit" className="button">Submit</button>

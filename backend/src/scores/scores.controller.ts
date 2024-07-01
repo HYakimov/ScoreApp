@@ -1,6 +1,7 @@
 import { Controller, Delete, Post, Get, Body, Res, HttpStatus, Param, Query, Put } from '@nestjs/common';
 import { ScoresService } from './scores.service';
 import { Score } from './score.entity';
+import { ScoreDto } from './score.dto';
 
 @Controller('data')
 export class ScoresController {
@@ -19,13 +20,13 @@ export class ScoresController {
     }
 
     @Post()
-    async create(@Body() score: any, @Res() res): Promise<void> {
+    async create(@Body() score: ScoreDto, @Res() res): Promise<void> {
         await this.scoresService.create(score);
         res.status(HttpStatus.CREATED).send('Data saved successfully');
     }
 
     @Put(':id')
-    async updateById(@Param('id') id: number, @Body() scoreDto: any, @Res() res): Promise<void> {
+    async updateById(@Param('id') id: number, @Body() scoreDto: ScoreDto, @Res() res): Promise<void> {
         await this.scoresService.updateById(scoreDto, id);
         res.status(HttpStatus.OK).send('Data updated successfully');
     }
