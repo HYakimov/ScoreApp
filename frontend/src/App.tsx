@@ -14,6 +14,7 @@ import { setTableData, sethigHlightedRow } from './store/states/tableSlice';
 import { setTotalPages } from './store/states/pageSlice';
 import { setSort } from './store/states/sortSlice';
 import { resetSort } from './constants/SortingConstants';
+import { FormPage, MainPage } from './constants/RouteConstants';
 
 const AppContent: React.FC = () => {
   const dispatch = useDispatch();
@@ -63,8 +64,8 @@ const AppContent: React.FC = () => {
       <Navbar />
       <div className="child">
         <Routes>
-          <Route path="/form" element={<FormComponent />} />
-          <Route path="/" element={<TableComponent />} />
+          <Route path={FormPage} element={<FormComponent />} />
+          <Route path={MainPage} element={<TableComponent />} />
         </Routes>
       </div>
     </div>

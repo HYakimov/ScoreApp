@@ -4,7 +4,7 @@
     padding: 20px;
     border-radius: 15px;
     width: 100%;
-    max-width: 400px;
+    max-width: 600px;
     max-height: 560px;
     overflow-y: auto;
     overflow-x: hidden;
@@ -69,11 +69,11 @@
 
 @keyframes glow {
     0% {
-        background-color: red;
+        background: orange;
     }
 
     100% {
-        background-color: transparent;
+        background: transparent;
     }
 }
 

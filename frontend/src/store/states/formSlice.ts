@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { FormData } from "../../components/FormComponent";
 
-const initialState = {
+export const initialState = {
     firstName: '',
     lastName: '',
     age: '',

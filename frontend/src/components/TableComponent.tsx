@@ -20,7 +20,7 @@ const TableComponent = () => {
   const tableData = useSelector((state: RootState) => state.table.tableData);
   const highlightedRow = useSelector((state: RootState) => state.table.highlightedRow);
 
-  const clearTable = async () => {
+  const handleClearTable = async () => {
     await HttpHelperService.delete();
   };
 
@@ -70,13 +70,16 @@ const TableComponent = () => {
               <th>Last Name</th>
               <th>Age</th>
               <th>Score</th>
+              <th>Country</th>
+              <th>City</th>
+              <th>Gender</th>
             </tr>
           </thead>
           <tbody>
             {tableData.map((item, index) => (
               <tr
                 key={item.id}
-                // style={{ background: getBackgroundColor(item.score) }}
+                style={{ background: getBackgroundColor(item.score) }}
                 className={`${highlightedRow == parseInt(item.id) ? 'table-row-highlight' : ''}`}
               >
                 <td style={{ borderBottomLeftRadius: index === tableData.length - 1 ? "15px" : "0" }}>
@@ -85,6 +88,9 @@ const TableComponent = () => {
                 <td>{item.lastName}</td>
                 <td>{item.age}</td>
                 <td>{item.score}</td>
+                <td>{item.country}</td>
+                <td>{item.city}</td>
+                <td>{item.gender}</td>
                 <td>
                   <FontAwesomeIcon icon={faPencilAlt} onClick={() => handleEdit(item)} style={{ cursor: "pointer" }} />
                 </td>
@@ -103,7 +109,7 @@ const TableComponent = () => {
         <button className="table-button" onClick={handleLoadTable}> Load Table </button>
         <button className="table-button" onClick={handleSortByAge}> Sort by Age </button>
         <button className="table-button" onClick={handleSortByScore}> Sort by Score </button>
-        <button className="table-button" onClick={clearTable}> Clear Table </button>
+        <button className="table-button" onClick={handleClearTable}> Clear Table </button>
       </div>
     </div>
   );

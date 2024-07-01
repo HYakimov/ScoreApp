@@ -4,9 +4,10 @@ import { ScoresService } from './scores.service';
 import { ScoresController } from './scores.controller';
 import { Score } from './score.entity';
 import { EventsGateway } from 'src/events.gateway';
+import { Country } from 'src/countries/country.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Score])],
+  imports: [TypeOrmModule.forFeature([Score]), TypeOrmModule.forFeature([Country])],
   providers: [ScoresService, EventsGateway],
   controllers: [ScoresController],
 })

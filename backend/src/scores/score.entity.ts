@@ -1,6 +1,7 @@
 import { MAX_AGE, MAX_SCORE, MIN_AGE, MIN_SCORE } from 'src/constants';
+import { Country } from 'src/countries/country.entity';
 import { CustomException } from 'src/exceptions';
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 
 @Entity()
 export class Score {
@@ -19,6 +20,16 @@ export class Score {
 
   @Column()
   score: number;
+
+  @ManyToOne(() => Country)
+  @JoinColumn({ name: 'countryId' })
+  country: Country;
+
+  @Column()
+  city: string;
+
+  @Column()
+  gender: string;
 
   public getValidation(): void {
     return this.formatAndValidateData();

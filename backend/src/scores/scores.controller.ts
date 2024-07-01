@@ -1,4 +1,4 @@
-import { Controller, Delete, Post, Get, Body, Res, HttpStatus, Param, Query, Put, InternalServerErrorException } from '@nestjs/common';
+import { Controller, Delete, Post, Get, Body, Res, HttpStatus, Param, Query, Put } from '@nestjs/common';
 import { ScoresService } from './scores.service';
 import { Score } from './score.entity';
 
@@ -19,18 +19,14 @@ export class ScoresController {
     }
 
     @Post()
-    async create(@Body() score: Score, @Res() res): Promise<void> {
-        await this.scoresService.create(score.firstName, score.lastName, score.age, score.score);
+    async create(@Body() score: any, @Res() res): Promise<void> {
+        await this.scoresService.create(score);
         res.status(HttpStatus.CREATED).send('Data saved successfully');
     }
 
     @Put(':id')
-    async updateById(
-        @Param('id') id: number,
-        @Body() scoreDto: Score,
-        @Res() res,
-    ): Promise<void> {
-        await this.scoresService.updateById(id, scoreDto.firstName, scoreDto.lastName, scoreDto.age, scoreDto.score);
+    async updateById(@Param('id') id: number, @Body() scoreDto: any, @Res() res): Promise<void> {
+        await this.scoresService.updateById(scoreDto, id);
         res.status(HttpStatus.OK).send('Data updated successfully');
     }
 

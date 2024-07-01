@@ -23,11 +23,19 @@ const HttpHelperService = {
     },
 
     submit: async (formData: FormData) => {
-        if (formData.id != '') {
+        if (formData.id != undefined) {
             await HttpService.put(`${baseUrl}/${formData.id}`, formData);
         } else {
             await HttpService.post(baseUrl, formData);
         }
+    },
+
+    getCountries: async () => {
+        return await HttpService.fetch(`/countries`);
+    },
+
+    getCities: async (country: string) => {
+        return await HttpService.fetch(`/cities/${country}`);
     }
 }
 
