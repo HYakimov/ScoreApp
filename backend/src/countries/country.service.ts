@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Country } from './country.entity';
-import { CityDto } from './city.dto';
+import { CityDto } from './dtos/city.dto';
 
 @Injectable()
 export class CountryService {

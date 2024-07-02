@@ -4,9 +4,8 @@ import { Repository } from 'typeorm';
 import { Score } from './score.entity';
 import { CustomException } from 'src/exceptions';
 import { EventsGateway } from 'src/events.gateway';
-import { Country } from 'src/countries/country.entity';
-import { ScoreWithPaginationDto } from './scoreWithPagination.dto';
-import { ScoreDto } from './score.dto';
+import { ScoreDto } from './dtos/score.dto';
+import { User } from 'src/user/user.entity';
 
 @Injectable()
 export class ScoresService {
@@ -14,75 +13,42 @@ export class ScoresService {
     constructor(
         @InjectRepository(Score)
         private readonly scoresRepository: Repository<Score>,
-        @InjectRepository(Country)
-        private countryRepository: Repository<Country>,
+        @InjectRepository(User)
+        private userRepository: Repository<User>,
         private readonly eventsGateway: EventsGateway
     ) { }
 
-    async findWithPagination(sortBy: string, page: number, limit: number): Promise<{ data: any, totalCount: number }> {
-        this.validatePage(page);
-        const offset = (page - 1) * limit;
-        const [scores, totalCount] = await this.scoresRepository.findAndCount({
-            order: sortBy ? { [sortBy]: 'DESC' } : {},
-            skip: offset,
-            take: limit,
-            relations: ['country']
-        });
-        return ScoreWithPaginationDto.create(scores, totalCount);
-    }
-
-    private validatePage(page: number) {
-        if (page < 1) {
-            throw CustomException.BadRequest("Page number must be greater than 0.");
+    async create(dto: ScoreDto): Promise<void> {
+        const user = await this.userRepository.findOne({ where: { id: dto.userId } });
+        if (!user) {
+            throw CustomException.NotFound(`User with ID ${dto.userId} not found.`);
         }
-    }
-
-    async create(scoreDto: ScoreDto): Promise<void> {
-        const country = await this.countryRepository.findOne({ where: { id: scoreDto.countryId } });
         const score = this.scoresRepository.create({
-            firstName: scoreDto.firstName,
-            lastName: scoreDto.lastName,
-            score: scoreDto.score,
-            age: scoreDto.age,
-            country: country,
-            city: scoreDto.cityId,
-            gender: scoreDto.gender
+            value: dto.value,
+            user: user
         });
-        score.getValidation();
+        score.getScoreValidation();
         const savedScore = await this.scoresRepository.save(score);
         this.eventsGateway.onNewEntryOrEdit(savedScore.id);
     }
 
-    async updateById(scoreDto: ScoreDto, id: number): Promise<void> {
-        const country = await this.countryRepository.findOne({ where: { id: scoreDto.countryId } });
-        const updateData = this.scoresRepository.create({
-            firstName: scoreDto.firstName,
-            lastName: scoreDto.lastName,
-            score: scoreDto.score,
-            age: scoreDto.age,
-            country: country,
-            city: scoreDto.cityId,
-            gender: scoreDto.gender
-        });
-        updateData.getValidation();
+    async updateById(dto: ScoreDto, id: number): Promise<void> {
+        if (dto.id != id) {
+            throw CustomException.BadRequest("Id's do not match.");
+        }
+        const user = await this.userRepository.findOne({ where: { id: dto.userId } });
+        if (!user) {
+            throw CustomException.NotFound(`User with ID ${dto.userId} not found.`);
+        }
+        const updateData: Partial<Score> = {
+            value: dto.value
+        };
+        updateData.getScoreValidation();
         const scoreToUpdate = await this.scoresRepository.findOne({ where: { id } });
         if (!scoreToUpdate) {
             throw CustomException.NotFound(`Score with ID ${id} not found.`);
         }
         await this.scoresRepository.update(id, updateData);
         this.eventsGateway.onNewEntryOrEdit(id);
-    }
-
-    async deleteAll(): Promise<void> {
-        await this.scoresRepository.clear();
-        this.eventsGateway.sendUpdate();
-    }
-
-    async deleteById(id: number): Promise<void> {
-        const result = await this.scoresRepository.delete(id);
-        if (result.affected < 1) {
-            throw CustomException.NotFound(`Entry with ID ${id} not found.`)
-        }
-        this.eventsGateway.sendUpdate();
     }
 }

@@ -1,7 +1,7 @@
-import { MAX_AGE, MAX_SCORE, MIN_AGE, MIN_SCORE } from 'src/constants';
-import { Country } from 'src/countries/country.entity';
+import { MAX_SCORE, MIN_SCORE } from 'src/constants';
 import { CustomException } from 'src/exceptions';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { User } from 'src/user/user.entity';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToOne } from 'typeorm';
 
 @Entity()
 export class Score {
@@ -10,54 +10,21 @@ export class Score {
   id: number;
 
   @Column()
-  firstName: string;
+  value: number;
 
-  @Column()
-  lastName: string;
+  @OneToOne(() => User, user => user.score)
+  @JoinColumn({ name: 'userId' })
+  user: User;
 
-  @Column()
-  age: number;
 
-  @Column()
-  score: number;
-
-  @ManyToOne(() => Country)
-  @JoinColumn({ name: 'countryId' })
-  country: Country;
-
-  @Column()
-  city: number;
-
-  @Column()
-  gender: string;
-
-  public getValidation(): void {
-    return this.formatAndValidateData();
+  public getScoreValidation(): void {
+    return this.validateScore();
   }
 
-  private formatAndValidateData(): void {
-    this.validateName(this.firstName, 'First name');
-    this.validateName(this.lastName, 'Last name');
-    this.validateAge(this.age);
-    this.validateScore(this.score);
-  }
-
-  private validateName(name: string, fieldName: string): void {
-    const containsDigits = /\d/.test(name);
-    if (containsDigits) {
-      throw CustomException.BadRequest(`${fieldName} must contain only letters.`);
-    }
-  }
-
-  private validateAge(age: number): void {
-    if (age < MIN_AGE || age > MAX_AGE) {
-      throw CustomException.BadRequest("Minimum age is " + MIN_AGE + " and maximum age is " + MAX_AGE + ".");
-    }
-  }
-
-  private validateScore(score: number): void {
-    if (score < MIN_SCORE || score > MAX_SCORE) {
+  private validateScore(): void {
+    if (this.value < MIN_SCORE || this.value > MAX_SCORE) {
       throw CustomException.BadRequest("Minimum score is " + MIN_SCORE + " and maximum score is " + MAX_SCORE + ".");
     }
   }
+
 }
