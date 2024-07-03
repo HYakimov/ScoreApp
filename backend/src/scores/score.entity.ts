@@ -1,7 +1,7 @@
 import { MAX_SCORE, MIN_SCORE } from 'src/constants';
 import { CustomException } from 'src/exceptions';
 import { User } from 'src/user/user.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, ManyToOne } from 'typeorm';
 
 @Entity()
 export class Score {
@@ -12,10 +12,9 @@ export class Score {
   @Column()
   value: number;
 
-  @OneToOne(() => User, user => user.score)
+  @ManyToOne(() => User, user => user.scores)
   @JoinColumn({ name: 'userId' })
   user: User;
-
 
   public getScoreValidation(): void {
     return this.validateScore();
@@ -26,5 +25,4 @@ export class Score {
       throw CustomException.BadRequest("Minimum score is " + MIN_SCORE + " and maximum score is " + MAX_SCORE + ".");
     }
   }
-
 }

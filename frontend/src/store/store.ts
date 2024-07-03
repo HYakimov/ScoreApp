@@ -5,6 +5,7 @@ import pageReducer from './states/pageSlice';
 import sortReducer from './states/sortSlice';
 import countriesReducer from './states/countriesSlice';
 import citiesReducer from './states/citiesSlice';
+import scoreReducer from './states/scoreSlice';
 
 const store = configureStore({
     reducer: {
@@ -13,7 +14,8 @@ const store = configureStore({
         page: pageReducer,
         sort: sortReducer,
         countries: countriesReducer,
-        cities: citiesReducer
+        cities: citiesReducer,
+        score: scoreReducer
     }
 });
 

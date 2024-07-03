@@ -19,9 +19,8 @@ export class User {
     @Column()
     age: number;
 
-    @OneToOne(() => Score, score => score.user)
-    @JoinColumn()
-    score: Score;
+    @OneToMany(() => Score, score => score.user)
+    scores: Score[];
 
     @ManyToOne(() => Country)
     @JoinColumn({ name: 'countryId' })

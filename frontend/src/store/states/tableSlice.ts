@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { FormData } from "../../components/FormComponent";
+import { FormData } from "../../components/UserRegistrationFormComponent";
 
 interface TableData {
     tableData: FormData[];

@@ -25,14 +25,20 @@ export class UserDto {
         record.firstName = user.firstName;
         record.lastName = user.lastName;
         record.age = user.age;
-        record.scoreId = user.score ? user.score.id : null;
-        record.scoreValue = user.score ? user.score.value : null;
+        if (user.scores && user.scores.length > 0) {
+            record.scoreId = user.scores[0].id || null;
+            record.scoreValue = user.scores[0].value || null;
+        } else {
+            record.scoreId = null;
+            record.scoreValue = null;
+        }
         record.countryName = user.country.name;
         record.countryId = user.country.id;
         record.cityName = UserDto.getCityName(user.city);
         record.cityId = user.city;
         record.gender = user.gender;
         record.id = user.id;
+        record.email = user.email;
 
         return record;
     }

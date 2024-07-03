@@ -27,9 +27,9 @@ export class UserService {
             order: sortBy ? { [sortBy]: 'DESC' } : {},
             skip: offset,
             take: limit,
-            relations: ['country', 'score']
+            relations: ['country', 'scores']
         });
-        console.log(users, totalCount);
+
         return UserPaginationDto.create(users, totalCount);
     }
 

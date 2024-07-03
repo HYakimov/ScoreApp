@@ -17,7 +17,7 @@ export class UserUpdateDto {
     @IsNotEmpty()
     gender: string;
     @IsNotEmpty()
-    @IsEmail()
+    // @IsEmail()
     email: string;
     @IsNotEmpty()
     id: number;

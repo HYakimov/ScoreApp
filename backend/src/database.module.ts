@@ -7,8 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       type: 'sqlite',
       database: 'database.sqlite',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true,
-      logging: true
+      synchronize: true
     }),
   ],
   exports: [TypeOrmModule],

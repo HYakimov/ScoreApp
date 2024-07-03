@@ -1,2 +1,3 @@
 export const MainPage = '/';
-export const FormPage = '/form';
+export const RegistrationFormPage = '/registrationForm';
+export const ScoresFormPage = '/scoresForm';

@@ -1,4 +1,4 @@
-import '../styles/FormComponent.css';
+import '../styles/UserRegistrationFormComponent.css';
 import React, { useEffect } from 'react';
 import HttpHelperService from '../HttpHelperService';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,20 +8,23 @@ import { useNavigate } from 'react-router-dom';
 import { MainPage } from '../constants/RouteConstants';
 import { setCountries } from '../store/states/countriesSlice';
 import { setCities } from '../store/states/citiesSlice';
+
 export interface FormData {
   firstName: string
   lastName: string
   age: number | null
-  score: number | null
+  scoreId: number | null
+  scoreValue: number | null
   countryName: string
   countryId: number | null
   cityName: string
   cityId: number | null
   gender: string
+  email: string
   id: number | null
 }
 
-const FormComponent = () => {
+const UserRegistrationFormComponent = () => {
   const formData = useSelector((state: RootState) => state.form);
   const countries = useSelector((state: RootState) => state.countries.value);
   const cities = useSelector((state: RootState) => state.cities.value);
@@ -88,10 +91,6 @@ const FormComponent = () => {
         <input type="number" name="age" value={formData.age == null ? '' : formData.age} onChange={handleInputChange} required className="input" />
       </div>
       <div>
-        <label className="label">Score:</label>
-        <input type="number" name="score" value={formData.score == null ? '' : formData.score} onChange={handleInputChange} required className="input" />
-      </div>
-      <div>
         <label className="label">Country:</label>
         <select name="countryId" value={formData.countryId == null ? '' : formData.countryId} onChange={handleSelectChangeCountry} required className="input select-input">
           <option value="">Select Country</option>
@@ -117,6 +116,10 @@ const FormComponent = () => {
           <option value="female">Female</option>
         </select>
       </div>
+      <div>
+        <label className="label">Email:</label>
+        <input type="text" name="email" value={formData.email} onChange={handleInputChange} required className="input" />
+      </div>
       <div className='btn-container'>
         <button type="submit" className="button">Submit</button>
         <button className="button" onClick={handleCancel}>Cancel</button>
@@ -125,4 +128,4 @@ const FormComponent = () => {
   );
 };
 
-export default FormComponent;
+export default UserRegistrationFormComponent;

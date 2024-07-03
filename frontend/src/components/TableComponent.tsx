@@ -4,12 +4,12 @@ import HttpHelperService from "../HttpHelperService";
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencilAlt, faTimes } from "@fortawesome/free-solid-svg-icons";
-import { FormData } from "./FormComponent";
+import { FormData } from "./UserRegistrationFormComponent";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store/store";
 import { setFormData } from "../store/states/formSlice";
 import { useNavigate } from "react-router-dom";
-import { FormPage } from "../constants/RouteConstants";
+import { RegistrationFormPage } from "../constants/RouteConstants";
 import { setPage } from "../store/states/pageSlice";
 import { setSort } from "../store/states/sortSlice";
 import { resetSort, sortByAge, sortByScore } from "../constants/SortingConstants";
@@ -33,8 +33,8 @@ const TableComponent = () => {
     dispatch(setPage(1));
   };
 
-  const handleEdit = (formData: FormData) => { ///////////////////////////
-    navigate(FormPage);
+  const handleEdit = (formData: FormData) => {
+    navigate(RegistrationFormPage);
     fetchCities(formData.countryId == null ? 0 : formData.countryId);
     dispatch(setFormData(formData));
     dispatch(setPage(1));
@@ -96,13 +96,14 @@ const TableComponent = () => {
               <th>Country</th>
               <th>City</th>
               <th>Gender</th>
+              <th>Email</th>
             </tr>
           </thead>
           <tbody>
             {tableData.map((item, index) => (
               <tr
                 key={item.id}
-                style={{ background: getBackgroundColor(item.score == null ? 0 : item.score) }}
+                style={{ background: getBackgroundColor(item.scoreId == null ? 0 : item.scoreId) }}
                 className={`${highlightedRow == item.id ? 'table-row-highlight' : ''}`}
               >
                 <td style={{ borderBottomLeftRadius: index === tableData.length - 1 ? "15px" : "0" }}>
@@ -110,10 +111,11 @@ const TableComponent = () => {
                 </td>
                 <td>{item.lastName}</td>
                 <td>{item.age}</td>
-                <td>{item.score}</td>
+                <td>{item.scoreValue}</td>
                 <td>{item.countryName}</td>
                 <td>{item.cityName}</td>
                 <td>{item.gender}</td>
+                <td>{item.email}</td>
                 <td>
                   <FontAwesomeIcon icon={faPencilAlt} onClick={() => handleEdit(item)} style={{ cursor: "pointer" }} />
                 </td>

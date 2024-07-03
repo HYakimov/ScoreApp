@@ -1,7 +1,7 @@
 import '../styles/NavBarComponent.css';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FormPage, MainPage } from '../constants/RouteConstants';
+import { MainPage, RegistrationFormPage, ScoresFormPage } from '../constants/RouteConstants';
 
 const NavBarComponent = () => {
 
@@ -13,7 +13,10 @@ const NavBarComponent = () => {
                 </div>
                 <ul className="nav-links">
                     <li>
-                        <Link to={FormPage} >Form</Link>
+                        <Link to={ScoresFormPage} >Scores Form</Link>
+                    </li>
+                    <li>
+                        <Link to={RegistrationFormPage} >Registration Form</Link>
                     </li>
                     <li>
                         <Link to={MainPage} >Table</Link>

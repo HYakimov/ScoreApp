@@ -1,13 +1,15 @@
-import { Controller, Post, Body, Res, HttpStatus, Param, Put } from '@nestjs/common';
+import { Controller, Post, Body, Res, HttpStatus, Param, Put, ValidationPipe, UsePipes, Get } from '@nestjs/common';
 import { ScoresService } from './scores.service';
 import { ScoreDto } from './dtos/score.dto';
+import { plainToInstance } from 'class-transformer';
 
-@Controller('data')
+@Controller('scores')
 export class ScoresController {
 
     constructor(private readonly scoresService: ScoresService) { }
 
     @Post()
+    // @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
     async create(@Body() dto: ScoreDto, @Res() res): Promise<void> {
         await this.scoresService.create(dto);
         res.status(HttpStatus.CREATED).send('Data saved successfully');

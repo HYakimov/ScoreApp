@@ -1,4 +1,5 @@
-import { FormData } from './components/FormComponent';
+import { ScoreData } from './components/ScoresFormComponent';
+import { FormData } from './components/UserRegistrationFormComponent';
 import { DELETE, POST, PUT, baseUrl, jsonHeader } from './constants/HttpConstants';
 
 const HttpService = {
@@ -17,7 +18,7 @@ const HttpService = {
         }
     },
 
-    post: async (url: string, data: FormData) => {
+    post: async (url: string, data: FormData | ScoreData) => {
         try {
             const response = await fetch(`${baseUrl}${url}`, {
                 method: POST,
@@ -32,7 +33,7 @@ const HttpService = {
         }
     },
 
-    put: async (url: string, data: FormData) => {
+    put: async (url: string, data: FormData | ScoreData) => {
         try {
             const response = await fetch(`${baseUrl}${url}`, {
                 method: PUT,

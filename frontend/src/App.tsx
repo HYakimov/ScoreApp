@@ -1,6 +1,6 @@
 import './styles/App.css';
-import FormComponent from './components/FormComponent';
 import TableComponent from './components/TableComponent';
+import UserRegistrationFormComponent from './components/UserRegistrationFormComponent';
 import io from 'socket.io-client';
 import HttpHelperService from './HttpHelperService';
 import React, { useEffect } from 'react';
@@ -14,7 +14,8 @@ import { setTableData, sethigHlightedRow } from './store/states/tableSlice';
 import { setTotalPages } from './store/states/pageSlice';
 import { setSort } from './store/states/sortSlice';
 import { resetSort } from './constants/SortingConstants';
-import { FormPage, MainPage } from './constants/RouteConstants';
+import { MainPage, RegistrationFormPage, ScoresFormPage } from './constants/RouteConstants';
+import ScoresFormComponent from './components/ScoresFormComponent';
 
 const AppContent: React.FC = () => {
   const dispatch = useDispatch();
@@ -64,7 +65,8 @@ const AppContent: React.FC = () => {
       <Navbar />
       <div className="child">
         <Routes>
-          <Route path={FormPage} element={<FormComponent />} />
+          <Route path={RegistrationFormPage} element={<UserRegistrationFormComponent />} />
+          <Route path={ScoresFormPage} element={<ScoresFormComponent />} />
           <Route path={MainPage} element={<TableComponent />} />
         </Routes>
       </div>
