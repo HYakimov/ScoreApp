@@ -13,11 +13,9 @@ export class UserUpdateDto {
     @IsNotEmpty()
     cityId: number;
     @IsNotEmpty()
-    scoreId: number;
-    @IsNotEmpty()
     gender: string;
     @IsNotEmpty()
-    // @IsEmail()
+    @IsEmail()
     email: string;
     @IsNotEmpty()
     id: number;

@@ -11,19 +11,23 @@ const countries = `/countries`;
 const HttpHelperService = {
 
     get: async (page: number, currentSortBy: string) => {
-        let url = `${users}?page=${page}&limit=${paginationLimit}`;
+        let url = `${users}/paginated?page=${page}&limit=${paginationLimit}`;
         if (currentSortBy) {
             url += `&sortBy=${currentSortBy}`;
         }
-        return await HttpService.fetch(url);
+        return await HttpService.get(url);
     },
 
-    delete: async () => {
-        await HttpService.delete(users);
+    getUsers: async () => {
+        return await HttpService.get(users);
     },
 
-    deleteById: async (id: number) => {
-        await HttpService.deleteById(`${users}/${id}`);
+    getCountries: async () => {
+        return await HttpService.get(countries);
+    },
+
+    getCities: async (countryId: number) => {
+        return await HttpService.get(`${cities}/${countryId}`);
     },
 
     submit: async (formData: FormData) => {
@@ -42,12 +46,12 @@ const HttpHelperService = {
         }
     },
 
-    getCountries: async () => {
-        return await HttpService.fetch(countries);
+    delete: async () => {
+        await HttpService.delete(users);
     },
 
-    getCities: async (countryId: number) => {
-        return await HttpService.fetch(`${cities}/${countryId}`);
+    deleteById: async (id: number) => {
+        await HttpService.deleteById(`${users}/${id}`);
     },
 
     downloadCsv: async (page: number, limit: number, sortBy: string) => {
@@ -55,4 +59,4 @@ const HttpHelperService = {
     }
 }
 
-export default HttpHelperService
+export default HttpHelperService;

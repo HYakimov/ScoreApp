@@ -5,7 +5,6 @@ import { RootState } from "../store/store";
 import { MainPage } from "../constants/RouteConstants";
 import HttpHelperService from "../HttpHelperService";
 import { initialState, setScore } from "../store/states/scoreSlice";
-import { setFormData } from "../store/states/formSlice";
 
 export interface ScoreData {
     id: number | null
@@ -14,9 +13,8 @@ export interface ScoreData {
 }
 
 const ScoresFormComponent = () => {
-    const formData = useSelector((state: RootState) => state.form);
     const scoreData = useSelector((state: RootState) => state.score);
-    const tableData = useSelector((state: RootState) => state.table.tableData);
+    const users = useSelector((state: RootState) => state.users.users);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -27,7 +25,7 @@ const ScoresFormComponent = () => {
 
     const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const { name, value } = e.target;
-        const selectedUser = tableData.find(user => user.id === Number(value));
+        const selectedUser = users.find(user => user.id === Number(value));
         if (selectedUser) {
             const updatedScoreData = {
                 ...scoreData,
@@ -65,7 +63,7 @@ const ScoresFormComponent = () => {
                 <label className="label">User:</label>
                 <select name="userId" value={scoreData.userId == null ? '' : scoreData.userId} onChange={handleSelectChange} required className="input select-input">
                     <option value="">Select User</option>
-                    {tableData.map(user => (
+                    {users.map(user => (
                         <option key={user.id} value={user.id == null ? 0 : user.id}>{user.firstName}</option>
                     ))}
                 </select>

@@ -6,6 +6,7 @@ import sortReducer from './states/sortSlice';
 import countriesReducer from './states/countriesSlice';
 import citiesReducer from './states/citiesSlice';
 import scoreReducer from './states/scoreSlice';
+import usersReducer from './states/usersSlice';
 
 const store = configureStore({
     reducer: {
@@ -15,7 +16,8 @@ const store = configureStore({
         sort: sortReducer,
         countries: countriesReducer,
         cities: citiesReducer,
-        score: scoreReducer
+        score: scoreReducer,
+        users: usersReducer
     }
 });
 

@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { CustomException } from 'src/exceptions';
 import { EventsGateway } from 'src/events.gateway';
 import { Country } from 'src/countries/country.entity';
 import { User } from './user.entity';
 import { UserUpdateDto } from './dtos/user.update.dto';
 import { UserRegistrationDto } from './dtos/user.registration.dto';
-import { UserPaginationDto } from './dtos/user.pagination.dto';
+import { UserDto } from './dtos/user.dto';
+import { UserResponseDto } from './dtos/user.response.dto';
 
 @Injectable()
 export class UserService {
@@ -17,20 +18,50 @@ export class UserService {
         private readonly userRepository: Repository<User>,
         @InjectRepository(Country)
         private countryRepository: Repository<Country>,
-        private readonly eventsGateway: EventsGateway
-    ) { }
+        private readonly eventsGateway: EventsGateway,
+        @InjectEntityManager() private readonly entityManager: EntityManager,) { }
 
-    async findWithPagination(sortBy: string, page: number, limit: number): Promise<UserPaginationDto> {
+    async findWithPagination(sortBy: string, page: number, pageSize: number): Promise<UserResponseDto> {
         this.validatePage(page);
-        const offset = (page - 1) * limit;
-        const [users, totalCount] = await this.userRepository.findAndCount({
-            order: sortBy ? { [sortBy]: 'DESC' } : {},
-            skip: offset,
-            take: limit,
-            relations: ['country', 'scores']
-        });
+        let query = `
+        SELECT 
+            u.firstName, u.lastName, u.age, u.gender, u.email, u.city as cityId, 
+            c.id as countryId, c.name as countryName, s.value as scoreValue, s.id as scoreId,
+            COUNT(*) OVER() as total_count
+        FROM 
+            User u
+        JOIN 
+            Country c ON u.countryId = c.id
+        JOIN 
+            Score s ON u.id = s.userId
+        JOIN (
+            SELECT 
+                MIN(s.id) AS first_score_id
+            FROM 
+                Score s
+            GROUP BY 
+                s.userId
+        ) fs ON s.id = fs.first_score_id
+    `;
 
-        return UserPaginationDto.create(users, totalCount);
+        if (sortBy === 'score') {
+            query += ` ORDER BY s.value DESC `;
+        } else if (sortBy === 'age') {
+            query += ` ORDER BY u.age DESC `;
+        }
+
+        query += ` LIMIT ? OFFSET ? `;
+
+        const params = [pageSize, (page - 1) * pageSize];
+        const users = await this.entityManager.query(query, params);
+        const totalCount = users.length > 0 ? users[0].total_count : 0;
+
+        return (UserResponseDto.create(users, totalCount));
+    }
+
+    async findAll(): Promise<UserDto[]> {
+        const users = await this.userRepository.find({ relations: ['country', 'scores'] });
+        return users.map(u => UserDto.create(u));
     }
 
     private validatePage(page: number): void {

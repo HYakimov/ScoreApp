@@ -15,6 +15,6 @@ export class UserRegistrationDto {
     @IsNotEmpty()
     gender: string;
     @IsNotEmpty()
-    // @IsEmail()
+    @IsEmail()
     email: string;
 }

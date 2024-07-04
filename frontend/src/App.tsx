@@ -16,11 +16,13 @@ import { setSort } from './store/states/sortSlice';
 import { resetSort } from './constants/SortingConstants';
 import { MainPage, RegistrationFormPage, ScoresFormPage } from './constants/RouteConstants';
 import ScoresFormComponent from './components/ScoresFormComponent';
+import { setUsers } from './store/states/usersSlice';
 
 const AppContent: React.FC = () => {
   const dispatch = useDispatch();
   const currentPage = useSelector((state: RootState) => state.page.value);
   const currentSortBy = useSelector((state: RootState) => state.sort.value);
+  const users = useSelector((state: RootState) => state.users.users);
 
   useEffect(() => {
     const socket = io(baseUrl);
@@ -45,6 +47,15 @@ const AppContent: React.FC = () => {
   useEffect(() => {
     fetchData(currentPage, currentSortBy);
   }, [currentPage, currentSortBy]);
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const fetchUsers = async () => {
+    const data = await HttpHelperService.getUsers();
+    dispatch(setUsers(data));
+  }
 
   const fetchData = async (page: number = 1, sortBy: string = '') => {
     if (sortBy === '') {
