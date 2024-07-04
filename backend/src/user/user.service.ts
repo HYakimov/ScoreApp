@@ -25,7 +25,7 @@ export class UserService {
         this.validatePage(page);
         let query = `
         SELECT 
-            u.firstName, u.lastName, u.age, u.gender, u.email, u.city as cityId, 
+            u.id, u.firstName, u.lastName, u.age, u.gender, u.email, u.city as cityId, 
             c.id as countryId, c.name as countryName, s.value as scoreValue, s.id as scoreId,
             COUNT(*) OVER() as total_count
         FROM 
@@ -81,7 +81,6 @@ export class UserService {
             gender: dto.gender,
             email: dto.email
         });
-        // user.getValidation();
         const savedUser = await this.userRepository.save(user);
         this.eventsGateway.onNewEntryOrEdit(savedUser.id);
     }
@@ -100,7 +99,6 @@ export class UserService {
             gender: dto.gender,
             email: dto.email
         };
-        // updateData.getValidation();
         const userToUpdate = await this.userRepository.findOne({ where: { id } });
         if (!userToUpdate) {
             throw CustomException.NotFound(`User with ID ${id} not found.`);
@@ -115,10 +113,11 @@ export class UserService {
     }
 
     async deleteById(id: number): Promise<void> {
-        const result = await this.userRepository.delete(id);
-        if (result.affected < 1) {
-            throw CustomException.NotFound(`Entry with ID ${id} not found.`)
+        const user = await this.userRepository.findOne({ where: { id }, relations: ['scores'] });
+        if (!user) {
+            throw CustomException.NotFound(`Entry with ID ${id} not found.`);
         }
+        await this.userRepository.remove(user);
         this.eventsGateway.sendUpdate();
     }
 }

@@ -17,12 +17,14 @@ import { resetSort } from './constants/SortingConstants';
 import { MainPage, RegistrationFormPage, ScoresFormPage } from './constants/RouteConstants';
 import ScoresFormComponent from './components/ScoresFormComponent';
 import { setUsers } from './store/states/usersSlice';
+import { setLoading } from './store/states/loadingSlice';
+import LoaderComponent from './components/LoaderComponent';
 
 const AppContent: React.FC = () => {
   const dispatch = useDispatch();
   const currentPage = useSelector((state: RootState) => state.page.value);
   const currentSortBy = useSelector((state: RootState) => state.sort.value);
-  const users = useSelector((state: RootState) => state.users.users);
+  const isLoading = useSelector((state: RootState) => state.loader.loading);
 
   useEffect(() => {
     const socket = io(baseUrl);
@@ -53,34 +55,45 @@ const AppContent: React.FC = () => {
   }, []);
 
   const fetchUsers = async () => {
+    dispatch(setLoading(true));
     const data = await HttpHelperService.getUsers();
     dispatch(setUsers(data));
+    dispatch(setLoading(false));
   }
 
   const fetchData = async (page: number = 1, sortBy: string = '') => {
+    dispatch(setLoading(true));
     if (sortBy === '') {
       dispatch(setSort(resetSort));
     }
     try {
       const data = await HttpHelperService.get(page, currentSortBy);
+      console.log(data);
       dispatch(setTableData(data.data));
       dispatch(setTotalPages(Math.ceil(data.totalCount / paginationLimit)))
       setTimeout(() => dispatch(sethigHlightedRow(-1)), 1000);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
+    dispatch(setLoading(false));
   }
 
   return (
     <div className="main-page">
-      <Navbar />
-      <div className="child">
-        <Routes>
-          <Route path={RegistrationFormPage} element={<UserRegistrationFormComponent />} />
-          <Route path={ScoresFormPage} element={<ScoresFormComponent />} />
-          <Route path={MainPage} element={<TableComponent />} />
-        </Routes>
-      </div>
+      {isLoading ? (
+        <LoaderComponent />
+      ) : (
+        <>
+          <Navbar />
+          <div className="child">
+            <Routes>
+              <Route path={RegistrationFormPage} element={<UserRegistrationFormComponent />} />
+              <Route path={ScoresFormPage} element={<ScoresFormComponent />} />
+              <Route path={MainPage} element={<TableComponent />} />
+            </Routes>
+          </div>
+        </>
+      )}
     </div>
   );
 };

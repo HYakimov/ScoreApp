@@ -12,7 +12,7 @@ export class Score {
   @Column()
   value: number;
 
-  @ManyToOne(() => User, user => user.scores)
+  @ManyToOne(() => User, user => user.scores, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })
   user: User;
 

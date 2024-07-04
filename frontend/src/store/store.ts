@@ -7,6 +7,7 @@ import countriesReducer from './states/countriesSlice';
 import citiesReducer from './states/citiesSlice';
 import scoreReducer from './states/scoreSlice';
 import usersReducer from './states/usersSlice';
+import loaderReducer from './states/loadingSlice';
 
 const store = configureStore({
     reducer: {
@@ -17,7 +18,8 @@ const store = configureStore({
         countries: countriesReducer,
         cities: citiesReducer,
         score: scoreReducer,
-        users: usersReducer
+        users: usersReducer,
+        loader: loaderReducer
     }
 });
 

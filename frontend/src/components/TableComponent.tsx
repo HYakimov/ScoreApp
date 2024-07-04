@@ -15,6 +15,7 @@ import { setSort } from "../store/states/sortSlice";
 import { resetSort, sortByAge, sortByScore } from "../constants/SortingConstants";
 import { setCities } from "../store/states/citiesSlice";
 import { paginationLimit } from "../constants/PaginationConstants";
+import { setLoading } from "../store/states/loadingSlice";
 
 const TableComponent = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -25,19 +26,25 @@ const TableComponent = () => {
   const page = useSelector((state: RootState) => state.page.value);
 
   const handleClearTable = async () => {
+    dispatch(setLoading(true));
     await HttpHelperService.delete();
+    dispatch(setLoading(false));
   };
 
   const handleDelete = async (id: number) => {
+    dispatch(setLoading(true));
     await HttpHelperService.deleteById(id);
+    dispatch(setLoading(false));
     dispatch(setPage(1));
   };
 
   const handleEdit = (formData: FormData) => {
+    dispatch(setLoading(true));
     navigate(RegistrationFormPage);
     fetchCities(formData.countryId == null ? 0 : formData.countryId);
     dispatch(setFormData(formData));
     dispatch(setPage(1));
+    dispatch(setLoading(false));
   }
 
   const handleSortByAge = () => {
@@ -69,8 +76,10 @@ const TableComponent = () => {
   }
 
   const fetchCities = async (countryId: number) => {
+    dispatch(setLoading(true));
     const data = await HttpHelperService.getCities(countryId);
     dispatch(setCities(data))
+    dispatch(setLoading(false));
   }
 
   function getBackgroundColor(score: number) {
@@ -100,27 +109,27 @@ const TableComponent = () => {
             </tr>
           </thead>
           <tbody>
-            {tableData.map((item, index) => (
+            {tableData.map((user, index) => (
               <tr
-                key={item.id}
-                style={{ background: getBackgroundColor(item.scoreId == null ? 0 : item.scoreId) }}
-                className={`${highlightedRow == item.id ? 'table-row-highlight' : ''}`}
+                key={user.id}
+                style={{ background: getBackgroundColor(user.scoreId == null ? 0 : user.scoreId) }}
+                className={`${highlightedRow == user.id ? 'table-row-highlight' : ''}`}
               >
                 <td style={{ borderBottomLeftRadius: index === tableData.length - 1 ? "15px" : "0" }}>
-                  {item.firstName}
+                  {user.firstName}
                 </td>
-                <td>{item.lastName}</td>
-                <td>{item.age}</td>
-                <td>{item.scoreValue}</td>
-                <td>{item.countryName}</td>
-                <td>{item.cityName}</td>
-                <td>{item.gender}</td>
-                <td>{item.email}</td>
+                <td>{user.lastName}</td>
+                <td>{user.age}</td>
+                <td>{user.scoreValue}</td>
+                <td>{user.countryName}</td>
+                <td>{user.cityName}</td>
+                <td>{user.gender}</td>
+                <td>{user.email}</td>
                 <td>
-                  <FontAwesomeIcon icon={faPencilAlt} onClick={() => handleEdit(item)} style={{ cursor: "pointer" }} />
+                  <FontAwesomeIcon icon={faPencilAlt} onClick={() => handleEdit(user)} style={{ cursor: "pointer" }} />
                 </td>
                 <td style={{ borderBottomRightRadius: index === tableData.length - 1 ? "15px" : "0" }}>
-                  <FontAwesomeIcon icon={faTimes} onClick={() => handleDelete(item.id == null ? 0 : item.id)} style={{ cursor: "pointer" }} />
+                  <FontAwesomeIcon icon={faTimes} onClick={() => handleDelete(user.id == null ? 0 : user.id)} style={{ cursor: "pointer" }} />
                 </td>
               </tr>
             ))}

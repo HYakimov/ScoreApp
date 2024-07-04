@@ -9,6 +9,7 @@ export class UserResponseDto {
     static create(users: any, totalCount: number): UserResponseDto {
         const record = new UserResponseDto();
         const usersDto = users.map(user => ({
+            id: user.id,
             firstName: user.firstName,
             lastName: user.lastName,
             age: user.age,
