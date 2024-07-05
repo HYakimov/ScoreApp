@@ -25,28 +25,28 @@ export class UserService {
     async findWithPagination(sortBy: string, page: number, pageSize: number): Promise<UserResponseDto> {
         this.validatePage(page);
         let query = `
+    SELECT 
+        u.id, u.firstName, u.lastName, u.age, u.gender, u.email, u.avatarPath, u.city as cityId, 
+        c.id as countryId, c.name as countryName, s.value as scoreValue, s.id as scoreId,
+        COUNT(*) OVER() as total_count
+    FROM 
+        User u
+    JOIN 
+        Country c ON u.countryId = c.id
+    LEFT JOIN 
+        Score s ON u.id = s.userId
+    LEFT JOIN (
         SELECT 
-            u.id, u.firstName, u.lastName, u.age, u.gender, u.email, u.avatarPath, u.city as cityId, 
-            c.id as countryId, c.name as countryName, s.value as scoreValue, s.id as scoreId,
-            COUNT(*) OVER() as total_count
+            MIN(s.id) AS first_score_id
         FROM 
-            User u
-        JOIN 
-            Country c ON u.countryId = c.id
-        JOIN 
-            Score s ON u.id = s.userId
-        JOIN (
-            SELECT 
-                MIN(s.id) AS first_score_id
-            FROM 
-                Score s
-            GROUP BY 
-                s.userId
-        ) fs ON s.id = fs.first_score_id
+            Score s
+        GROUP BY 
+            s.userId
+    ) fs ON s.id = fs.first_score_id
     `;
 
         if (sortBy === 'score') {
-            query += ` ORDER BY s.value DESC `;
+            query += ` ORDER BY s.value DESC NULLS LAST, u.id `;
         } else if (sortBy === 'age') {
             query += ` ORDER BY u.age DESC `;
         }

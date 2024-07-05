@@ -8,6 +8,7 @@ export interface UserInputData {
     cityId: number | null;
     gender: string;
     email: string;
+    id: number | null
 };
 
 export const initialState: UserInputData = {
@@ -17,7 +18,8 @@ export const initialState: UserInputData = {
     countryId: null,
     cityId: null,
     gender: '',
-    email: ''
+    email: '',
+    id: null
 };
 
 const userInputData = createSlice({

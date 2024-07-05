@@ -12,7 +12,6 @@ import { setFormData, initialFormDataState } from '../store/states/formSlice';
 
 const UserRegistrationFormComponent = () => {
   const userInputData = useSelector((state: RootState) => state.userInputData);
-  const formData = useSelector((state: RootState) => state.form);
   const countries = useSelector((state: RootState) => state.countries.value);
   const cities = useSelector((state: RootState) => state.cities.value);
   const dispatch = useDispatch();
@@ -51,18 +50,17 @@ const UserRegistrationFormComponent = () => {
     const data = new FormData();
     Object.keys(userInputData).forEach((key) => {
       const value = (userInputData as any)[key];
-      if (value !== null) {
+      if (value !== null && key !== 'id') {
         data.append(key, value);
       }
     });
     if (avatarFile) {
       data.append('avatar', avatarFile);
     }
-    if (formData.id != null) {
-      await HttpHelperService.update(formData.id, data);
+    if (userInputData.id != null) {
+      await HttpHelperService.update(userInputData.id, data);
       dispatch(setFormData(initialFormDataState))
     } else {
-      console.log(data);
       await HttpHelperService.submit(data);
       dispatch(setUserInputData(initialState));
     }

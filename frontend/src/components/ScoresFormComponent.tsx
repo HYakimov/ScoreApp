@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { RootState } from "../store/store";
 import { MainPage } from "../constants/RouteConstants";
 import HttpHelperService from "../HttpHelperService";
 import { initialState, setScore } from "../store/states/scoreSlice";
+import { setLoading } from "../store/states/loadingSlice";
+import { setUsers } from "../store/states/usersSlice";
 
 export interface ScoreData {
     id: number | null
@@ -17,6 +19,17 @@ const ScoresFormComponent = () => {
     const users = useSelector((state: RootState) => state.users.users);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        fetchUsers();
+    }, []);
+
+    const fetchUsers = async () => {
+        // dispatch(setLoading(true));
+        const data = await HttpHelperService.getUsers();
+        dispatch(setUsers(data));
+        // dispatch(setLoading(false));
+    }
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;

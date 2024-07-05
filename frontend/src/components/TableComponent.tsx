@@ -16,6 +16,7 @@ import { setCities } from "../store/states/citiesSlice";
 import { paginationLimit } from "../constants/PaginationConstants";
 import { setLoading } from "../store/states/loadingSlice";
 import { FormData } from "../store/states/formSlice";
+import { setUserInputData } from "../store/states/userInputData";
 
 const TableComponent = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -42,7 +43,16 @@ const TableComponent = () => {
     dispatch(setLoading(true));
     navigate(RegistrationFormPage);
     fetchCities(formData.countryId == null ? 0 : formData.countryId);
-    dispatch(setFormData(formData));
+    dispatch(setUserInputData({
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      age: formData.age,
+      countryId: formData.countryId,
+      cityId: formData.cityId,
+      gender: formData.gender,
+      email: formData.email,
+      id: formData.id
+    }));
     dispatch(setPage(1));
     dispatch(setLoading(false));
   }
@@ -112,7 +122,7 @@ const TableComponent = () => {
             {tableData.map((user, index) => (
               <tr
                 key={user.id}
-                style={{ background: getBackgroundColor(user.scoreId == null ? 0 : user.scoreId) }}
+                style={{ background: getBackgroundColor(user.scoreValue == null ? 0 : user.scoreValue) }}
                 className={`${highlightedRow == user.id ? 'table-row-highlight' : ''}`}
               >
                 <td style={{ borderBottomLeftRadius: index === tableData.length - 1 ? "15px" : "0" }}>
