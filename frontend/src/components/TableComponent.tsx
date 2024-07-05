@@ -4,7 +4,6 @@ import HttpHelperService from "../HttpHelperService";
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencilAlt, faTimes } from "@fortawesome/free-solid-svg-icons";
-import { FormData } from "./UserRegistrationFormComponent";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store/store";
 import { setFormData } from "../store/states/formSlice";
@@ -16,6 +15,7 @@ import { resetSort, sortByAge, sortByScore } from "../constants/SortingConstants
 import { setCities } from "../store/states/citiesSlice";
 import { paginationLimit } from "../constants/PaginationConstants";
 import { setLoading } from "../store/states/loadingSlice";
+import { FormData } from "../store/states/formSlice";
 
 const TableComponent = () => {
   const dispatch: AppDispatch = useDispatch();

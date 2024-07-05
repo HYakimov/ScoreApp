@@ -35,6 +35,9 @@ export class User {
     @Column()
     email: string;
 
+    @Column()
+    avatarPath: string;
+
     // public getValidation(): void {
     //     return this.formatAndValidateData();
     // }

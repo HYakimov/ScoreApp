@@ -15,6 +15,7 @@ export class UserResponseDto {
             age: user.age,
             gender: user.gender,
             email: user.email,
+            avatarPath: user.avatarPath,
             cityId: user.cityId,
             cityName: CountryService.getCityName(user.cityId),
             countryId: user.countryId,

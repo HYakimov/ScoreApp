@@ -1,7 +1,9 @@
-import { Controller, Get, Post, Put, Delete, HttpStatus, Query, Res, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, HttpStatus, Query, Res, Body, Param, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { UserService } from './user.service';
-import { UserRegistrationDto } from './dtos/user.registration.dto';
-import { UserUpdateDto } from './dtos/user.update.dto';
+import { UserInputDto } from './dtos/user.input.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
 
 @Controller('users')
 export class UserController {
@@ -26,14 +28,56 @@ export class UserController {
     }
 
     @Post()
-    async create(@Body() userDto: UserRegistrationDto, @Res() res): Promise<void> {
-        await this.userService.create(userDto);
+    @UseInterceptors(FileInterceptor('avatar', {
+        storage: diskStorage({
+            destination: './uploads/avatars',
+            filename: (req, file, cb) => {
+                const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+                const ext = extname(file.originalname);
+                const filename = `${file.originalname}-${uniqueSuffix}${ext}`;
+                cb(null, filename);
+            },
+        }),
+    }))
+    async create(
+        @Body() dto: UserInputDto,
+        @UploadedFile() file: Express.Multer.File,
+        @Res() res,
+    ): Promise<void> {
+        let filePath: string | null;
+        if (file) {
+            filePath = file.path;
+        } else {
+            filePath = null;
+        }
+        await this.userService.create(dto, filePath);
         res.status(HttpStatus.CREATED).send('Data saved successfully');
     }
 
     @Put(':id')
-    async updateById(@Param('id') id: number, @Body() userDto: UserUpdateDto, @Res() res): Promise<void> {
-        await this.userService.updateById(userDto, id);
+    @UseInterceptors(FileInterceptor('avatar', {
+        storage: diskStorage({
+            destination: './uploads/avatars',
+            filename: (req, file, cb) => {
+                const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+                const ext = extname(file.originalname);
+                const filename = `${file.originalname}-${uniqueSuffix}${ext}`;
+                cb(null, filename);
+            },
+        }),
+    }))
+    async updateById(
+        @Param('id') id: number,
+        @UploadedFile() file: Express.Multer.File,
+        @Body() dto: UserInputDto,
+        @Res() res): Promise<void> {
+        let filePath: string | null;
+        if (file) {
+            filePath = file.path;
+        } else {
+            filePath = null;
+        }
+        await this.userService.updateById(dto, id, filePath);
         res.status(HttpStatus.OK).send('Data updated successfully');
     }
 

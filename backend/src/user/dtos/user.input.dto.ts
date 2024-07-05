@@ -1,20 +1,20 @@
 import { IsEmail, IsNotEmpty } from "class-validator"
 
-export class UserRegistrationDto {
+export class UserInputDto {
 
-    @IsNotEmpty()
+    // @IsNotEmpty()
     firstName: string;
-    @IsNotEmpty()
+    // @IsNotEmpty()
     lastName: string;
-    @IsNotEmpty()
+    // @IsNotEmpty()
     age: number;
-    @IsNotEmpty()
+    // @IsNotEmpty()
     countryId: number;
-    @IsNotEmpty()
+    // @IsNotEmpty()
     cityId: number;
-    @IsNotEmpty()
+    // @IsNotEmpty()
     gender: string;
-    @IsNotEmpty()
-    @IsEmail()
+    // @IsNotEmpty()
+    // @IsEmail()
     email: string;
 }

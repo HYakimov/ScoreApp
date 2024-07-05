@@ -14,6 +14,7 @@ export class UserDto {
     cityName: string;
     gender: string;
     email: string;
+    avatarPath: string;
     id: number;
 
     static getCityName(cityId: number): string {
@@ -37,8 +38,9 @@ export class UserDto {
         record.cityName = UserDto.getCityName(user.city);
         record.cityId = user.city;
         record.gender = user.gender;
-        record.id = user.id;
         record.email = user.email;
+        record.avatarPath = user.avatarPath;
+        record.id = user.id;
 
         return record;
     }

@@ -8,6 +8,7 @@ import citiesReducer from './states/citiesSlice';
 import scoreReducer from './states/scoreSlice';
 import usersReducer from './states/usersSlice';
 import loaderReducer from './states/loadingSlice';
+import userInputDataReducer from './states/userInputData';
 
 const store = configureStore({
     reducer: {
@@ -19,7 +20,8 @@ const store = configureStore({
         cities: citiesReducer,
         score: scoreReducer,
         users: usersReducer,
-        loader: loaderReducer
+        loader: loaderReducer,
+        userInputData: userInputDataReducer
     }
 });
 

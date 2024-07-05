@@ -14,7 +14,7 @@ import { UserModule } from './user/user.module';
     CountryModule,
     CsvModule,
     ReactModule,
-    UserModule,
+    UserModule
   ],
   controllers: [],
   providers: [EventsGateway],

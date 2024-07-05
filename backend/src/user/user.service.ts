@@ -5,8 +5,7 @@ import { CustomException } from 'src/exceptions';
 import { EventsGateway } from 'src/events.gateway';
 import { Country } from 'src/countries/country.entity';
 import { User } from './user.entity';
-import { UserUpdateDto } from './dtos/user.update.dto';
-import { UserRegistrationDto } from './dtos/user.registration.dto';
+import { UserInputDto } from './dtos/user.input.dto';
 import { UserDto } from './dtos/user.dto';
 import { UserResponseDto } from './dtos/user.response.dto';
 
@@ -19,13 +18,15 @@ export class UserService {
         @InjectRepository(Country)
         private countryRepository: Repository<Country>,
         private readonly eventsGateway: EventsGateway,
-        @InjectEntityManager() private readonly entityManager: EntityManager,) { }
+        @InjectEntityManager()
+        private readonly entityManager: EntityManager
+    ) { }
 
     async findWithPagination(sortBy: string, page: number, pageSize: number): Promise<UserResponseDto> {
         this.validatePage(page);
         let query = `
         SELECT 
-            u.id, u.firstName, u.lastName, u.age, u.gender, u.email, u.city as cityId, 
+            u.id, u.firstName, u.lastName, u.age, u.gender, u.email, u.avatarPath, u.city as cityId, 
             c.id as countryId, c.name as countryName, s.value as scoreValue, s.id as scoreId,
             COUNT(*) OVER() as total_count
         FROM 
@@ -70,7 +71,7 @@ export class UserService {
         }
     }
 
-    async create(dto: UserRegistrationDto): Promise<void> {
+    async create(dto: UserInputDto, filePath: string): Promise<void> {
         const country = await this.countryRepository.findOne({ where: { id: dto.countryId } });
         const user = this.userRepository.create({
             firstName: dto.firstName,
@@ -79,16 +80,14 @@ export class UserService {
             country: country,
             city: dto.cityId,
             gender: dto.gender,
-            email: dto.email
+            email: dto.email,
+            avatarPath: filePath ?? 'uploads\\avatars\\avatardefault'
         });
         const savedUser = await this.userRepository.save(user);
         this.eventsGateway.onNewEntryOrEdit(savedUser.id);
     }
 
-    async updateById(dto: UserUpdateDto, id: number): Promise<void> {
-        if (dto.id != id) {
-            throw CustomException.BadRequest("Id's do not match.");
-        }
+    async updateById(dto: UserInputDto, id: number, filePath: string): Promise<void> {
         const country = await this.countryRepository.findOne({ where: { id: dto.countryId } });
         const updateData: Partial<User> = {
             firstName: dto.firstName,
@@ -97,7 +96,8 @@ export class UserService {
             country: country,
             city: dto.cityId,
             gender: dto.gender,
-            email: dto.email
+            email: dto.email,
+            avatarPath: filePath ?? 'uploads\\avatars\\avatardefault'
         };
         const userToUpdate = await this.userRepository.findOne({ where: { id } });
         if (!userToUpdate) {

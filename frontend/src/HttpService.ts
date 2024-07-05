@@ -1,5 +1,4 @@
 import { ScoreData } from './components/ScoresFormComponent';
-import { FormData } from './components/UserRegistrationFormComponent';
 import { DELETE, POST, PUT, baseUrl, jsonHeader } from './constants/HttpConstants';
 
 const HttpService = {
@@ -18,7 +17,7 @@ const HttpService = {
         }
     },
 
-    post: async (url: string, data: FormData | ScoreData) => {
+    post: async (url: string, data: ScoreData) => {
         try {
             const response = await fetch(`${baseUrl}${url}`, {
                 method: POST,
@@ -33,12 +32,40 @@ const HttpService = {
         }
     },
 
-    put: async (url: string, data: FormData | ScoreData) => {
+    postData: async (url: string, data: FormData) => {
+        try {
+            const response = await fetch(`${baseUrl}${url}`, {
+                method: POST,
+                body: data
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+        } catch (error) {
+            console.error('There was a problem with the fetch operation:', error);
+        }
+    },
+
+    put: async (url: string, data: ScoreData) => {
         try {
             const response = await fetch(`${baseUrl}${url}`, {
                 method: PUT,
                 headers: jsonHeader,
                 body: JSON.stringify(data)
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+        } catch (error) {
+            console.error('There was a problem with the fetch operation:', error);
+        }
+    },
+
+    putData: async (url: string, data: FormData) => {
+        try {
+            const response = await fetch(`${baseUrl}${url}`, {
+                method: PUT,
+                body: data
             });
             if (!response.ok) {
                 throw new Error('Network response was not ok');

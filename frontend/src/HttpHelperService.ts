@@ -1,5 +1,4 @@
 import { paginationLimit } from "./constants/PaginationConstants";
-import { FormData } from './components/UserRegistrationFormComponent';
 import HttpService from "./HttpService";
 import { ScoreData } from "./components/ScoresFormComponent";
 
@@ -30,12 +29,12 @@ const HttpHelperService = {
         return await HttpService.get(`${cities}/${countryId}`);
     },
 
-    submit: async (formData: FormData) => {
-        if (formData.id != null) {
-            await HttpService.put(`${users}/${formData.id}`, formData);
-        } else {
-            await HttpService.post(users, formData);
-        }
+    submit: async (userInputData: FormData) => {
+        await HttpService.postData(users, userInputData);
+    },
+
+    update: async (userId: number, userInputData: FormData) => {
+        await HttpService.putData(`${users}/${userId}`, userInputData);
     },
 
     submitScore: async (scoreData: ScoreData) => {
