@@ -6,7 +6,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencilAlt, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store/store";
-import { setFormData } from "../store/states/formSlice";
 import { useNavigate } from "react-router-dom";
 import { RegistrationFormPage } from "../constants/RouteConstants";
 import { setPage } from "../store/states/pageSlice";

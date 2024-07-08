@@ -22,28 +22,29 @@ export class UserService {
         private readonly entityManager: EntityManager
     ) { }
 
+
     async findWithPagination(sortBy: string, page: number, pageSize: number): Promise<UserResponseDto> {
         this.validatePage(page);
+        let externalScoreIndex = 0; // Adjust this index based on your requirement
         let query = `
-    SELECT 
-        u.id, u.firstName, u.lastName, u.age, u.gender, u.email, u.avatarPath, u.city as cityId, 
-        c.id as countryId, c.name as countryName, s.value as scoreValue, s.id as scoreId,
-        COUNT(*) OVER() as total_count
-    FROM 
-        User u
-    JOIN 
-        Country c ON u.countryId = c.id
-    LEFT JOIN 
-        Score s ON u.id = s.userId
-    LEFT JOIN (
-        SELECT 
-            MIN(s.id) AS first_score_id
-        FROM 
-            Score s
-        GROUP BY 
-            s.userId
-    ) fs ON s.id = fs.first_score_id
-    `;
+            SELECT 
+                u.id, u.firstName, u.lastName, u.age, u.gender, u.email, u.avatarPath, u.city as cityId, 
+                c.id as countryId, c.name as countryName, 
+                s.value as scoreValue,
+                COUNT(*) OVER() as total_count
+            FROM 
+                User u
+            JOIN 
+                Country c ON u.countryId = c.id
+            LEFT JOIN (
+                SELECT 
+                    s.userId,
+                    s.value,
+                    ROW_NUMBER() OVER (PARTITION BY s.userId ORDER BY s.id) as scoreIndex
+                FROM 
+                    Score s
+            ) s ON u.id = s.userId AND s.scoreIndex = ${externalScoreIndex + 1} -- SQLite uses 1-based index for ROW_NUMBER()
+        `;
 
         if (sortBy === 'score') {
             query += ` ORDER BY s.value DESC NULLS LAST, u.id `;
