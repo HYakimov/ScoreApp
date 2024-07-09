@@ -5,7 +5,8 @@ import { CsvModule } from './csv/csv.module';
 import { ReactModule } from './react.module';
 import { EventsGateway } from './events.gateway';
 import { CountryModule } from './countries/country.module';
-import { UserModule } from './user/user.module';
+import { UserModule } from './users/user.module';
+import { CompetitionModule } from './competition/competition.module';
 
 @Module({
   imports: [
@@ -14,7 +15,8 @@ import { UserModule } from './user/user.module';
     CountryModule,
     CsvModule,
     ReactModule,
-    UserModule
+    UserModule,
+    CompetitionModule
   ],
   controllers: [],
   providers: [EventsGateway],

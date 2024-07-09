@@ -1,6 +1,7 @@
+import { Competition } from 'src/competition/competition.entity';
 import { MAX_SCORE, MIN_SCORE } from 'src/constants';
 import { CustomException } from 'src/exceptions';
-import { User } from 'src/user/user.entity';
+import { User } from 'src/users/user.entity';
 import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, ManyToOne } from 'typeorm';
 
 @Entity()
@@ -15,6 +16,10 @@ export class Score {
   @ManyToOne(() => User, user => user.scores, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })
   user: User;
+
+  @ManyToOne(() => Competition, c => c.scores, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'competitionId' })
+  competition: Competition;
 
   public getScoreValidation(): void {
     return this.validateScore();

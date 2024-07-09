@@ -12,6 +12,7 @@ export class FormData {
     email: string;
     avatarPath: string;
     id: number | null;
+    competitionId: number | null;
 
     constructor(data: FormData) {
         this.firstName = data.firstName;
@@ -27,5 +28,6 @@ export class FormData {
         this.email = data.email;
         this.avatarPath = data.avatarPath;
         this.id = data.id;
+        this.competitionId = data.competitionId;
     }
 }

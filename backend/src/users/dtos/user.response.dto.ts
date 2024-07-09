@@ -21,7 +21,8 @@ export class UserResponseDto {
             countryId: user.countryId,
             countryName: user.countryName,
             scoreValue: user.scoreValue,
-            scoreId: user.scoreId
+            scoreId: user.scoreId,
+            competitionId: user.competitionId
         }));
         record.data = usersDto;
         record.totalCount = totalCount;

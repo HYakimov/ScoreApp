@@ -1,4 +1,4 @@
-import { users, countries, cities, scores } from "./constants/HttpPathConstants";
+import { users, countries, cities, scores, competitions } from "./constants/HttpPathConstants";
 import { paginationLimit } from "./constants/PaginationConstants";
 import HttpService from "./HttpService";
 import { ScoreData } from "./types/ScoreData";
@@ -25,6 +25,10 @@ const HttpHelperService = {
         return await HttpService.get(`${cities}/${countryId}`);
     },
 
+    getCompetitions: async () => {
+        return await HttpService.get(competitions);
+    },
+
     submit: async (userInputData: FormData) => {
         await HttpService.postData(users, userInputData);
     },
@@ -34,11 +38,7 @@ const HttpHelperService = {
     },
 
     submitScore: async (scoreData: ScoreData) => {
-        if (scoreData.id != null) {
-            await HttpService.put(`${scores}/${scoreData.id}`, scoreData);
-        } else {
-            await HttpService.post(scores, scoreData);
-        }
+        await HttpService.post(scores, scoreData);
     },
 
     delete: async () => {

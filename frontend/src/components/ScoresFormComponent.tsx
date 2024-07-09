@@ -5,21 +5,29 @@ import { MainPage } from "../constants/RouteConstants";
 import HttpHelperService from "../HttpHelperService";
 import { initialState, setScore } from "../store/states/ScoreDataSlice";
 import { setUsers } from "../store/states/UsersDataSlice";
-import { scoreSelector, usersSelector } from "../store/selectors/selectors";
+import { competitionsSelector, scoreSelector, usersSelector } from "../store/selectors/selectors";
+import { setCompetitions } from "../store/states/CompetitionsDataSlice";
 
 const ScoresFormComponent = () => {
     const scoreData = useSelector(scoreSelector);
     const users = useSelector(usersSelector);
+    const competitions = useSelector(competitionsSelector);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     useEffect(() => {
         fetchUsers();
+        fetchCompetitions();
     }, []);
 
     const fetchUsers = async () => {
         const data = await HttpHelperService.getUsers();
         dispatch(setUsers(data));
+    }
+
+    const fetchCompetitions = async () => {
+        const data = await HttpHelperService.getCompetitions();
+        dispatch(setCompetitions(data));
     }
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,16 +37,12 @@ const ScoresFormComponent = () => {
 
     const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const { name, value } = e.target;
-        const selectedUser = users.find(user => user.id === Number(value));
-        if (selectedUser) {
-            const updatedScoreData = {
-                ...scoreData,
-                userId: selectedUser.id,
-                value: selectedUser.scoreValue ?? scoreData.value,
-                id: selectedUser.scoreId ?? scoreData.id
-            };
-            dispatch(setScore(updatedScoreData));
-        }
+        dispatch(setScore({ ...scoreData, [name]: value }));
+    };
+
+    const handleSelectUserChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const { value } = e.target;
+        dispatch(setScore({ ...scoreData, userId: Number(value) }));
     };
 
     const handleCancel = () => {
@@ -47,7 +51,19 @@ const ScoresFormComponent = () => {
     }
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        const selectedUser = users.find(user => user.id === scoreData.userId);
+        if (selectedUser != undefined) {
+            scoreData.id = selectedUser.scoreId;
+            const updatedScoreData = {
+                id: selectedUser.scoreId,
+                value: scoreData.value,
+                competitionId: scoreData.competitionId,
+                userId: selectedUser.id
+            };
+            dispatch(setScore(updatedScoreData));
+        }
         e.preventDefault();
+        console.log(scoreData);
         await HttpHelperService.submitScore(scoreData);
         dispatch(setScore(initialState));
         navigate(MainPage);
@@ -63,8 +79,17 @@ const ScoresFormComponent = () => {
                 <input type="number" name="value" value={scoreData.value == null ? '' : scoreData.value} onChange={handleInputChange} required className="input" />
             </div>
             <div>
+                <label className="label">Competition:</label>
+                <select name="competitionId" value={scoreData.competitionId == null ? '' : scoreData.competitionId} onChange={handleSelectChange} required className="input select-input">
+                    <option value="">Select Competition</option>
+                    {competitions.map(c => (
+                        <option key={c.id} value={c.id == null ? 0 : c.id}>{c.name}</option>
+                    ))}
+                </select>
+            </div>
+            <div>
                 <label className="label">User:</label>
-                <select name="userId" value={scoreData.userId == null ? '' : scoreData.userId} onChange={handleSelectChange} required className="input select-input">
+                <select name="userId" value={scoreData.userId == null ? '' : scoreData.userId} onChange={handleSelectUserChange} required className="input select-input">
                     <option value="">Select User</option>
                     {users.map(user => (
                         <option key={user.id} value={user.id == null ? 0 : user.id}>{user.firstName}</option>

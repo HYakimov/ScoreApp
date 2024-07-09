@@ -9,7 +9,7 @@ export class CountryService {
 
     constructor(
         @InjectRepository(Country)
-        private countryRepository: Repository<Country>
+        private readonly countryRepository: Repository<Country>
     ) { }
 
     static cities = [

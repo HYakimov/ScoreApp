@@ -3,9 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Score } from './score.entity';
 import { CustomException } from 'src/exceptions';
-import { EventsGateway } from 'src/events.gateway';
-import { User } from 'src/user/user.entity';
+import { User } from 'src/users/user.entity';
 import { ScoreDto } from './dtos/score.dto';
+import { Competition } from 'src/competition/competition.entity';
+import { EventsGateway } from 'src/events.gateway';
 
 @Injectable()
 export class ScoresService {
@@ -15,35 +16,34 @@ export class ScoresService {
         private readonly scoresRepository: Repository<Score>,
         @InjectRepository(User)
         private userRepository: Repository<User>,
+        @InjectRepository(Competition)
+        private competitionRepository: Repository<Competition>,
         private readonly eventsGateway: EventsGateway
     ) { }
 
-    async create(dto: ScoreDto): Promise<void> {
+    async createOrUpdate(dto: ScoreDto): Promise<void> {
         const user = await this.validateAndReturnUser(dto.userId);
-        const score = this.scoresRepository.create({
-            value: dto.value,
-            user: user
+        const competition = await this.validateAndReturnCompetition(dto.competitionId);
+        let score = await this.scoresRepository.findOne({
+            where: { user: { id: dto.userId }, competition: { id: dto.competitionId } },
+            relations: ['user', 'competition']
         });
-        score.getScoreValidation();
-        const savedScore = await this.scoresRepository.save(score);
-        this.eventsGateway.onNewEntryOrEdit(savedScore.id);
-    }
 
-    async updateById(dto: ScoreDto, id: number): Promise<void> {
-        this.validateIds(dto.id, id);
-        await this.validateAndReturnUser(dto.userId);
-        const score = await this.validateAndReturnScore(dto.id);
-        score.value = dto.value;
+        if (score) {
+            score.value = dto.value;
+        } else {
+            score = this.scoresRepository.create({
+                value: dto.value,
+                user: user,
+                competition: competition
+            });
+        }
+
         score.getScoreValidation();
         await this.scoresRepository.save(score);
-        this.eventsGateway.onNewEntryOrEdit(id);
+        this.eventsGateway.onNewEntryOrEdit(score.id);
     }
 
-    private validateIds(dtoId: number, pathId: number) {
-        if (dtoId != pathId) {
-            throw CustomException.BadRequest("Id's do not match.");
-        }
-    }
 
     private async validateAndReturnUser(userId: number): Promise<User> {
         const user = this.userRepository.findOne({ where: { id: userId } });
@@ -54,12 +54,12 @@ export class ScoresService {
         return user;
     }
 
-    private async validateAndReturnScore(scoreId: number): Promise<Score> {
-        const score = this.scoresRepository.findOne({ where: { id: scoreId } });
-        if (!score) {
-            throw CustomException.NotFound(`Score with Id ${scoreId} not found.`);
+    private async validateAndReturnCompetition(competitionId: number): Promise<Competition> {
+        const competition = this.competitionRepository.findOne({ where: { id: competitionId } });
+        if (!competition) {
+            throw CustomException.NotFound(`Competition with Id ${competitionId} not found.`);
         }
 
-        return score;
+        return competition;
     }
 }

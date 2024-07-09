@@ -4,6 +4,7 @@ import { ScoreData } from "../../types/ScoreData";
 export const initialState: ScoreData = {
     id: null,
     value: null,
+    competitionId: null,
     userId: null
 }
 
@@ -11,7 +12,7 @@ const ScoreDataSlice = createSlice({
     name: 'score',
     initialState,
     reducers: {
-        setScore: (state, action: PayloadAction<Partial<ScoreData>>) => {
+        setScore: (state, action: PayloadAction<ScoreData>) => {
             return { ...state, ...action.payload };
         }
     }
