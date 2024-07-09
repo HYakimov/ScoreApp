@@ -1,15 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-
-export interface UserInputData {
-    firstName: string;
-    lastName: string;
-    age: number | null;
-    countryId: number | null;
-    cityId: number | null;
-    gender: string;
-    email: string;
-    id: number | null
-};
+import { UserInputData } from "../../types/UserInputData";
 
 export const initialState: UserInputData = {
     firstName: '',
@@ -22,7 +12,7 @@ export const initialState: UserInputData = {
     id: null
 };
 
-const userInputData = createSlice({
+const UserInputDataSlice = createSlice({
     name: 'UserInputData',
     initialState,
     reducers: {
@@ -32,5 +22,5 @@ const userInputData = createSlice({
     }
 });
 
-export const { setUserInputData } = userInputData.actions;
-export default userInputData.reducer;
+export const { setUserInputData } = UserInputDataSlice.actions;
+export default UserInputDataSlice.reducer;

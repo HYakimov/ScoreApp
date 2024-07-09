@@ -2,18 +2,18 @@ import '../styles/UserRegistrationFormComponent.css';
 import React, { useEffect, useState } from 'react';
 import HttpHelperService from '../HttpHelperService';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../store/store';
 import { useNavigate } from 'react-router-dom';
 import { MainPage } from '../constants/RouteConstants';
-import { setCountries } from '../store/states/countriesSlice';
-import { setCities } from '../store/states/citiesSlice';
-import { initialState, setUserInputData } from '../store/states/userInputData';
-import { setFormData, initialFormDataState } from '../store/states/formSlice';
+import { setCountries } from '../store/states/CountriesDataSlice';
+import { setCities } from '../store/states/CitiesDataSlice';
+import { initialState, setUserInputData } from '../store/states/UserInputDataSlice';
+import { setFormData, initialFormDataState } from '../store/states/FormDataSlice';
+import { citiesRecordsSelector, countriesRecordsSelector, userInputSelector } from '../store/selectors/selectors';
 
 const UserRegistrationFormComponent = () => {
-  const userInputData = useSelector((state: RootState) => state.userInputData);
-  const countries = useSelector((state: RootState) => state.countries.value);
-  const cities = useSelector((state: RootState) => state.cities.value);
+  const userInputData = useSelector(userInputSelector);
+  const countries = useSelector(countriesRecordsSelector);
+  const cities = useSelector(citiesRecordsSelector);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [avatarFile, setAvatarFile] = useState<File | null>(null);

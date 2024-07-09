@@ -1,14 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit';
-import formReducer from './states/formSlice'
-import tableDataReducer from './states/tableSlice';
-import pageReducer from './states/pageSlice';
-import sortReducer from './states/sortSlice';
-import countriesReducer from './states/countriesSlice';
-import citiesReducer from './states/citiesSlice';
-import scoreReducer from './states/scoreSlice';
-import usersReducer from './states/usersSlice';
-import loaderReducer from './states/loadingSlice';
-import userInputDataReducer from './states/userInputData';
+import formReducer from './states/FormDataSlice'
+import tableDataReducer from './states/TableDataSlice';
+import pageReducer from './states/PageDataSlice';
+import sortReducer from './states/SortDataSlice';
+import countriesReducer from './states/CountriesDataSlice';
+import citiesReducer from './states/CitiesDataSlice';
+import scoreReducer from './states/ScoreDataSlice';
+import usersReducer from './states/UsersDataSlice';
+import loaderReducer from './states/LoadingDataSlice';
+import userInputDataReducer from './states/UserInputDataSlice';
 
 const store = configureStore({
     reducer: {

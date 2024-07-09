@@ -1,0 +1,4 @@
+export const users = `/users`;
+export const scores = `/scores`;
+export const cities = `/cities`;
+export const countries = `/countries`;

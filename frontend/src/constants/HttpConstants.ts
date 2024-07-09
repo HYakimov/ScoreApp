@@ -3,3 +3,4 @@ export const jsonHeader = { 'Content-Type': 'application/json' };
 export const POST = 'POST';
 export const PUT = 'PUT';
 export const DELETE = 'DELETE';
+export const GET = 'GET';

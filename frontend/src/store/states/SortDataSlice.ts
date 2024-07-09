@@ -1,14 +1,11 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { SortData } from "../../types/SortData";
 
-interface Sort {
-    value: string;
-}
-
-const initialState: Sort = {
+const initialState: SortData = {
     value: ''
 }
 
-const sortSlice = createSlice({
+const SortDataSlice = createSlice({
     name: 'sort',
     initialState,
     reducers: {
@@ -18,5 +15,5 @@ const sortSlice = createSlice({
     }
 })
 
-export const { setSort } = sortSlice.actions;
-export default sortSlice.reducer;
+export const { setSort } = SortDataSlice.actions;
+export default SortDataSlice.reducer;

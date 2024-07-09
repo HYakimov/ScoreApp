@@ -1,17 +1,13 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { FormData } from "./formSlice";
-
-interface TableData {
-    tableData: FormData[];
-    highlightedRow: number;
-}
+import { FormData } from "../../types/FormData";
+import { TableData } from "../../types/TableData";
 
 const initialState: TableData = {
     tableData: [],
     highlightedRow: -1
 };
 
-const tableDataSlice = createSlice({
+const TableDataSlice = createSlice({
     name: 'tableData',
     initialState,
     reducers: {
@@ -24,5 +20,5 @@ const tableDataSlice = createSlice({
     },
 });
 
-export const { setTableData, sethigHlightedRow } = tableDataSlice.actions;
-export default tableDataSlice.reducer;
+export const { setTableData, sethigHlightedRow } = TableDataSlice.actions;
+export default TableDataSlice.reducer;

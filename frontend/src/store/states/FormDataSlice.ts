@@ -1,19 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-export interface FormData {
-    firstName: string;
-    lastName: string;
-    age: number | null;
-    scoreId: number | null;
-    scoreValue: number | null;
-    countryName: string;
-    countryId: number | null;
-    cityName: string;
-    cityId: number | null;
-    gender: string;
-    email: string;
-    avatarPath: string;
-    id: number | null;
-}
+import { FormData } from "../../types/FormData";
 
 const initialState: FormData = {
     firstName: '',
@@ -47,7 +33,7 @@ export const initialFormDataState: FormData = {
     id: null,
 };
 
-const formDataSlice = createSlice({
+const FormDataSlice = createSlice({
     name: 'formData',
     initialState,
     reducers: {
@@ -57,5 +43,5 @@ const formDataSlice = createSlice({
     }
 });
 
-export const { setFormData } = formDataSlice.actions;
-export default formDataSlice.reducer;
+export const { setFormData } = FormDataSlice.actions;
+export default FormDataSlice.reducer;

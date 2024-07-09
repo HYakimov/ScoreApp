@@ -1,22 +1,15 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { RootState } from "../store/store";
 import { MainPage } from "../constants/RouteConstants";
 import HttpHelperService from "../HttpHelperService";
-import { initialState, setScore } from "../store/states/scoreSlice";
-import { setLoading } from "../store/states/loadingSlice";
-import { setUsers } from "../store/states/usersSlice";
-
-export interface ScoreData {
-    id: number | null
-    value: number | null;
-    userId: number | null;
-}
+import { initialState, setScore } from "../store/states/ScoreDataSlice";
+import { setUsers } from "../store/states/UsersDataSlice";
+import { scoreSelector, usersSelector } from "../store/selectors/selectors";
 
 const ScoresFormComponent = () => {
-    const scoreData = useSelector((state: RootState) => state.score);
-    const users = useSelector((state: RootState) => state.users.users);
+    const scoreData = useSelector(scoreSelector);
+    const users = useSelector(usersSelector);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -25,10 +18,8 @@ const ScoresFormComponent = () => {
     }, []);
 
     const fetchUsers = async () => {
-        // dispatch(setLoading(true));
         const data = await HttpHelperService.getUsers();
         dispatch(setUsers(data));
-        // dispatch(setLoading(false));
     }
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,7 +38,6 @@ const ScoresFormComponent = () => {
                 id: selectedUser.scoreId ?? scoreData.id
             };
             dispatch(setScore(updatedScoreData));
-            console.log(updatedScoreData);
         }
     };
 

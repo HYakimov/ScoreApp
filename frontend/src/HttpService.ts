@@ -1,5 +1,5 @@
-import { ScoreData } from './components/ScoresFormComponent';
-import { DELETE, POST, PUT, baseUrl, jsonHeader } from './constants/HttpConstants';
+import { DELETE, GET, POST, PUT, baseUrl, jsonHeader } from './constants/HttpConstants';
+import { ScoreData } from './types/ScoreData';
 
 const HttpService = {
 
@@ -108,7 +108,7 @@ const HttpService = {
     download: async (url: string) => {
         try {
             const response = await fetch(`${baseUrl}${url}`, {
-                method: 'GET',
+                method: GET,
                 headers: jsonHeader,
             })
             if (!response.ok) {

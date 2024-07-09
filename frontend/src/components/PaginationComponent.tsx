@@ -1,14 +1,14 @@
 import "../styles/PaginationComponent.css";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../store/store";
-import { setPage } from "../store/states/pageSlice";
+import { setPage } from "../store/states/PageDataSlice";
+import { pageSelector, totalPagesSelector } from "../store/selectors/selectors";
 
 
 const PaginationComponent = () => {
     const dispatch = useDispatch();
-    const currentPage = useSelector((state: RootState) => state.page.value);
-    const totalPages = useSelector((state: RootState) => state.page.totalPages);
+    const currentPage = useSelector(pageSelector);
+    const totalPages = useSelector(totalPagesSelector);
 
     const handlePageChange = (page: number) => {
         if (page >= 1 && page <= totalPages) {

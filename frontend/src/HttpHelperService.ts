@@ -1,11 +1,7 @@
+import { users, countries, cities, scores } from "./constants/HttpPathConstants";
 import { paginationLimit } from "./constants/PaginationConstants";
 import HttpService from "./HttpService";
-import { ScoreData } from "./components/ScoresFormComponent";
-
-const users = `/users`;
-const scores = `/scores`;
-const cities = `/cities`;
-const countries = `/countries`;
+import { ScoreData } from "./types/ScoreData";
 
 const HttpHelperService = {
 

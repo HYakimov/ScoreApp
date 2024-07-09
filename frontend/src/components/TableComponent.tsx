@@ -5,25 +5,26 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencilAlt, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../store/store";
+import { AppDispatch } from "../store/store";
 import { useNavigate } from "react-router-dom";
 import { RegistrationFormPage } from "../constants/RouteConstants";
-import { setPage } from "../store/states/pageSlice";
-import { setSort } from "../store/states/sortSlice";
+import { setPage } from "../store/states/PageDataSlice";
+import { setSort } from "../store/states/SortDataSlice";
 import { resetSort, sortByAge, sortByScore } from "../constants/SortingConstants";
-import { setCities } from "../store/states/citiesSlice";
+import { setCities } from "../store/states/CitiesDataSlice";
 import { paginationLimit } from "../constants/PaginationConstants";
-import { setLoading } from "../store/states/loadingSlice";
-import { FormData } from "../store/states/formSlice";
-import { setUserInputData } from "../store/states/userInputData";
+import { setLoading } from "../store/states/LoadingDataSlice";
+import { FormData } from "../types/FormData";
+import { setUserInputData } from "../store/states/UserInputDataSlice";
+import { highlightedRowSelector, pageSelector, sortSelector, tableRecordsSelector } from "../store/selectors/selectors";
 
 const TableComponent = () => {
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
-  const tableData = useSelector((state: RootState) => state.table.tableData);
-  const highlightedRow = useSelector((state: RootState) => state.table.highlightedRow);
-  const sortBy = useSelector((state: RootState) => state.sort.value);
-  const page = useSelector((state: RootState) => state.page.value);
+  const tableData = useSelector(tableRecordsSelector);
+  const highlightedRow = useSelector(highlightedRowSelector);
+  const sortBy = useSelector(sortSelector);
+  const page = useSelector(pageSelector);
 
   const handleClearTable = async () => {
     dispatch(setLoading(true));

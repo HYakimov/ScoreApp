@@ -1,16 +1,12 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { PageData } from "../../types/PageData";
 
-interface Page {
-    value: number;
-    totalPages: number;
-}
-
-const initialState: Page = {
+const initialState: PageData = {
     value: 1,
     totalPages: 0
 }
 
-const pageSlice = createSlice({
+const PageDataSlice = createSlice({
     name: 'page',
     initialState,
     reducers: {
@@ -23,5 +19,5 @@ const pageSlice = createSlice({
     }
 })
 
-export const { setPage, setTotalPages } = pageSlice.actions;
-export default pageSlice.reducer;
+export const { setPage, setTotalPages } = PageDataSlice.actions;
+export default PageDataSlice.reducer;

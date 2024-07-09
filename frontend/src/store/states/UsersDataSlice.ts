@@ -1,15 +1,12 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { FormData } from "./formSlice";
+import { FormData } from "../../types/FormData";
+import { UsersData } from "../../types/UserData";
 
-interface Users {
-    users: FormData[];
-}
-
-const initialState: Users = {
+const initialState: UsersData = {
     users: []
 };
 
-const usersDataSlice = createSlice({
+const UsersDataSlice = createSlice({
     name: 'users',
     initialState,
     reducers: {
@@ -19,5 +16,5 @@ const usersDataSlice = createSlice({
     }
 });
 
-export const { setUsers } = usersDataSlice.actions;
-export default usersDataSlice.reducer;
+export const { setUsers } = UsersDataSlice.actions;
+export default UsersDataSlice.reducer;

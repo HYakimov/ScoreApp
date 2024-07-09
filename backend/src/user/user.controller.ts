@@ -77,7 +77,6 @@ export class UserController {
         } else {
             filePath = null;
         }
-        console.log(dto, id);
         await this.userService.updateById(dto, id, filePath);
         res.status(HttpStatus.OK).send('Data updated successfully');
     }

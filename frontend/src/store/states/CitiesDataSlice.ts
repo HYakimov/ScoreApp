@@ -1,14 +1,11 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { CitiesData } from "../../types/CitiesData";
 
-interface Cities {
-    value: { id: number, name: string }[];
-}
-
-const initialState: Cities = {
+const initialState: CitiesData = {
     value: []
 }
 
-const citySlice = createSlice({
+const CityDataSlice = createSlice({
     name: 'cities',
     initialState,
     reducers: {
@@ -19,5 +16,5 @@ const citySlice = createSlice({
 
 })
 
-export const { setCities } = citySlice.actions;
-export default citySlice.reducer;
+export const { setCities } = CityDataSlice.actions;
+export default CityDataSlice.reducer;

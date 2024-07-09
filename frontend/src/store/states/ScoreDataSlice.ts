@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { ScoreData } from "../../components/ScoresFormComponent";
+import { ScoreData } from "../../types/ScoreData";
 
 export const initialState: ScoreData = {
     id: null,
@@ -7,7 +7,7 @@ export const initialState: ScoreData = {
     userId: null
 }
 
-const scoreSlice = createSlice({
+const ScoreDataSlice = createSlice({
     name: 'score',
     initialState,
     reducers: {
@@ -17,5 +17,5 @@ const scoreSlice = createSlice({
     }
 })
 
-export const { setScore } = scoreSlice.actions;
-export default scoreSlice.reducer;
+export const { setScore } = ScoreDataSlice.actions;
+export default ScoreDataSlice.reducer;

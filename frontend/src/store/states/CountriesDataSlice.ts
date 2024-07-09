@@ -1,14 +1,11 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { CountriesData } from "../../types/CountriesData";
 
-interface Countries {
-    value: { id: number; name: string }[];
-}
-
-const initialState: Countries = {
+const initialState: CountriesData = {
     value: []
 }
 
-const countriesSlice = createSlice({
+const CountriesDataSlice = createSlice({
     name: 'countries',
     initialState,
     reducers: {
@@ -18,5 +15,5 @@ const countriesSlice = createSlice({
     },
 })
 
-export const { setCountries } = countriesSlice.actions;
-export default countriesSlice.reducer;
+export const { setCountries } = CountriesDataSlice.actions;
+export default CountriesDataSlice.reducer;

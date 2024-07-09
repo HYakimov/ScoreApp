@@ -22,7 +22,6 @@ export class UserService {
         private readonly entityManager: EntityManager
     ) { }
 
-
     async findWithPagination(sortBy: string, page: number, pageSize: number): Promise<UserResponseDto> {
         this.validatePage(page);
         let externalScoreIndex = 0; // Adjust this index based on your requirement
