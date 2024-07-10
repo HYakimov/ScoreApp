@@ -30,7 +30,7 @@ export class UserDto {
         if (user.scores && user.scores.length > 0) {
             record.scoreId = user.scores[0].id || null;
             record.scoreValue = user.scores[0].value || null;
-            record.competitionId = user.scores[0].competition ? user.scores[0].competition.id : null;
+            record.competitionId = user.scores[0].competition.id
         } else {
             record.scoreId = null;
             record.scoreValue = null;

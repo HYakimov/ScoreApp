@@ -56,7 +56,6 @@ export class UserService {
 
         query += ` LIMIT ? OFFSET ? `;
 
-
         const params = [pageSize, (page - 1) * pageSize];
         const users = await this.entityManager.query(query, params);
         const totalCount = users.length > 0 ? users[0].total_count : 0;
