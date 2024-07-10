@@ -5,8 +5,6 @@ const initialState: FormData = {
     firstName: '',
     lastName: '',
     age: null,
-    scoreId: null,
-    scoreValue: null,
     countryName: '',
     countryId: null,
     cityName: '',
@@ -15,15 +13,13 @@ const initialState: FormData = {
     email: '',
     avatarPath: '',
     id: null,
-    competitionId: null
+    scores: null
 };
 
 export const initialFormDataState: FormData = {
     firstName: '',
     lastName: '',
     age: null,
-    scoreId: null,
-    scoreValue: null,
     countryName: '',
     countryId: null,
     cityName: '',
@@ -32,7 +28,7 @@ export const initialFormDataState: FormData = {
     email: '',
     avatarPath: '',
     id: null,
-    competitionId: null
+    scores: null
 };
 
 const FormDataSlice = createSlice({

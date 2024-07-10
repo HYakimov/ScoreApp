@@ -38,6 +38,7 @@ const HttpHelperService = {
     },
 
     submitScore: async (scoreData: ScoreData) => {
+        console.log(scoreData);
         await HttpService.post(scores, scoreData);
     },
 

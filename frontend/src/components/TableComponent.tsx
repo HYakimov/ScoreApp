@@ -92,8 +92,13 @@ const TableComponent = () => {
     dispatch(setLoading(false));
   }
 
-  function getBackgroundColor(score: number) {
-    const hue = Math.round((score / 100) * 120);
+  function getBackgroundColor(scores: { scoreId: number, scoreValue: number, competitionId: number }[]) {
+    if (!scores || scores.length === 0) {
+      return 'linear-gradient(to right, hsl(0, 0%, 90%), hsl(0, 0%, 70%))';
+    }
+    const totalScore = scores.reduce((sum, score) => sum + score.scoreValue, 0);
+    const avgScore = totalScore / scores.length;
+    const hue = Math.round((avgScore / 100) * 120);
     const hue2 = (hue + 60) % 360;
 
     return `linear-gradient(to right, hsl(${hue}, 100%, 50%), hsl(${hue2}, 100%, 50%))`;
@@ -122,15 +127,15 @@ const TableComponent = () => {
             {tableData.map((user, index) => (
               <tr
                 key={user.id}
-                style={{ background: getBackgroundColor(user.scoreValue == null ? 0 : user.scoreValue) }}
-                className={`${highlightedRow == user.id ? 'table-row-highlight' : ''}`}
+                style={{ background: getBackgroundColor(user.scores ?? []) }}
+                className={`${highlightedRow ?? ''}`}
               >
                 <td style={{ borderBottomLeftRadius: index === tableData.length - 1 ? "15px" : "0" }}>
                   {user.firstName}
                 </td>
                 <td>{user.lastName}</td>
                 <td>{user.age}</td>
-                <td>{user.scoreValue}</td>
+                <td>{user.scores && user.scores.length > 0 && user.scores[0].scoreValue !== undefined ? user.scores[0].scoreValue : ''}</td>
                 <td>{user.countryName}</td>
                 <td>{user.cityName}</td>
                 <td>{user.gender}</td>

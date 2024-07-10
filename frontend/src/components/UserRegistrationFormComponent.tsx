@@ -96,11 +96,11 @@ const UserRegistrationFormComponent = () => {
       </div>
       <div>
         <label className="label">Age:</label>
-        <input type="number" name="age" value={userInputData.age == null ? '' : userInputData.age} onChange={handleInputChange} required className="input" />
+        <input type="number" name="age" value={userInputData.age ?? ''} onChange={handleInputChange} required className="input" />
       </div>
       <div>
         <label className="label">Country:</label>
-        <select name="countryId" value={userInputData.countryId == null ? '' : userInputData.countryId} onChange={handleSelectChangeCountry} required className="input select-input">
+        <select name="countryId" value={userInputData.countryId ?? ''} onChange={handleSelectChangeCountry} required className="input select-input">
           <option value="">Select Country</option>
           {countries.map(country => (
             <option key={country.id} value={country.id}>{country.name}</option>
@@ -109,7 +109,7 @@ const UserRegistrationFormComponent = () => {
       </div>
       <div>
         <label className="label">City:</label>
-        <select name="cityId" value={userInputData.cityId == null ? '' : userInputData.cityId} onChange={handleSelectChange} required className="input select-input">
+        <select name="cityId" value={userInputData.cityId ?? ''} onChange={handleSelectChange} required className="input select-input">
           <option value="">Select City</option>
           {cities.map(city => (
             <option key={city.id} value={city.id}>{city.name}</option>

@@ -3,43 +3,36 @@ import { User } from "../user.entity"
 
 export class UserDto {
 
+    id: number;
     firstName: string;
     lastName: string;
     age: number;
-    scoreId: number | null;
-    scoreValue: number | null;
+    gender: string;
+    email: string;
+    avatarPath: string;
     countryId: number;
     countryName: string;
     cityId: number;
     cityName: string;
-    gender: string;
-    email: string;
-    avatarPath: string;
-    id: number;
-    competitionId: number;
+    scores: { scoreId: number, scoreValue: number, competitionId: number }[];
 
     static getCityName(cityId: number): string {
         return CountryService.getCityName(cityId);
     }
 
-    static create(user: User): UserDto {
+    static create(user: any): UserDto {
         const record = new UserDto();
         record.firstName = user.firstName;
         record.lastName = user.lastName;
         record.age = user.age;
-        if (user.scores && user.scores.length > 0) {
-            record.scoreId = user.scores[0].id || null;
-            record.scoreValue = user.scores[0].value || null;
-            record.competitionId = user.scores[0].competition.id
-        } else {
-            record.scoreId = null;
-            record.scoreValue = null;
-            record.competitionId = null;
-        }
-        record.countryName = user.country.name;
-        record.countryId = user.country.id;
-        record.cityName = UserDto.getCityName(user.city);
-        record.cityId = user.city;
+        record.scores = user.scores ? user.scores.split(',').map(score => {
+            const [scoreId, scoreValue, competitionId] = score.split(':').map(Number);
+            return { scoreId, scoreValue, competitionId };
+        }) : [];
+        record.countryName = user.countryName;
+        record.countryId = user.countryId;
+        record.cityName = UserDto.getCityName(user.cityId);
+        record.cityId = user.cityId;
         record.gender = user.gender;
         record.email = user.email;
         record.avatarPath = user.avatarPath;
