@@ -7,6 +7,7 @@ import { initialState, setScore } from "../store/states/ScoreDataSlice";
 import { setUsers } from "../store/states/UsersDataSlice";
 import { competitionsSelector, scoreSelector, tableRecordsSelector, usersSelector } from "../store/selectors/selectors";
 import { setCompetitions } from "../store/states/CompetitionsDataSlice";
+import { ScoreData } from "../types/ScoreData";
 
 const ScoresFormComponent = () => {
     const scoreData = useSelector(scoreSelector);
@@ -44,10 +45,18 @@ const ScoresFormComponent = () => {
         navigate(MainPage);
     }
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => { // fix
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         const selectedUser = tableData.find(user => user.id === scoreData.userId);
+        if (selectedUser && selectedUser.scores) {
+            const existingScore = selectedUser.scores.find(score => score.competitionId == scoreData.competitionId);
+            if (existingScore) {
+                scoreData.id = existingScore.scoreId;
+            }
+        }
+        const data = { ...scoreData };
+        dispatch(setScore(data));
         e.preventDefault();
-        await HttpHelperService.submitScore(scoreData);
+        await HttpHelperService.submitScore(data);
         dispatch(setScore(initialState));
         navigate(MainPage);
     }

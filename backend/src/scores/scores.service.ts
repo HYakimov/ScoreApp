@@ -44,7 +44,6 @@ export class ScoresService {
         this.eventsGateway.onNewEntryOrEdit(score.id);
     }
 
-
     private async validateAndReturnUser(userId: number): Promise<User> {
         const user = this.userRepository.findOne({ where: { id: userId } });
         if (!user) {

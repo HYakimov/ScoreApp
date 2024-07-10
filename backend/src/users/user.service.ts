@@ -6,7 +6,6 @@ import { EventsGateway } from 'src/events.gateway';
 import { Country } from 'src/countries/country.entity';
 import { User } from './user.entity';
 import { UserInputDto } from './dtos/user.input.dto';
-import { UserDto } from './dtos/user.dto';
 import { UserResponseDto } from './dtos/user.response.dto';
 import { UserScoresResponseDto } from './dtos/user.scores.response.dto';
 

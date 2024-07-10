@@ -1,5 +1,4 @@
 import { CountryService } from "src/countries/country.service"
-import { User } from "../user.entity"
 
 export class UserDto {
 
