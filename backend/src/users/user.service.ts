@@ -24,7 +24,6 @@ export class UserService {
 
     async findWithPagination(sortBy: string, page: number, pageSize: number): Promise<UserResponseDto> {
         this.validatePage(page);
-
         let query = `
         SELECT 
             u.id, u.firstName, u.lastName, u.age, u.gender, u.email, u.avatarPath, u.city as cityId, 
@@ -58,7 +57,7 @@ export class UserService {
     }
 
     async findAll(): Promise<UserScoresResponseDto> {
-        const users = await this.userRepository.find({ relations: ['country', 'scores', 'scores.competition'] });
+        const users = await this.userRepository.find({ relations: ['scores', 'scores.competition'] });
         return UserScoresResponseDto.create(users);
     }
 

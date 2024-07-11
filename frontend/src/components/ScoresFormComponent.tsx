@@ -4,25 +4,30 @@ import { useNavigate } from "react-router-dom";
 import { MainPage } from "../constants/RouteConstants";
 import HttpHelperService from "../HttpHelperService";
 import { initialState, setScore } from "../store/states/ScoreDataSlice";
-import { setUsers } from "../store/states/UsersDataSlice";
-import { competitionsSelector, scoreSelector, tableRecordsSelector, usersSelector } from "../store/selectors/selectors";
+import { competitionsSelector, scoreSelector, usersDataForScoreSelector } from "../store/selectors/selectors";
 import { setCompetitions } from "../store/states/CompetitionsDataSlice";
-import { ScoreData } from "../types/ScoreData";
+import { setUsersDataForScore } from "../store/states/UsersDataForScoreSlice";
 
 const ScoresFormComponent = () => {
     const scoreData = useSelector(scoreSelector);
-    const tableData = useSelector(tableRecordsSelector);
+    const users = useSelector(usersDataForScoreSelector);
     const competitions = useSelector(competitionsSelector);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     useEffect(() => {
         fetchCompetitions();
+        fetchUsers();
     }, []);
 
     const fetchCompetitions = async () => {
         const data = await HttpHelperService.getCompetitions();
         dispatch(setCompetitions(data));
+    }
+
+    const fetchUsers = async () => {
+        const data = await HttpHelperService.getUsers();
+        dispatch(setUsersDataForScore(data.data));
     }
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,7 +51,7 @@ const ScoresFormComponent = () => {
     }
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        const selectedUser = tableData.find(user => user.id === scoreData.userId);
+        const selectedUser = users.find(user => user.userId === scoreData.userId);
         if (selectedUser && selectedUser.scores) {
             const existingScore = selectedUser.scores.find(score => score.competitionId == scoreData.competitionId);
             if (existingScore) {
@@ -83,8 +88,8 @@ const ScoresFormComponent = () => {
                 <label className="label">User:</label>
                 <select name="userId" value={scoreData.userId ?? ''} onChange={handleSelectUserChange} required className="input select-input">
                     <option value="">Select User</option>
-                    {tableData.map(user => (
-                        <option key={user.id} value={user.id ?? 0}>{user.firstName}</option>
+                    {users.map(user => (
+                        <option key={user.userId} value={user.userId ?? 0}>{user.firstName}</option>
                     ))}
                 </select>
             </div>

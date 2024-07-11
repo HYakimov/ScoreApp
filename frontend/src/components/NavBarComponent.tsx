@@ -1,7 +1,7 @@
 import '../styles/NavBarComponent.css';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { MainPage, RegistrationFormPage, ScoresFormPage } from '../constants/RouteConstants';
+import { ChartPage, MainPage, RegistrationFormPage, ScoresFormPage } from '../constants/RouteConstants';
 
 const NavBarComponent = () => {
 
@@ -12,6 +12,9 @@ const NavBarComponent = () => {
                     <Link to={MainPage}>My App</Link>
                 </div>
                 <ul className="nav-links">
+                    <li>
+                        <Link to={ChartPage} >Chart</Link>
+                    </li>
                     <li>
                         <Link to={ScoresFormPage} >Scores Form</Link>
                     </li>

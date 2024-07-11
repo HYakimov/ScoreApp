@@ -14,11 +14,12 @@ import { setTableData, sethigHlightedRow } from './store/states/TableDataSlice';
 import { setTotalPages } from './store/states/PageDataSlice';
 import { setSort } from './store/states/SortDataSlice';
 import { resetSort } from './constants/SortingConstants';
-import { MainPage, RegistrationFormPage, ScoresFormPage } from './constants/RouteConstants';
+import { ChartPage, MainPage, RegistrationFormPage, ScoresFormPage } from './constants/RouteConstants';
 import ScoresFormComponent from './components/ScoresFormComponent';
 import { setLoading } from './store/states/LoadingDataSlice';
 import LoaderComponent from './components/LoaderComponent';
 import { loaderSelector } from './store/selectors/selectors';
+import ChartComponent from './components/ChartComponent';
 
 const AppContent: React.FC = () => {
   const dispatch = useDispatch();
@@ -78,6 +79,7 @@ const AppContent: React.FC = () => {
               <Route path={RegistrationFormPage} element={<UserRegistrationFormComponent />} />
               <Route path={ScoresFormPage} element={<ScoresFormComponent />} />
               <Route path={MainPage} element={<TableComponent />} />
+              <Route path={ChartPage} element={<ChartComponent />} />
             </Routes>
           </div>
         </>
