@@ -1,54 +1,88 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Chart } from 'react-google-charts';
-import { useSelector } from 'react-redux';
-import { tableRecordsSelector } from '../store/selectors/selectors';
+import { useSelector, useDispatch } from 'react-redux';
+import { usersDataForScoreSelector } from '../store/selectors/selectors';
+import HttpHelperService from '../HttpHelperService';
+import { setUsersDataForScore } from '../store/states/UsersDataForScoreSlice';
+import LoaderComponent from './LoaderComponent';
+import { faChartArea } from '@fortawesome/free-solid-svg-icons';
 
 const ChartComponent: React.FC = () => {
-    const tableData = useSelector(tableRecordsSelector);
-    let data: (string | number)[][] = [];
-    let maxLength: number = 0;
+    const users = useSelector(usersDataForScoreSelector);
+    const dispatch = useDispatch();
+    const [data, setData] = useState<(string | number)[][]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        fetchUsers();
+    }, []);
+
+    const fetchUsers = async () => {
+        const response = await HttpHelperService.getUsers();
+        dispatch(setUsersDataForScore(response.data));
+    };
 
     useEffect(() => {
         const header = ['First Name'];
-        tableData.forEach(data => {
-            if (data.scores && data.scores.length > maxLength) {
-                maxLength = data.scores.length;
-            }
-        })
+        const dataArray: (string | number)[][] = [header];
+        let maxScoresLength = 0;
 
-        for (let i = 1; i <= maxLength; i++) {
-            header.push(`Score ` + i);
-        }
-        data.push(header);
-
-        tableData.forEach(record => {
-            const row: (string | number)[] = [record.firstName];
-            const sortedScores = record.scores ? record.scores.slice(0, 3).sort((a, b) => a.competitionId - b.competitionId) : [];
-            const scores = sortedScores.map(score => score.scoreValue);
-            while (scores.length < 3) {
-                scores.push(0);
-            }
-            row.push(...scores);
-            console.log(row)
-            data.push(row);
+        users.forEach(user => {
+            user.scores?.forEach(score => {
+                if (score.competitionId > maxScoresLength) {
+                    maxScoresLength = score.competitionId;
+                }
+            });
         });
 
-    }, [tableData])
+        for (let i = 1; i <= maxScoresLength; i++) {
+            header.push(`Score ${i}`);
+        }
+
+        users.forEach(user => {
+            const row: (string | number)[] = [user.firstName];
+            const scores = new Array(maxScoresLength).fill(0);
+
+            user.scores?.forEach(score => {
+                const index = score.competitionId - 1;
+                if (index >= 0 && index < maxScoresLength) {
+                    scores[index] = score.scoreValue;
+                }
+            });
+            row.push(...scores);
+            dataArray.push(row);
+        });
+        setData(dataArray);
+        setIsLoading(false);
+    }, [users]);
 
     const options = {
         title: 'User Scores',
         vAxis: { title: 'Scores' },
         legend: { position: 'bottom' },
-    };
+        colors: ['red', 'blue', 'orange'],
+        chartArea: { width: '70%', height: '70%' },
+        animation: {
+            startup: true,
+            easing: 'linear',
+            duration: 1500,
+        },
+    }
 
     return (
-        <Chart
-            chartType="ColumnChart"
-            width="600px"
-            height="400px"
-            data={data}
-            options={options}
-        />
+        <>
+            {isLoading ? (
+                <LoaderComponent />
+            ) : (
+                <Chart
+                    chartType="ColumnChart"
+                    width="600px"
+                    height="400px"
+                    data={data}
+                    options={options}
+                />
+            )}
+        </>
     );
 };
 

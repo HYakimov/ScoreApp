@@ -63,6 +63,7 @@ const ScoresFormComponent = () => {
         e.preventDefault();
         await HttpHelperService.submitScore(data);
         dispatch(setScore(initialState));
+        fetchUsers(); // for chart purpose
         navigate(MainPage);
     }
 
