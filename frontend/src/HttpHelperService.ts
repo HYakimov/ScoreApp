@@ -1,4 +1,4 @@
-import { users, countries, cities, scores, competitions } from "./constants/HttpPathConstants";
+import { users, countries, cities, scores, competitions, downloadCsv } from "./constants/HttpPathConstants";
 import { paginationLimit } from "./constants/PaginationConstants";
 import HttpService from "./HttpService";
 import { ScoreData } from "./types/ScoreData";
@@ -49,8 +49,8 @@ const HttpHelperService = {
         await HttpService.deleteById(`${users}/${id}`);
     },
 
-    downloadCsv: async (page: number, limit: number, sortBy: string) => {
-        return await HttpService.download(`/download/csv?page=${page}&limit=${limit}&sortBy=${sortBy}`);
+    downloadCsv: async () => {
+        return await HttpService.download(downloadCsv);
     }
 }
 
