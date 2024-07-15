@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
+    TypeOrmModule.forRoot({//TODO: Mysql mariaDB ??? 
       type: 'sqlite',
       database: 'database.sqlite',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],

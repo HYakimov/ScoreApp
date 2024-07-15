@@ -21,7 +21,7 @@ export class Score {
   @JoinColumn({ name: 'competitionId' })
   competition: Competition;
 
-  public getScoreValidation(): void {
+  public getScoreValidation(): void {//TODO: What is the point of this method
     return this.validateScore();
   }
 

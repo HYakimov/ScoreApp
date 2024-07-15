@@ -74,7 +74,7 @@ const TableComponent = () => {
 
   const handleDownloadCsv = async () => {
     const csvData = await HttpHelperService.downloadCsv(page, paginationLimit, sortBy);
-    const blob = new Blob([csvData], { type: 'text/csv' });
+    const blob = new Blob([csvData], { type: 'text/csv' });//TODO: No need for read file data, and convert to ObjectURL, just open url of the file to new tab and browser will handle it.
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.style.display = 'none';

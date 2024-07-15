@@ -13,7 +13,7 @@ export class CsvController {
     @Query('page') page: number,
     @Query('limit') limit: number,
     @Res() res: Response): Promise<void> {
-    const csv = await this.csvService.generateCsv(sortBy, page, limit);
+    const csv = await this.csvService.generateCsv(sortBy, page, limit);//TODO: I want export all records, why we have filters and pagination?
     res.header('Content-Type', 'text/csv');
     res.attachment('data.csv');
     res.send(csv);

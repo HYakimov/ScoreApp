@@ -12,7 +12,7 @@ export class CountryService {
         private readonly countryRepository: Repository<Country>
     ) { }
 
-    static cities = [
+    static cities = [//TODO: Move this to data base
         // Bulgaria
         { id: 0, name: 'Sofia', countryId: 1 },
         { id: 1, name: 'Plovdiv', countryId: 1 },
@@ -75,7 +75,7 @@ export class CountryService {
         return city.name;
     }
 
-    getDataById(id: number): CityDto[] {
+    getDataById(id: number): CityDto[] {//TODO: Rename this to tell what data we load
         return CountryService.cities
             .filter(city => city.countryId == id)
             .map(city => CityDto.create(city.id, city.name, city.countryId));

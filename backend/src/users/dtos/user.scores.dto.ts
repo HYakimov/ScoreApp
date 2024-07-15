@@ -3,7 +3,7 @@ import { ScoresController } from "src/scores/scores.controller";
 export class UserScoreDto {
     userId: number;
     firstName: string;
-    scores: { scoreId: number, scoreValue: number, competitionId: number }[];
+    scores: { scoreId: number, scoreValue: number, competitionId: number }[];//Needs to make dto here
 
     static create(user: any): UserScoreDto {
         const record = new UserScoreDto();

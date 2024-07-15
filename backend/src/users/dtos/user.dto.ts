@@ -13,7 +13,7 @@ export class UserDto {
     countryName: string;
     cityId: number;
     cityName: string;
-    scores: { scoreId: number, scoreValue: number, competitionId: number }[];
+    scores: { scoreId: number, scoreValue: number, competitionId: number }[];//Needs to make dto here
 
     static getCityName(cityId: number): string {
         return CountryService.getCityName(cityId);
