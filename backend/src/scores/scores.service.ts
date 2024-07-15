@@ -39,7 +39,6 @@ export class ScoresService {
             });
         }
 
-        score.getScoreValidation();
         await this.scoresRepository.save(score);
         this.eventsGateway.onNewEntryOrEdit(score.id);
     }
