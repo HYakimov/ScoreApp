@@ -67,9 +67,8 @@ export class UserService {
         query += ` LIMIT ${limit} OFFSET ${offset} `;
 
         const users = await this.entityManager.query(query);
-        const totalCount = users[0].total ?? 0;
 
-        return UserResponseDto.create(users, totalCount);
+        return UserResponseDto.create(users);
     }
 
     async findAll(): Promise<UserScoresResponseDto> {

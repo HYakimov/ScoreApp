@@ -17,7 +17,6 @@ export class CityService {
 
     async addCity(city: any): Promise<void> {
         const country = await this.countryRepository.findOne({ where: { id: city.countryId } });
-        console.log(country);
         const newCity = this.cityRepository.create({
             name: city.name,
             country: country
