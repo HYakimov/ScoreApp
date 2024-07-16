@@ -6,7 +6,8 @@ import { ReactModule } from './react.module';
 import { EventsGateway } from './events.gateway';
 import { CountryModule } from './countries/country.module';
 import { UserModule } from './users/user.module';
-import { CompetitionModule } from './competition/competition.module';
+import { CompetitionModule } from './competitions/competition.module';
+import { CityModule } from './cities/city.module';
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { CompetitionModule } from './competition/competition.module';
     CsvModule,
     ReactModule,
     UserModule,
-    CompetitionModule
+    CompetitionModule,
+    CityModule
   ],
   controllers: [],
   providers: [EventsGateway],

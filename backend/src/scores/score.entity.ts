@@ -1,4 +1,4 @@
-import { Competition } from 'src/competition/competition.entity';
+import { Competition } from 'src/competitions/competition.entity';
 import { User } from 'src/users/user.entity';
 import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, ManyToOne } from 'typeorm';
 

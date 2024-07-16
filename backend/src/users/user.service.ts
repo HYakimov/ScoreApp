@@ -8,6 +8,7 @@ import { User } from './user.entity';
 import { UserInputDto } from './dtos/user.input.dto';
 import { UserResponseDto } from './dtos/user.response.dto';
 import { UserScoresResponseDto } from './dtos/user.scores.response.dto';
+import { City } from 'src/cities/city.entity';
 
 @Injectable()
 export class UserService {
@@ -17,6 +18,8 @@ export class UserService {
         private readonly userRepository: Repository<User>,
         @InjectRepository(Country)
         private countryRepository: Repository<Country>,
+        @InjectRepository(City)
+        private cityRepository: Repository<City>,
         private readonly eventsGateway: EventsGateway,
         @InjectEntityManager()
         private readonly entityManager: EntityManager
@@ -25,33 +28,44 @@ export class UserService {
     async findWithPagination(sortBy: string, page: number, pageSize: number): Promise<UserResponseDto> {
         this.validatePage(page);
         let query = `
-        SELECT 
-            u.id, u.firstName, u.lastName, u.age, u.gender, u.email, u.avatarPath, u.city as cityId, 
-            c.id as countryId, c.name as countryName, 
-            GROUP_CONCAT(s.id || ':' || s.value || ':' || s.competitionId) as scores, -- Concatenate scoreId, scoreValue, and competitionId
-            COUNT(*) OVER() as total_count
-        FROM 
+        SELECT
+            u.id AS userId,
+            u.firstName,
+            u.lastName,
+            u.age,
+            u.gender,
+            u.email,
+            u.avatarPath,
+            c.id AS cityId,
+            c.name AS cityName,
+            cn.id AS countryId,
+            cn.name AS countryName,
+            s.id AS scoreId,
+            s.value AS scoreValue,
+            comp.id AS competitionId
+        FROM
             User u
-        JOIN 
-            Country c ON u.countryId = c.id
-        LEFT JOIN Score s ON u.id = s.userId 
-        LEFT JOIN Competition comp ON s.competitionId = comp.id
-        GROUP BY 
-            u.id, u.firstName, u.lastName, u.age, u.gender, u.email, u.avatarPath, u.city, 
-            c.id, c.name
+        LEFT JOIN
+            City c ON u.cityId = c.id
+        LEFT JOIN
+            Country cn ON u.countryId = cn.id
+        LEFT JOIN
+            Score s ON u.id = s.userId
+        LEFT JOIN
+            Competition comp ON s.competitionId = comp.id
         `;
 
         if (sortBy === 'score') {
-            query += ` ORDER BY MAX(s.value) DESC NULLS LAST, u.id `;
+            query += ` ORDER BY s.value DESC `;
         } else if (sortBy === 'age') {
             query += ` ORDER BY u.age DESC `;
         }
 
-        query += ` LIMIT ? OFFSET ? `;
+        query += ` LIMIT 3 OFFSET 0 `; //TODO fix this
 
         const params = [pageSize, (page - 1) * pageSize];
         const users = await this.entityManager.query(query, params);
-        const totalCount = users.length > 0 ? users[0].total_count : 0;
+        const totalCount = users.length ?? 0;
 
         return UserResponseDto.create(users, totalCount);
     }
@@ -69,12 +83,13 @@ export class UserService {
 
     async create(dto: UserInputDto, filePath: string): Promise<void> {
         const country = await this.countryRepository.findOne({ where: { id: dto.countryId } });
+        const city = await this.cityRepository.findOne({ where: { id: dto.cityId } });
         const user = this.userRepository.create({
             firstName: dto.firstName,
             lastName: dto.lastName,
             age: dto.age,
             country: country,
-            city: dto.cityId,
+            city: city,
             gender: dto.gender,
             email: dto.email,
             avatarPath: filePath ?? 'uploads\\avatars\\avatardefault'
@@ -85,12 +100,13 @@ export class UserService {
 
     async updateById(dto: UserInputDto, id: number, filePath: string): Promise<void> {
         const country = await this.countryRepository.findOne({ where: { id: dto.countryId } });
+        const city = await this.cityRepository.findOne({ where: { id: dto.cityId } });
         const updateData: Partial<User> = {
             firstName: dto.firstName,
             lastName: dto.lastName,
             age: dto.age,
             country: country,
-            city: dto.cityId,
+            city: city,
             gender: dto.gender,
             email: dto.email,
             avatarPath: filePath ?? 'uploads\\avatars\\avatardefault'

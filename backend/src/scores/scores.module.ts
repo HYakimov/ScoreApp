@@ -5,14 +5,11 @@ import { ScoresController } from './scores.controller';
 import { Score } from './score.entity';
 import { EventsGateway } from 'src/events.gateway';
 import { User } from 'src/users/user.entity';
-import { Competition } from 'src/competition/competition.entity';
+import { Competition } from 'src/competitions/competition.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Score]),
-    TypeOrmModule.forFeature([User]),
-    TypeOrmModule.forFeature([Competition])
-  ],
+    TypeOrmModule.forFeature([Score, User, Competition])],
   providers: [ScoresService, EventsGateway],
   controllers: [ScoresController],
 })

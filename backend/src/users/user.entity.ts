@@ -1,8 +1,7 @@
-import { MAX_AGE, MAX_SCORE, MIN_AGE, MIN_SCORE } from 'src/constants';
+import { City } from 'src/cities/city.entity';
 import { Country } from 'src/countries/country.entity';
-import { CustomException } from 'src/exceptions';
 import { Score } from 'src/scores/score.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany, OneToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 
 @Entity()
 export class User {
@@ -26,8 +25,9 @@ export class User {
     @JoinColumn({ name: 'countryId' })
     country: Country;
 
-    @Column()
-    city: number;
+    @ManyToOne(() => City)
+    @JoinColumn({ name: 'cityId' })
+    city: City;
 
     @Column()
     gender: string;
@@ -37,29 +37,4 @@ export class User {
 
     @Column()
     avatarPath: string;
-
-    // public getValidation(): void {
-    //     return this.formatAndValidateData();
-    // }
-
-    // private formatAndValidateData(): void {
-    //     this.validateName(this.firstName, 'First name');
-    //     this.validateName(this.lastName, 'Last name');
-    //     this.validateAge(this.age);
-    // }
-
-    // private validateName(name: string, fieldName: string): void {
-    //     const containsDigits = /\d/.test(name);
-    //     if (containsDigits) {
-    //         throw CustomException.BadRequest(`${fieldName} must contain only letters.`);
-    //     }
-    // }
-
-    // private validateAge(age: number): void {
-    //     if (age < MIN_AGE || age > MAX_AGE) {
-    //         throw CustomException.BadRequest("Minimum age is " + MIN_AGE + " and maximum age is " + MAX_AGE + ".");
-    //     }
-    // }
-
-
 }

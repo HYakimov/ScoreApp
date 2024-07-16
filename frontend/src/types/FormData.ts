@@ -10,7 +10,9 @@ export class FormData {
     countryId: number | null;
     cityName: string;
     cityId: number | null;
-    scores: { scoreId: number, scoreValue: number, competitionId: number }[] | null;
+    scoreId: number | null;
+    scoreValue: number | null;
+    competitionId: number | null;
 
     constructor(data: FormData) {
         this.firstName = data.firstName;
@@ -24,6 +26,8 @@ export class FormData {
         this.email = data.email;
         this.avatarPath = data.avatarPath;
         this.id = data.id;
-        this.scores = data.scores;
+        this.scoreId = data.scoreId;
+        this.scoreValue = data.scoreValue;
+        this.competitionId = data.competitionId;
     }
 }

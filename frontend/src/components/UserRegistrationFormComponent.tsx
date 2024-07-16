@@ -74,7 +74,7 @@ const UserRegistrationFormComponent = () => {
 
   const fetchCities = async (countryId: number) => {
     const data = await HttpHelperService.getCities(countryId);
-    dispatch(setCities(data))
+    dispatch(setCities(data.data))
   }
 
   useEffect(() => {
