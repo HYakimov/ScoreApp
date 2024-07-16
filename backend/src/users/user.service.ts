@@ -26,10 +26,12 @@ export class UserService {
     ) { }
 
     async findWithPagination(sortBy: string, page: number, pageSize: number): Promise<UserResponseDto> {
-        this.validatePage(page);
+        this.validatePaginationDetails(page, pageSize);
+        const limit = pageSize;
+        const offset = (page - 1) * pageSize;
         let query = `
         SELECT
-            u.id AS userId,
+            u.id,
             u.firstName,
             u.lastName,
             u.age,
@@ -42,7 +44,8 @@ export class UserService {
             cn.name AS countryName,
             s.id AS scoreId,
             s.value AS scoreValue,
-            comp.id AS competitionId
+            comp.id AS competitionId,
+            COUNT(*) OVER() AS total 
         FROM
             User u
         LEFT JOIN
@@ -61,11 +64,10 @@ export class UserService {
             query += ` ORDER BY u.age DESC `;
         }
 
-        query += ` LIMIT 3 OFFSET 0 `; //TODO fix this
+        query += ` LIMIT ${limit} OFFSET ${offset} `;
 
-        const params = [pageSize, (page - 1) * pageSize];
-        const users = await this.entityManager.query(query, params);
-        const totalCount = users.length ?? 0;
+        const users = await this.entityManager.query(query);
+        const totalCount = users[0].total ?? 0;
 
         return UserResponseDto.create(users, totalCount);
     }
@@ -75,9 +77,12 @@ export class UserService {
         return UserScoresResponseDto.create(users);
     }
 
-    private validatePage(page: number): void {
+    private validatePaginationDetails(page: number, pageSize: number): void {
         if (page < 1) {
             throw CustomException.BadRequest("Page number must be greater than 0.");
+        }
+        if (pageSize < 1) {
+            throw CustomException.BadRequest("Page size must be greater than 0.");
         }
     }
 

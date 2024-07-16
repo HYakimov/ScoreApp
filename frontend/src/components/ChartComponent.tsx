@@ -60,7 +60,6 @@ const ChartComponent: React.FC = () => {
         title: 'User Scores',
         vAxis: { title: 'Scores' },
         legend: { position: 'bottom' },
-        colors: ['red', 'blue', 'orange'],
         chartArea: { width: '70%', height: '70%' },
         animation: {
             startup: true,

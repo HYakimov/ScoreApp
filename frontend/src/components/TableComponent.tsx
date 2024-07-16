@@ -42,7 +42,7 @@ const TableComponent = () => {
   const handleEdit = (formData: FormData) => {
     dispatch(setLoading(true));
     navigate(RegistrationFormPage);
-    fetchCities(formData.countryId == null ? 0 : formData.countryId);
+    fetchCities(formData.countryId ?? 0);
     dispatch(setUserInputData({
       firstName: formData.firstName,
       lastName: formData.lastName,
@@ -115,7 +115,7 @@ const TableComponent = () => {
           <tbody>
             {tableData.map((user, index) => (
               <tr
-                key={user.id}
+                key={index}
                 style={{ background: getBackgroundColor(user.scoreValue ?? 1) }}
                 className={`${highlightedRow ?? ''}`}
               >
@@ -134,7 +134,7 @@ const TableComponent = () => {
                   <FontAwesomeIcon icon={faPencilAlt} onClick={() => handleEdit(user)} style={{ cursor: "pointer" }} />
                 </td>
                 <td style={{ borderBottomRightRadius: index === tableData.length - 1 ? "15px" : "0" }}>
-                  <FontAwesomeIcon icon={faTimes} onClick={() => handleDelete(user.id == null ? 0 : user.id)} style={{ cursor: "pointer" }} />
+                  <FontAwesomeIcon icon={faTimes} onClick={() => handleDelete(user.id ?? 0)} style={{ cursor: "pointer" }} />
                 </td>
               </tr>
             ))}
