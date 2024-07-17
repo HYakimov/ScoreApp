@@ -1,5 +1,4 @@
-import { Controller, Get, Res } from '@nestjs/common';
-import { Response } from 'express';
+import { Controller, Get, Header, Res, StreamableFile } from '@nestjs/common';
 import { CsvService } from './csv.service';
 
 @Controller('download')
@@ -8,10 +7,10 @@ export class CsvController {
   constructor(private readonly csvService: CsvService) { }
 
   @Get('csv')
-  async downloadCsv(@Res() res: Response): Promise<void> {
-    const csv = await this.csvService.generateCsv();
-    res.header('Content-Type', 'text/csv');
-    res.attachment('data.csv');
-    res.send(csv);
+  @Header('Content-Type', 'text/csv')
+  @Header('Content-Disposition', 'attachment; filename="data.csv"')
+  async downloadCsv(): Promise<StreamableFile> {
+    const csvStream = await this.csvService.generateCsvAsStream();
+    return new StreamableFile(csvStream);
   }
 }
