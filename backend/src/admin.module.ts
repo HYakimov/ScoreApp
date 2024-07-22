@@ -5,9 +5,9 @@ import { join } from 'path';
 @Module({
     imports: [
         ServeStaticModule.forRoot({
-            rootPath: join(__dirname, '..', '..', 'frontend', 'build'),
-            serveRoot: '/',
+            rootPath: join(__dirname, '..', '..', 'admin-panel', 'dist', 'admin-panel', 'browser'),
+            serveRoot: '/admin',
         }),
     ],
 })
-export class ReactModule { }
+export class AdminModule { }

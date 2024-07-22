@@ -8,6 +8,7 @@ import { CountryModule } from './countries/country.module';
 import { UserModule } from './users/user.module';
 import { CompetitionModule } from './competitions/competition.module';
 import { CityModule } from './cities/city.module';
+import { AdminModule } from './admin.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { CityModule } from './cities/city.module';
     CountryModule,
     CsvModule,
     ReactModule,
+    AdminModule,
     UserModule,
     CompetitionModule,
     CityModule
