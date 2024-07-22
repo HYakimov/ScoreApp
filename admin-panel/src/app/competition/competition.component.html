@@ -29,6 +29,9 @@
         <button mat-raised-button (click)="removeData()">
             Remove data
         </button>
+        <button mat-raised-button (click)="editData()">
+            Edit data
+        </button>
     </div>
     <div class="pagination-wrapper ">
         <mat-paginator [length]="competitions.data.length" [pageSizeOptions]="[5, 10]" showFirstLastButtons
