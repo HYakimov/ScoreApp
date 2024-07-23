@@ -3,13 +3,13 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
-  selector: "app-admin-navbar",
+  selector: "navbar",
   standalone: true,
   imports: [MatToolbarModule, MatButtonModule],
-  templateUrl: "./admin-navbar.component.html",
-  styleUrls: ["./admin-navbar.component.css"]
+  templateUrl: "./navbar.component.html",
+  styleUrls: ["./navbar.component.css"]
 })
-export class AdminNavbarComponent implements OnInit {
+export class NavbarComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void { }

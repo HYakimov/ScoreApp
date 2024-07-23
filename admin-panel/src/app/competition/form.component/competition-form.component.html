@@ -1,0 +1,35 @@
+<div class="form-wrapper">
+    <h3>
+        Competitions Form
+    </h3>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="material-form">
+        <mat-form-field appearance="fill">
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="name" />
+            <mat-error *ngIf="form.get('name')?.hasError('required')">
+                Name is required.
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Country</mat-label>
+            <mat-select formControlName="countryIds" multiple>
+                <mat-option *ngFor="let country of countries" [value]="country.id">
+                    {{ country.name }}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="form.get('countryIds')?.hasError('required')">
+                At least one country is required.
+            </mat-error>
+        </mat-form-field>
+
+        <div class="button-container">
+            <button mat-raised-button type="submit" [disabled]="form.invalid">
+                Submit
+            </button>
+            <button mat-raised-button type="button" (click)="cancel()">
+                Cancel
+            </button>
+        </div>
+    </form>
+</div>

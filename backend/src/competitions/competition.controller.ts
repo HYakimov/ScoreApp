@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpStatus, Post, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Res } from '@nestjs/common';
 import { CompetitionService } from './competition.service';
 import { CreateCompetitionDto } from './dtos/create.competition.dto';
 
@@ -16,6 +16,15 @@ export class CompetitionController {
     @Post()
     async create(@Body() dto: CreateCompetitionDto, @Res() res): Promise<void> {
         await this.competitionService.createCompetition(dto);
-        res.status(HttpStatus.CREATED).send('Data saved successfully');
+        res.status(HttpStatus.CREATED).json("Data saved successfully");
+    }
+
+    //put
+
+    @Delete(':id')
+    async deleteById(@Param('id') id: number, @Res() res): Promise<void> {
+        console.log("id", id);
+        await this.competitionService.deleteById(id);
+        res.status(HttpStatus.OK).json(`Entry with ID ${id} deleted successfully`);
     }
 }

@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { CompetitionComponent } from './competition/competition.component';
-import { AdminNavbarComponent } from './admin-navbar/admin-navbar.component';
+import { CompetitionFormComponent } from './competition/form.component/competition-form.component';
+import { CompetitionTableComponent } from './competition/table.component/competition-table.component';
+import { NavbarComponent } from './navbar/navbar.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CompetitionComponent, AdminNavbarComponent],
+  imports: [RouterOutlet, CompetitionTableComponent, NavbarComponent, CompetitionFormComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })

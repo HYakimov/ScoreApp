@@ -1,5 +1,6 @@
+import { Country } from "src/countries/country.entity";
 import { Score } from "src/scores/score.entity";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Competition {
@@ -12,4 +13,8 @@ export class Competition {
 
     @OneToMany(() => Score, score => score.competition)
     scores: Score[];
+
+    @ManyToMany(() => Country, country => country.competitions)
+    @JoinTable()
+    countries: Country[];
 }
