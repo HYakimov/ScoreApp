@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Res } from '@nestjs/common';
 import { CompetitionService } from './competition.service';
 import { CreateCompetitionDto } from './dtos/create.competition.dto';
 
@@ -20,6 +20,11 @@ export class CompetitionController {
     }
 
     //put
+    @Put(':id')
+    async updateById(@Param('id') id: number, @Body() dto: CreateCompetitionDto, @Res() res): Promise<void> {
+        await this.competitionService.updateById(id, dto);
+        res.status(HttpStatus.OK).json("Data updated successfully");
+    }
 
     @Delete(':id')
     async deleteById(@Param('id') id: number, @Res() res): Promise<void> {

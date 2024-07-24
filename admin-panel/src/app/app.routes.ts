@@ -6,9 +6,11 @@ import { CompetitionFormComponent } from './competition/form.component/competiti
 export const BASE_ROUTE = '';
 export const COMPETITIONS_ROUTE = 'competitions';
 export const COMPETITION_FORM_ROUTE = 'competitionForm';
+export const EDIT_COMPETITION_ROUTE = 'competitionForm/:id';
 
 export const routes: Routes = [
     { path: BASE_ROUTE, component: LandingComponent },
     { path: COMPETITIONS_ROUTE, component: CompetitionTableComponent },
-    { path: COMPETITION_FORM_ROUTE, component: CompetitionFormComponent }
+    { path: COMPETITION_FORM_ROUTE, component: CompetitionFormComponent },
+    { path: EDIT_COMPETITION_ROUTE, component: CompetitionFormComponent }
 ];

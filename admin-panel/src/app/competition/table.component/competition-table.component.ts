@@ -48,6 +48,7 @@ export class CompetitionTableComponent {
   }
 
   editData(competition: Competition): void {
-    //TODO
+    this.competitionService.setCompetition(competition);
+    this.router.navigate(['competitionForm']);
   }
 }

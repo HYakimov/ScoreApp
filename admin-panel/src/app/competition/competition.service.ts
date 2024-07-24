@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { lastValueFrom, Observable } from 'rxjs';
+import { BehaviorSubject, lastValueFrom, Observable } from 'rxjs';
 import { Competition } from './competition.model';
 import { Country } from './country.model';
 import { CompetitionDto } from './competition.dto';
@@ -10,10 +10,19 @@ import { CompetitionDto } from './competition.dto';
 })
 export class CompetitionService {
 
-  constructor(private http: HttpClient) { }
-
   private readonly competitionsUrl = 'http://localhost:3000/competitions';
   private readonly countriesUrl = 'http://localhost:3000/countries';
+  private competition: Competition | null = null;
+
+  constructor(private http: HttpClient) { }
+
+  setCompetition(competition: Competition): void {
+    this.competition = competition;
+  }
+
+  getCompetition(): Competition | null {
+    return this.competition;
+  }
 
   getCompetitions(): Observable<Competition[]> {
     return this.http.get<Competition[]>(this.competitionsUrl);
@@ -52,6 +61,19 @@ export class CompetitionService {
       console.error('Error posting data:', error);
     }
     return {};
+  }
+
+  updateCompetition(id: number, competitionData: CompetitionDto): Observable<any> {
+    return this.http.put(`${this.competitionsUrl}/${id}`, competitionData);
+  }
+
+  async updateCompetitionAsync(id: number, competitionData: CompetitionDto): Promise<any> {
+    try {
+      return await lastValueFrom(this.updateCompetition(id, competitionData));
+    } catch (error) {
+      console.error('Error updating competition:', error);
+      throw error;
+    }
   }
 
   deleteCompetition(id: number): Observable<void> {

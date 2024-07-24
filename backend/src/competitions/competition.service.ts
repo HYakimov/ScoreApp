@@ -20,7 +20,6 @@ export class CompetitionService {
         const result = await this.competitionRepository.find({
             relations: ['countries']
         })
-
         return result;
     }
 
@@ -31,11 +30,24 @@ export class CompetitionService {
         await this.competitionRepository.save(newCompetition);
     }
 
+    async updateById(id: number, dto: CreateCompetitionDto): Promise<void> {
+        const competition = await this.validateAndReturnCompetition(id);
+        const countries = await this.countryRepository.findBy({ id: In(dto.countryIds) });
+        competition.countries = countries;
+        competition.name = dto.name;
+        await this.competitionRepository.save(competition);
+    }
+
     async deleteById(id: number): Promise<void> {
+        const competition = await this.validateAndReturnCompetition(id);
+        await this.competitionRepository.remove(competition);
+    }
+
+    private async validateAndReturnCompetition(id: number): Promise<Competition> {
         const competition = await this.competitionRepository.findOne({ where: { id }, relations: ['countries'] });
         if (!competition) {
-            throw CustomException.NotFound(`Entry with ID ${id} not found.`);
+            throw CustomException.NotFound(`Competition with id ${id} not found.`);
         }
-        await this.competitionRepository.remove(competition);
+        return competition;
     }
 }
