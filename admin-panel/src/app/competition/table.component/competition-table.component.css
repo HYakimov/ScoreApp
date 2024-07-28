@@ -5,6 +5,11 @@
     gap: 15px;
 }
 
+.mat-mdc-table {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
 .wrapper .table-wrapper {
     display: flex;
     flex-direction: column;
@@ -31,6 +36,8 @@
 .wrapper .pagination-wrapper {
     display: flex;
     justify-content: flex-end;
+    border-radius: 10px;
+    overflow: hidden;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 

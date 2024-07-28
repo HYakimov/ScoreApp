@@ -21,6 +21,7 @@ export class CompetitionTableComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   competitions = new MatTableDataSource<Competition>();
   displayedColumns: string[] = ['id', 'name', 'countries', 'actions'];
+  title = "Competitions";
 
   ngOnInit(): void {
     this.fetchCompetitions();
