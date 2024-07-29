@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateCompetitionDto } from './dtos/create.competition.dto';
 import { Country } from 'src/countries/country.entity';
 import { CustomException } from 'src/exceptions';
+import { CompetitionsDto } from './dtos/competitions.dto';
 
 @Injectable()
 export class CompetitionService {
@@ -16,12 +17,12 @@ export class CompetitionService {
         private readonly countryRepository: Repository<Country>
     ) { }
 
-    async getCompetitions(): Promise<Competition[]> {
+    async getCompetitions(): Promise<CompetitionsDto> {
         const result = await this.competitionRepository.find({
             relations: ['countries']
         })
 
-        return result;
+        return CompetitionsDto.create(result);
     }
 
     async createCompetition(dto: CreateCompetitionDto): Promise<void> {

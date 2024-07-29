@@ -22,7 +22,7 @@ const ScoresFormComponent = () => {
 
     const fetchCompetitions = async () => {
         const data = await HttpHelperService.getCompetitions();
-        dispatch(setCompetitions(data));
+        dispatch(setCompetitions(data.data));
     }
 
     const fetchUsers = async () => {

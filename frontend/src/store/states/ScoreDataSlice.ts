@@ -2,7 +2,6 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { ScoreData } from "../../types/ScoreData";
 
 export const initialState: ScoreData = {
-    id: null,
     value: null,
     competitionId: null,
     userId: null

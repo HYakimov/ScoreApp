@@ -30,8 +30,6 @@ export class UserController {
     @Get('/forCompetition/:id')
     async findAllForCompetition(@Res() res, @Param('id') id): Promise<void> {
         const result = await this.userService.findAllForCompetition(id);
-        console.log(result);
-
         res.status(HttpStatus.OK).json(result);
     }
 

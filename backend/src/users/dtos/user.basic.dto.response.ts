@@ -1,5 +1,4 @@
 import { UserBasicDto } from "./user.basic.dto";
-import { UserScoreDto } from "./user.score.dto";
 
 export class UserBasicDtoResponse {
 

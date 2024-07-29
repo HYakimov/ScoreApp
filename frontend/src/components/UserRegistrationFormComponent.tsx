@@ -69,7 +69,7 @@ const UserRegistrationFormComponent = () => {
 
   const fetchCountries = async () => {
     const data = await HttpHelperService.getCountries();
-    dispatch(setCountries(data))
+    dispatch(setCountries(data.data))
   }
 
   const fetchCities = async (countryId: number) => {
