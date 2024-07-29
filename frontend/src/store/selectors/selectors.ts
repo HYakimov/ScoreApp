@@ -10,6 +10,7 @@ import { ScoreData } from "../../types/ScoreData";
 import { LoaderState } from "../../types/LoaderState";
 import { CompetitionsData } from "../../types/CompetitionsData";
 import { UsersDataForScore } from "../../types/UsersDataForScore";
+import { UsersDataForCompetition } from "../../types/UsersDataForCompetition";
 
 const tableDataState = (state: any) => state.table;
 const citiesState = (state: any) => state.cities;
@@ -22,6 +23,7 @@ const scoreState = (state: any) => state.score;
 const loaderState = (state: any) => state.loader;
 const competitionsState = (state: any) => state.competitions;
 const usersDataForScore = (state: any) => state.usersDataForScore;
+const usersDataForCompetition = (state: any) => state.usersDataForCompetition;
 
 const tableRecordsSelector = createSelector(tableDataState, (state) => new TableData(state).tableData);
 const highlightedRowSelector = createSelector(tableDataState, (state) => new TableData(state).highlightedRow);
@@ -36,6 +38,7 @@ const scoreSelector = createSelector(scoreState, (state) => new ScoreData(state)
 const loaderSelector = createSelector(loaderState, (state) => new LoaderState(state.loading).loading);
 const competitionsSelector = createSelector(competitionsState, (state) => new CompetitionsData(state).value);
 const usersDataForScoreSelector = createSelector(usersDataForScore, (state) => new UsersDataForScore(state).scoreData);
+const usersDataForCompetitionSelector = createSelector(usersDataForCompetition, (state) => new UsersDataForCompetition(state).value);
 
 export {
     tableRecordsSelector,
@@ -50,5 +53,6 @@ export {
     scoreSelector,
     loaderSelector,
     competitionsSelector,
-    usersDataForScoreSelector
+    usersDataForScoreSelector,
+    usersDataForCompetitionSelector
 }

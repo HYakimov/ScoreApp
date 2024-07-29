@@ -16,6 +16,6 @@ export class CountryController {
     @Post()
     async create(@Body() country: Country, @Res() res): Promise<void> {
         await this.countryService.addCountry(country.name);
-        res.status(HttpStatus.CREATED).send('Data saved successfully');
+        res.status(HttpStatus.CREATED).json('Data saved successfully');
     }
 }

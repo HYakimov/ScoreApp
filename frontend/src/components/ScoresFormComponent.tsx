@@ -4,14 +4,14 @@ import { useNavigate } from "react-router-dom";
 import { MainPage } from "../constants/RouteConstants";
 import HttpHelperService from "../HttpHelperService";
 import { initialState, setScore } from "../store/states/ScoreDataSlice";
-import { competitionsSelector, scoreSelector, usersDataForScoreSelector } from "../store/selectors/selectors";
+import { competitionsSelector, scoreSelector, usersDataForCompetitionSelector } from "../store/selectors/selectors";
 import { setCompetitions } from "../store/states/CompetitionsDataSlice";
-import { setUsersDataForScore } from "../store/states/UsersDataForScoreSlice";
 import { setUsers } from "../store/states/UsersDataSlice";
+import { setUsersDataForCompetition } from "../store/states/UsersDataForCompetitionSlice";
 
 const ScoresFormComponent = () => {
     const scoreData = useSelector(scoreSelector);
-    const users = useSelector(usersDataForScoreSelector);
+    const users = useSelector(usersDataForCompetitionSelector);
     const competitions = useSelector(competitionsSelector);
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -32,7 +32,7 @@ const ScoresFormComponent = () => {
 
     const fetchUsersForCompetition = async (competitionId: number) => {
         const data = await HttpHelperService.getUsersForCompetition(competitionId);
-        dispatch(setUsersDataForScore(data.data));
+        dispatch(setUsersDataForCompetition(data.data));
     }
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,17 +59,8 @@ const ScoresFormComponent = () => {
     }
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        const selectedUser = users.find(user => user.userId === scoreData.userId);
-        if (selectedUser && selectedUser.scores) {
-            const existingScore = selectedUser.scores.find(score => score.competitionId == scoreData.competitionId);
-            if (existingScore) {
-                scoreData.id = existingScore.scoreId;
-            }
-        }
-        const data = { ...scoreData };
-        dispatch(setScore(data));
         e.preventDefault();
-        await HttpHelperService.submitScore(data);
+        await HttpHelperService.submitScore(scoreData);
         dispatch(setScore(initialState));
         fetchUsers(); // for chart purpose
         navigate(MainPage);
@@ -98,7 +89,7 @@ const ScoresFormComponent = () => {
                 <select name="userId" value={scoreData.userId ?? ''} onChange={handleSelectUserChange} required className="input select-input">
                     <option value="">Select User</option>
                     {users.map(user => (
-                        <option key={user.userId} value={user.userId ?? 0}>{user.firstName}</option>
+                        <option key={user.id} value={user.id ?? 0}>{user.name}</option>
                     ))}
                 </select>
             </div>

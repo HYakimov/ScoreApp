@@ -7,9 +7,10 @@ import { Country } from 'src/countries/country.entity';
 import { User } from './user.entity';
 import { UserInputDto } from './dtos/user.input.dto';
 import { UserResponseDto } from './dtos/user.response.dto';
-import { UserScoresResponseDto } from './dtos/user.scores.response.dto';
 import { City } from 'src/cities/city.entity';
 import { Competition } from 'src/competitions/competition.entity';
+import { UserScoresDto } from './dtos/user.scores..dto';
+import { UserBasicDtoResponse } from './dtos/user.basic.dto.response';
 
 @Injectable()
 export class UserService {
@@ -28,9 +29,9 @@ export class UserService {
         private readonly entityManager: EntityManager
     ) { }
 
-    async findAll(): Promise<UserScoresResponseDto> {
+    async findAll(): Promise<UserScoresDto> {
         const users = await this.userRepository.find({ relations: ['scores', 'scores.competition'] });
-        return UserScoresResponseDto.create(users);
+        return UserScoresDto.create(users);
     }
 
     async findWithPagination(sortBy: string, page: number, pageSize: number): Promise<UserResponseDto> {
@@ -80,14 +81,17 @@ export class UserService {
     }
 
     async findAllForCompetition(id: number): Promise<any> {
-        const competition = await this.competitionRepository.findOne({ where: { id }, relations: ['countries'] });
-        const countryIds = competition.countries.map(country => country.id);
-        const users = await this.userRepository.find({
-            where: { country: { id: In(countryIds) } },
-            relations: ['scores', 'scores.competition'],
-        });
+        const users = await this.competitionRepository.query(
+            `SELECT 
+                u.id, 
+                u.firstName,
+                u.lastName 
+            FROM user AS u
+            JOIN competition_countries_country AS ccc ON ccc.countryId = u.countryId
+            WHERE ccc.competitionId = ?`, [id]
+        );
 
-        return UserScoresResponseDto.create(users);
+        return UserBasicDtoResponse.create(users);
     }
 
     private validatePaginationDetails(page: number, pageSize: number): void {

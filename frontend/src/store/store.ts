@@ -11,6 +11,7 @@ import loaderReducer from './states/LoadingDataSlice';
 import userInputDataReducer from './states/UserInputDataSlice';
 import competitionsReducer from './states/CompetitionsDataSlice';
 import usersDataForScoreReducer from './states/UsersDataForScoreSlice';
+import usersDataForCompetitionReducer from './states/UsersDataForCompetitionSlice';
 
 const store = configureStore({
     reducer: {
@@ -25,7 +26,8 @@ const store = configureStore({
         loader: loaderReducer,
         userInputData: userInputDataReducer,
         competitions: competitionsReducer,
-        usersDataForScore: usersDataForScoreReducer
+        usersDataForScore: usersDataForScoreReducer,
+        usersDataForCompetition: usersDataForCompetitionReducer
     }
 });
 

@@ -1,9 +1,9 @@
 import { BasicDto } from "./BasicDto";
 
-export class CompetitionsData {
+export class UsersDataForCompetition {
     value: BasicDto[];
 
-    constructor(data: CompetitionsData) {
+    constructor(data: UsersDataForCompetition) {
         this.value = data.value;
     }
 }

@@ -1,4 +1,5 @@
 export class ScoreData {
+
     id: number | null
     value: number | null;
     competitionId: number | null;

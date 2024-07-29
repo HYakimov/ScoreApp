@@ -1,5 +1,7 @@
+import { BasicDto } from "./BasicDto";
+
 export class CountriesData {
-    value: { id: number; name: string }[];
+    value: BasicDto[];
 
     constructor(data: CountriesData) {
         this.value = data.value;

@@ -1,5 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { CompetitionsData } from "../../types/CompetitionsData";
+import { BasicDto } from "../../types/BasicDto";
 
 const initialState: CompetitionsData = {
     value: []
@@ -9,7 +10,7 @@ const CompetitionsDataSlice = createSlice({
     name: 'competitions',
     initialState,
     reducers: {
-        setCompetitions: (state, action: PayloadAction<{ id: number; name: string }[]>) => {
+        setCompetitions: (state, action: PayloadAction<BasicDto[]>) => {
             state.value = action.payload;
         },
     }

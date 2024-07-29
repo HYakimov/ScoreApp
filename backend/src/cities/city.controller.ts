@@ -1,5 +1,6 @@
 import { Body, Controller, Get, HttpStatus, Param, Post, Res } from '@nestjs/common';
 import { CityService } from './city.service';
+import { CityDto } from './dtos/city.dto';
 
 @Controller('cities')
 export class CityController {
@@ -13,8 +14,8 @@ export class CityController {
     }
 
     @Post()
-    async create(@Body() city: any, @Res() res): Promise<void> {
-        await this.cityService.addCity(city);
-        res.status(HttpStatus.CREATED).send('Data saved successfully');
+    async create(@Body() dto: CityDto, @Res() res): Promise<void> {
+        await this.cityService.addCity(dto);
+        res.status(HttpStatus.CREATED).json('Data saved successfully');
     }
 }
