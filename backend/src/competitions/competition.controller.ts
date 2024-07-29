@@ -19,7 +19,6 @@ export class CompetitionController {
         res.status(HttpStatus.CREATED).json("Data saved successfully");
     }
 
-    //put
     @Put(':id')
     async updateById(@Param('id') id: number, @Body() dto: CreateCompetitionDto, @Res() res): Promise<void> {
         await this.competitionService.updateById(id, dto);
@@ -28,7 +27,6 @@ export class CompetitionController {
 
     @Delete(':id')
     async deleteById(@Param('id') id: number, @Res() res): Promise<void> {
-        console.log("id", id);
         await this.competitionService.deleteById(id);
         res.status(HttpStatus.OK).json(`Entry with ID ${id} deleted successfully`);
     }

@@ -10,6 +10,12 @@ export class UserController {
 
     constructor(private readonly userService: UserService) { }
 
+    @Get()
+    async findAll(@Res() res): Promise<void> {
+        const result = await this.userService.findAll();
+        res.status(HttpStatus.OK).json(result);
+    }
+
     @Get('/paginated')
     async findAllWithPagination(
         @Query('sortBy') sortBy: string,
@@ -21,9 +27,9 @@ export class UserController {
         res.status(HttpStatus.OK).json(result);
     }
 
-    @Get()
-    async findAll(@Res() res): Promise<void> {
-        const result = await this.userService.findAll();
+    @Get('/forCompetition/:id')
+    async findAllForCompetition(@Res() res, @Param('id') id): Promise<void> {
+        const result = await this.userService.findAllForCompetition(id);
         res.status(HttpStatus.OK).json(result);
     }
 

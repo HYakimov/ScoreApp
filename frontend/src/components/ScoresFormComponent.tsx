@@ -7,6 +7,7 @@ import { initialState, setScore } from "../store/states/ScoreDataSlice";
 import { competitionsSelector, scoreSelector, usersDataForScoreSelector } from "../store/selectors/selectors";
 import { setCompetitions } from "../store/states/CompetitionsDataSlice";
 import { setUsersDataForScore } from "../store/states/UsersDataForScoreSlice";
+import { setUsers } from "../store/states/UsersDataSlice";
 
 const ScoresFormComponent = () => {
     const scoreData = useSelector(scoreSelector);
@@ -17,7 +18,6 @@ const ScoresFormComponent = () => {
 
     useEffect(() => {
         fetchCompetitions();
-        fetchUsers();
     }, []);
 
     const fetchCompetitions = async () => {
@@ -27,6 +27,11 @@ const ScoresFormComponent = () => {
 
     const fetchUsers = async () => {
         const data = await HttpHelperService.getUsers();
+        dispatch(setUsers(data.data));
+    }
+
+    const fetchUsersForCompetition = async (competitionId: number) => {
+        const data = await HttpHelperService.getUsersForCompetition(competitionId);
         dispatch(setUsersDataForScore(data.data));
     }
 
@@ -37,7 +42,10 @@ const ScoresFormComponent = () => {
 
     const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const { name, value } = e.target;
-        dispatch(setScore({ ...scoreData, [name]: value }));
+        dispatch(setScore({ ...scoreData, [name]: value, userId: null }));
+        if (value) {
+            fetchUsersForCompetition(Number(value));
+        }
     };
 
     const handleSelectUserChange = (e: React.ChangeEvent<HTMLSelectElement>) => {

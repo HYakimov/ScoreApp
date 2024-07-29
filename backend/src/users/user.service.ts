@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, Repository } from 'typeorm';
+import { EntityManager, In, Repository } from 'typeorm';
 import { CustomException } from 'src/exceptions';
 import { EventsGateway } from 'src/events.gateway';
 import { Country } from 'src/countries/country.entity';
@@ -9,6 +9,7 @@ import { UserInputDto } from './dtos/user.input.dto';
 import { UserResponseDto } from './dtos/user.response.dto';
 import { UserScoresResponseDto } from './dtos/user.scores.response.dto';
 import { City } from 'src/cities/city.entity';
+import { Competition } from 'src/competitions/competition.entity';
 
 @Injectable()
 export class UserService {
@@ -18,12 +19,19 @@ export class UserService {
         private readonly userRepository: Repository<User>,
         @InjectRepository(Country)
         private countryRepository: Repository<Country>,
+        @InjectRepository(Competition)
+        private competitionRepository: Repository<Competition>,
         @InjectRepository(City)
         private cityRepository: Repository<City>,
         private readonly eventsGateway: EventsGateway,
         @InjectEntityManager()
         private readonly entityManager: EntityManager
     ) { }
+
+    async findAll(): Promise<UserScoresResponseDto> {
+        const users = await this.userRepository.find({ relations: ['scores', 'scores.competition'] });
+        return UserScoresResponseDto.create(users);
+    }
 
     async findWithPagination(sortBy: string, page: number, pageSize: number): Promise<UserResponseDto> {
         this.validatePaginationDetails(page, pageSize);
@@ -71,8 +79,14 @@ export class UserService {
         return UserResponseDto.create(users);
     }
 
-    async findAll(): Promise<UserScoresResponseDto> {
-        const users = await this.userRepository.find({ relations: ['scores', 'scores.competition'] });
+    async findAllForCompetition(id: number): Promise<any> {
+        const competition = await this.competitionRepository.findOne({ where: { id }, relations: ['countries'] });
+        const countryIds = competition.countries.map(country => country.id);
+        const users = await this.userRepository.find({
+            where: { country: { id: In(countryIds) } },
+            relations: ['scores', 'scores.competition'],
+        });
+
         return UserScoresResponseDto.create(users);
     }
 

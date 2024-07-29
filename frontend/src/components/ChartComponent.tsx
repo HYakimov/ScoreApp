@@ -5,7 +5,6 @@ import { usersDataForScoreSelector } from '../store/selectors/selectors';
 import HttpHelperService from '../HttpHelperService';
 import { setUsersDataForScore } from '../store/states/UsersDataForScoreSlice';
 import LoaderComponent from './LoaderComponent';
-import { faChartArea } from '@fortawesome/free-solid-svg-icons';
 
 const ChartComponent: React.FC = () => {
     const users = useSelector(usersDataForScoreSelector);

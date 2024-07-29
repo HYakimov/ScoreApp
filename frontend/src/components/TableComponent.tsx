@@ -12,19 +12,16 @@ import { setPage } from "../store/states/PageDataSlice";
 import { setSort } from "../store/states/SortDataSlice";
 import { resetSort, sortByAge, sortByScore } from "../constants/SortingConstants";
 import { setCities } from "../store/states/CitiesDataSlice";
-import { paginationLimit } from "../constants/PaginationConstants";
 import { setLoading } from "../store/states/LoadingDataSlice";
 import { FormData } from "../types/FormData";
 import { setUserInputData } from "../store/states/UserInputDataSlice";
-import { highlightedRowSelector, pageSelector, sortSelector, tableRecordsSelector } from "../store/selectors/selectors";
+import { highlightedRowSelector, tableRecordsSelector } from "../store/selectors/selectors";
 
 const TableComponent = () => {
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
   const tableData = useSelector(tableRecordsSelector);
   const highlightedRow = useSelector(highlightedRowSelector);
-  const sortBy = useSelector(sortSelector);
-  const page = useSelector(pageSelector);
 
   const handleClearTable = async () => {
     dispatch(setLoading(true));

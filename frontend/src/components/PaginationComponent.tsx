@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { setPage } from "../store/states/PageDataSlice";
 import { pageSelector, totalPagesSelector } from "../store/selectors/selectors";
 
-
 const PaginationComponent = () => {
     const dispatch = useDispatch();
     const currentPage = useSelector(pageSelector);

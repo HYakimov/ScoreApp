@@ -4,7 +4,7 @@ export class UserScoresResponseDto {
 
     data: UserScoreDto[];
 
-    static create(users: any): UserScoresResponseDto {
+    static create(users: any[]): UserScoresResponseDto {
         const record = new UserScoresResponseDto();
         record.data = users.map(user => UserScoreDto.create(user));
 

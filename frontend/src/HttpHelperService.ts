@@ -29,6 +29,10 @@ const HttpHelperService = {
         return await HttpService.get(competitions);
     },
 
+    getUsersForCompetition: async (competitionId: number) => {
+        return await HttpService.get(`${users}/forCompetition/${competitionId}`);
+    },
+
     submit: async (userInputData: FormData) => {
         await HttpService.postData(users, userInputData);
     },
