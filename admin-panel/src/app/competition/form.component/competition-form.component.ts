@@ -35,7 +35,10 @@ export class CompetitionFormComponent implements OnInit {
   }
 
   async fetchCountries(): Promise<void> {
-    this.countries = await this.competitionService.getCountriesAsync();
+    this.competitionService.getCountries().subscribe({
+      next: (countries) => this.countries = countries,
+      error: (error) => console.error('Error fetching countries:', error)
+    });
   }
 
   ngOnInit(): void {
@@ -56,9 +59,13 @@ export class CompetitionFormComponent implements OnInit {
   async onSubmit(): Promise<void> {
     if (this.form.valid) {
       if (this.competition) {
-        await this.competitionService.updateCompetitionAsync(this.competition.id, this.form.value);
+        this.competitionService.updateCompetition(this.competition.id, this.form.value).subscribe({
+          error: (error) => console.error('Error updating data:', error)
+        });
       } else {
-        await this.competitionService.postCompetitionAsync(this.form.value);
+        this.competitionService.postCompetition(this.form.value).subscribe({
+          error: (error) => console.error('Error posting data:', error)
+        });
       }
       this.router.navigate(['/competitions']);
     } else {

@@ -32,7 +32,10 @@ export class CompetitionTableComponent {
   }
 
   async fetchCompetitions(): Promise<void> {
-    this.competitions.data = await this.competitionService.getCompetitionsAsync();
+    this.competitionService.getCompetitions().subscribe({
+      next: (competitions) => this.competitions.data = competitions,
+      error: (error) => console.error('Error fetching data:', error)
+    });
   }
 
   getCountryNames(competition: Competition): string {
@@ -44,8 +47,10 @@ export class CompetitionTableComponent {
   }
 
   async deleteData(competition: Competition): Promise<void> {
-    await this.competitionService.deleteCompetitionAsync(competition.id);
-    this.fetchCompetitions();
+    this.competitionService.deleteCompetition(competition.id).subscribe({
+      error: (error) => console.error('Error deleting data:', error),
+      complete: () => this.fetchCompetitions()
+    });
   }
 
   editData(competition: Competition): void {

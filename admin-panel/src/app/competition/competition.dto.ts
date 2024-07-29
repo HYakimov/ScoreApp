@@ -1,5 +1,3 @@
-import { Country } from "./country.model";
-
 export class CompetitionDto {
     name: string;
     countryIds: number[];
