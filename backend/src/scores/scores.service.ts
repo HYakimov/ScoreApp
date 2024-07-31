@@ -7,6 +7,7 @@ import { User } from 'src/users/user.entity';
 import { ScoreDto } from './dtos/score.dto';
 import { Competition } from 'src/competitions/competition.entity';
 import { EventsGateway } from 'src/events.gateway';
+import { ScoresDtoForChart } from './dtos/scores.dto.for.chart';
 
 @Injectable()
 export class ScoresService {
@@ -41,6 +42,20 @@ export class ScoresService {
 
         await this.scoresRepository.save(score);
         this.eventsGateway.onNewEntryOrEdit(score.id);
+    }
+
+    async getDataForChart(): Promise<ScoresDtoForChart> {
+        const data = await this.competitionRepository.query(
+            `SELECT 
+                s.competitionId, 
+                u.countryId, 
+                AVG(s.value) AS averageScore
+            FROM score AS s
+            JOIN user AS u ON s.userId = u.id
+            GROUP BY s.competitionId, u.countryId`
+        );
+
+        return ScoresDtoForChart.create(data);
     }
 
     private async validateAndReturnUser(userId: number): Promise<User> {

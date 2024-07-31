@@ -14,7 +14,7 @@ const HttpHelperService = {
     },
 
     getUsers: async () => {
-        return await HttpService.get(users);
+        return await HttpService.get(scores);
     },
 
     getCountries: async () => {

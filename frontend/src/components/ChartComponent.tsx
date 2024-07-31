@@ -1,63 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { Chart } from 'react-google-charts';
-import { useSelector, useDispatch } from 'react-redux';
-import { usersDataForScoreSelector } from '../store/selectors/selectors';
-import HttpHelperService from '../HttpHelperService';
-import { setUsersDataForScore } from '../store/states/UsersDataForScoreSlice';
 import LoaderComponent from './LoaderComponent';
+import { ChartComponentProps } from '../types/ChartComponentProps';
 
-const ChartComponent: React.FC = () => {
-    const users = useSelector(usersDataForScoreSelector);
-    const dispatch = useDispatch();
-    const [data, setData] = useState<(string | number)[][]>([]);
+const ChartComponent: React.FC<ChartComponentProps> = ({ scores }) => {
     const [isLoading, setIsLoading] = useState(true);
+    const [dataArray, setDataArray] = useState<(string | number)[][]>([]);
 
     useEffect(() => {
-        fetchUsers();
-    }, []);
-
-    const fetchUsers = async () => {
-        const response = await HttpHelperService.getUsers();
-        dispatch(setUsersDataForScore(response.data));
-    };
-
-    useEffect(() => {
-        const header = ['First Name'];
-        const dataArray: (string | number)[][] = [header];
-        let maxScoresLength = 0;
-
-        users.forEach(user => {
-            user.scores?.forEach(score => {
-                if (score.competitionId > maxScoresLength) {
-                    maxScoresLength = score.competitionId;
-                }
-            });
-        });
-
-        for (let i = 1; i <= maxScoresLength; i++) {
-            header.push(`Score ${i}`);
+        if (scores) {
+            const transformedData = [
+                ['Country ID', 'Average Score', { role: 'annotation' }] as (string | number)[],
+                ...scores.map(score => [score.countryId, score.averageScore, score.countryId]),
+            ];
+            setDataArray(transformedData);
         }
-
-        users.forEach(user => {
-            const row: (string | number)[] = [user.firstName];
-            const scores = new Array(maxScoresLength).fill(0);
-
-            user.scores?.forEach(score => {
-                const index = score.competitionId - 1;
-                if (index >= 0 && index < maxScoresLength) {
-                    scores[index] = score.scoreValue;
-                }
-            });
-            row.push(...scores);
-            dataArray.push(row);
-        });
-        setData(dataArray);
         setIsLoading(false);
-    }, [users]);
+    }, [scores]);
+
 
     const options = {
-        title: 'User Scores',
-        vAxis: { title: 'Scores' },
+        title: 'Competition Scores by Country',
+        hAxis: { title: 'Country ID' },
+        vAxis: { title: 'Average Score' },
         legend: { position: 'bottom' },
         chartArea: { width: '70%', height: '70%' },
         animation: {
@@ -65,7 +30,7 @@ const ChartComponent: React.FC = () => {
             easing: 'linear',
             duration: 1500,
         },
-    }
+    };
 
     return (
         <>
@@ -74,9 +39,9 @@ const ChartComponent: React.FC = () => {
             ) : (
                 <Chart
                     chartType="ColumnChart"
-                    width="600px"
-                    height="400px"
-                    data={data}
+                    width="250px"
+                    height="150px"
+                    data={dataArray}
                     options={options}
                 />
             )}

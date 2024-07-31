@@ -1,14 +1,14 @@
+import { CountryScoreDto } from "./country.score.dto";
+
 export class ScoreDtoForChart {
 
-    scoreId: number;
-    scoreValue: number;
     competitionId: number;
+    scores: CountryScoreDto[];
 
-    static create(score: any): ScoreDtoForChart {
+    static create(data: any): ScoreDtoForChart {
         const record = new ScoreDtoForChart();
-        record.scoreId = score.id;
-        record.scoreValue = score.value;
-        record.competitionId = score.competition.id;
+        record.competitionId = data.competitionId;
+        record.scores = data.scores.map(score => CountryScoreDto.create(score));
 
         return record;
     }

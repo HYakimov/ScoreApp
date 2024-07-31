@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, In, Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { CustomException } from 'src/exceptions';
 import { EventsGateway } from 'src/events.gateway';
 import { Country } from 'src/countries/country.entity';
@@ -9,7 +9,6 @@ import { UserInputDto } from './dtos/user.input.dto';
 import { UserResponseDto } from './dtos/user.response.dto';
 import { City } from 'src/cities/city.entity';
 import { Competition } from 'src/competitions/competition.entity';
-import { UserScoresDto } from './dtos/user.scores..dto';
 import { UserBasicDtoResponse } from './dtos/user.basic.dto.response';
 
 @Injectable()
@@ -28,11 +27,6 @@ export class UserService {
         @InjectEntityManager()
         private readonly entityManager: EntityManager
     ) { }
-
-    async findAll(): Promise<UserScoresDto> {
-        const users = await this.userRepository.find({ relations: ['scores', 'scores.competition'] });
-        return UserScoresDto.create(users);
-    }
 
     async findWithPagination(sortBy: string, page: number, pageSize: number): Promise<UserResponseDto> {
         this.validatePaginationDetails(page, pageSize);
@@ -78,7 +72,7 @@ export class UserService {
         const users = await this.entityManager.query(query);
 
         return UserResponseDto.create(users);
-    }
+    } // TODO refactor
 
     async findAllForCompetition(id: number): Promise<any> {
         const users = await this.competitionRepository.query(

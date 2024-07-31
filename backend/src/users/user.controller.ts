@@ -10,12 +10,6 @@ export class UserController {
 
     constructor(private readonly userService: UserService) { }
 
-    @Get()
-    async findAll(@Res() res): Promise<void> {
-        const result = await this.userService.findAll();
-        res.status(HttpStatus.OK).json(result);
-    }
-
     @Get('/paginated')
     async findAllWithPagination(
         @Query('sortBy') sortBy: string,
