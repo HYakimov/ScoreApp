@@ -13,16 +13,12 @@ const ChartsContainer = () => {
     }, []);
 
     const fetchUsers = async () => {
-        try {
-            const response = await HttpHelperService.getUsers();
-            const fetchedData = response.data.map((item: any) => {
-                const scores = item.scores.map((score: any) => new ChartData(score));
-                return new ChartComponentProps(item.competitionId, scores);
-            });
-            setData(fetchedData);
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        }
+        const response = await HttpHelperService.getUsers();
+        const fetchedData = response.data.map((item: any) => {
+            const scores = item.scores.map((score: any) => new ChartData(score));
+            return new ChartComponentProps(item.competitionId, scores);
+        });
+        setData(fetchedData);
     };
 
     return (
@@ -30,6 +26,7 @@ const ChartsContainer = () => {
             {data.map((d, index) => (
                 <div key={index} className="chart-item">
                     <ChartComponent
+                        competitionId={d.competitionId}
                         scores={d.scores}
                     />
                 </div>

@@ -3,32 +3,37 @@ import { Chart } from 'react-google-charts';
 import LoaderComponent from './LoaderComponent';
 import { ChartComponentProps } from '../types/ChartComponentProps';
 
-const ChartComponent: React.FC<ChartComponentProps> = ({ scores }) => {
+const ChartComponent: React.FC<ChartComponentProps> = ({ competitionId, scores }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [dataArray, setDataArray] = useState<(string | number)[][]>([]);
+    const colors = [`red`, `blue`, `green`, `orange`, `purple`, `yellow`];
 
     useEffect(() => {
         if (scores) {
             const transformedData = [
-                ['Country ID', 'Average Score', { role: 'annotation' }] as (string | number)[],
-                ...scores.map(score => [score.countryId, score.averageScore, score.countryId]),
+                ['Country', 'Average Score', { role: 'style' }, { role: 'annotation' }] as (string | number)[],
+                ...scores.map((score, index) => [
+                    `Country ${score.countryId}`,
+                    score.averageScore,
+                    colors[index],
+                    score.averageScore
+                ]),
             ];
             setDataArray(transformedData);
         }
         setIsLoading(false);
     }, [scores]);
 
-
     const options = {
-        title: 'Competition Scores by Country',
-        hAxis: { title: 'Country ID' },
+        title: `Competition ${competitionId}`,
         vAxis: { title: 'Average Score' },
-        legend: { position: 'bottom' },
+        legend: { position: 'none' },
         chartArea: { width: '70%', height: '70%' },
+        bar: { groupWidth: '50%' },
         animation: {
             startup: true,
             easing: 'linear',
-            duration: 1500,
+            duration: 2000,
         },
     };
 
@@ -40,7 +45,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({ scores }) => {
                 <Chart
                     chartType="ColumnChart"
                     width="250px"
-                    height="150px"
+                    height="200px"
                     data={dataArray}
                     options={options}
                 />
