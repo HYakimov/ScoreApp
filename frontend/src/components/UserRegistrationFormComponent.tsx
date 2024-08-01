@@ -87,9 +87,9 @@ const UserRegistrationFormComponent: React.FC = () => {
     dispatch(setCities(data.data));
   };
 
-  const getErrorMessageForInput = (inputName:string) => {
-    const error =  errorMessages.find(p => p.property == inputName)
-    if(error != null){
+  const getErrorMessageForInput = (inputName: string) => {
+    const error = errorMessages.find(p => p.property == inputName)
+    if (error != null) {
       return error.message
     }
     return null;
@@ -108,17 +108,17 @@ const UserRegistrationFormComponent: React.FC = () => {
         <div>
           <label className="label">First Name:</label>
           <input type="text" name="firstName" value={userInputData.firstName} onChange={handleInputChange} required className="input" />
-          {showErrorMessages && <p>{getErrorMessageForInput("firstName")}</p>}
+          {showErrorMessages() && <p>{getErrorMessageForInput("firstName")}</p>}
         </div>
         <div>
           <label className="label">Last Name:</label>
           <input type="text" name="lastName" value={userInputData.lastName} onChange={handleInputChange} required className="input" />
-          {showErrorMessages && <p>{getErrorMessageForInput("lastName")}</p>}
+          {showErrorMessages() && <p>{getErrorMessageForInput("lastName")}</p>}
         </div>
         <div>
           <label className="label">Age:</label>
           <input type="number" name="age" value={userInputData.age ?? ''} onChange={handleInputChange} required className="input" />
-          {showErrorMessages && <p>{getErrorMessageForInput("age")}</p>}
+          {showErrorMessages() && <p>{getErrorMessageForInput("age")}</p>}
         </div>
         <div>
           <label className="label">Country:</label>
@@ -128,7 +128,7 @@ const UserRegistrationFormComponent: React.FC = () => {
               <option key={country.id} value={country.id}>{country.name}</option>
             ))}
           </select>
-          {showErrorMessages && <p>{getErrorMessageForInput("countryId")}</p>}
+          {showErrorMessages() && <p>{getErrorMessageForInput("countryId")}</p>}
         </div>
         <div>
           <label className="label">City:</label>
@@ -138,7 +138,7 @@ const UserRegistrationFormComponent: React.FC = () => {
               <option key={city.id} value={city.id}>{city.name}</option>
             ))}
           </select>
-          {showErrorMessages && <p>{getErrorMessageForInput("cityId")}</p>}
+          {showErrorMessages() && <p>{getErrorMessageForInput("cityId")}</p>}
         </div>
         <div>
           <label className="label">Gender:</label>
@@ -147,12 +147,12 @@ const UserRegistrationFormComponent: React.FC = () => {
             <option value="male">Male</option>
             <option value="female">Female</option>
           </select>
-          {showErrorMessages && <p>{getErrorMessageForInput("gender")}</p>}
+          {showErrorMessages() && <p>{getErrorMessageForInput("gender")}</p>}
         </div>
         <div>
           <label className="label">Email:</label>
           <input type="text" name="email" value={userInputData.email} onChange={handleInputChange} required className="input" />
-          {showErrorMessages && <p>{getErrorMessageForInput("email")}</p>}
+          {showErrorMessages() && <p>{getErrorMessageForInput("email")}</p>}
         </div>
         <div>
           <label className="label">Avatar:</label>

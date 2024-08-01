@@ -8,7 +8,6 @@ import { competitionsSelector, scoreSelector, usersDataForCompetitionSelector } 
 import { setCompetitions } from "../store/states/CompetitionsDataSlice";
 import { setUsers } from "../store/states/UsersDataSlice";
 import { setUsersDataForCompetition } from "../store/states/UsersDataForCompetitionSlice";
-import ErrorComponent from "./ErrorComponent";
 
 const ScoresFormComponent = () => {
     const navigate = useNavigate();
@@ -111,12 +110,7 @@ const ScoresFormComponent = () => {
                     <button className="button" onClick={handleCancel}>Cancel</button>
                 </div>
             </form>
-            {showErrorComponent && (
-                <ErrorComponent
-                    errorMessages={errorMessages}
-                    onClose={() => setShowErrorComponent(false)}
-                />
-            )}
+
         </div>
     );
 }
