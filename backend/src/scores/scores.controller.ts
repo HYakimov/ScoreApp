@@ -10,9 +10,6 @@ export class ScoresController {
     @Get()
     async findAll(@Res() res): Promise<void> {
         const result = await this.scoresService.getDataForChart();
-
-        console.log(result);
-
         res.status(HttpStatus.OK).json(result);
     }
 

@@ -10,12 +10,14 @@ export class ScoresDtoForChart {
             if (!acc[item.competitionId]) {
                 acc[item.competitionId] = {
                     competitionId: item.competitionId,
+                    competitionName: item.competitionName,
                     scores: []
                 };
             }
 
             acc[item.competitionId].scores.push({
                 countryId: item.countryId,
+                countryName: item.countryName,
                 averageScore: parseFloat(item.averageScore)
             });
 

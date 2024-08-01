@@ -48,10 +48,14 @@ export class ScoresService {
         const data = await this.competitionRepository.query(
             `SELECT 
                 s.competitionId, 
+                cc.name as competitionName, 
                 u.countryId, 
+                c.name as countryName, 
                 AVG(s.value) AS averageScore
             FROM score AS s
             JOIN user AS u ON s.userId = u.id
+            JOIN competition AS cc ON s.competitionId = cc.id
+            JOIN country AS c ON u.countryId = c.id
             GROUP BY s.competitionId, u.countryId`
         );
 

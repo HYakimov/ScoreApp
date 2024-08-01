@@ -16,7 +16,7 @@ const ChartsContainer = () => {
         const response = await HttpHelperService.getUsers();
         const fetchedData = response.data.map((item: any) => {
             const scores = item.scores.map((score: any) => new ChartData(score));
-            return new ChartComponentProps(item.competitionId, scores);
+            return new ChartComponentProps(item.competitionId, item.competitionName, scores);
         });
         setData(fetchedData);
     };
@@ -27,6 +27,7 @@ const ChartsContainer = () => {
                 <div key={index} className="chart-item">
                     <ChartComponent
                         competitionId={d.competitionId}
+                        competitionName={d.competitionName}
                         scores={d.scores}
                     />
                 </div>
