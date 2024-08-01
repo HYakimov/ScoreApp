@@ -9,7 +9,6 @@ import { setCities } from '../store/states/CitiesDataSlice';
 import { initialState, setUserInputData } from '../store/states/UserInputDataSlice';
 import { setFormData, initialFormDataState } from '../store/states/FormDataSlice';
 import { citiesRecordsSelector, countriesRecordsSelector, userInputSelector } from '../store/selectors/selectors';
-import ErrorComponent from './ErrorComponent';
 
 const UserRegistrationFormComponent: React.FC = () => {
   const dispatch = useDispatch();
@@ -19,7 +18,7 @@ const UserRegistrationFormComponent: React.FC = () => {
   const cities = useSelector(citiesRecordsSelector);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [errorMessages, setErrorMessages] = useState<{ property: string; message: string }[]>([]);
-  const [showErrorComponent, setShowErrorComponent] = useState(false);
+  const showErrorMessages = () => errorMessages != null;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -74,7 +73,6 @@ const UserRegistrationFormComponent: React.FC = () => {
         const parsedError = JSON.parse(error.message);
         const messages = JSON.parse(parsedError.message);
         setErrorMessages(messages);
-        setShowErrorComponent(true);
       }
     }
   };
@@ -89,6 +87,14 @@ const UserRegistrationFormComponent: React.FC = () => {
     dispatch(setCities(data.data));
   };
 
+  const getErrorMessageForInput = (inputName:string) => {
+    const error =  errorMessages.find(p => p.property == inputName)
+    if(error != null){
+      return error.message
+    }
+    return null;
+  }
+
   useEffect(() => {
     fetchCountries();
   }, []);
@@ -102,14 +108,17 @@ const UserRegistrationFormComponent: React.FC = () => {
         <div>
           <label className="label">First Name:</label>
           <input type="text" name="firstName" value={userInputData.firstName} onChange={handleInputChange} required className="input" />
+          {showErrorMessages && <p>{getErrorMessageForInput("firstName")}</p>}
         </div>
         <div>
           <label className="label">Last Name:</label>
           <input type="text" name="lastName" value={userInputData.lastName} onChange={handleInputChange} required className="input" />
+          {showErrorMessages && <p>{getErrorMessageForInput("lastName")}</p>}
         </div>
         <div>
           <label className="label">Age:</label>
           <input type="number" name="age" value={userInputData.age ?? ''} onChange={handleInputChange} required className="input" />
+          {showErrorMessages && <p>{getErrorMessageForInput("age")}</p>}
         </div>
         <div>
           <label className="label">Country:</label>
@@ -119,6 +128,7 @@ const UserRegistrationFormComponent: React.FC = () => {
               <option key={country.id} value={country.id}>{country.name}</option>
             ))}
           </select>
+          {showErrorMessages && <p>{getErrorMessageForInput("countryId")}</p>}
         </div>
         <div>
           <label className="label">City:</label>
@@ -128,6 +138,7 @@ const UserRegistrationFormComponent: React.FC = () => {
               <option key={city.id} value={city.id}>{city.name}</option>
             ))}
           </select>
+          {showErrorMessages && <p>{getErrorMessageForInput("cityId")}</p>}
         </div>
         <div>
           <label className="label">Gender:</label>
@@ -136,10 +147,12 @@ const UserRegistrationFormComponent: React.FC = () => {
             <option value="male">Male</option>
             <option value="female">Female</option>
           </select>
+          {showErrorMessages && <p>{getErrorMessageForInput("gender")}</p>}
         </div>
         <div>
           <label className="label">Email:</label>
           <input type="text" name="email" value={userInputData.email} onChange={handleInputChange} required className="input" />
+          {showErrorMessages && <p>{getErrorMessageForInput("email")}</p>}
         </div>
         <div>
           <label className="label">Avatar:</label>
@@ -150,12 +163,6 @@ const UserRegistrationFormComponent: React.FC = () => {
           <button className="button" onClick={handleCancel}>Cancel</button>
         </div>
       </form>
-      {showErrorComponent && (
-        <ErrorComponent
-          errorMessages={errorMessages}
-          onClose={() => setShowErrorComponent(false)}
-        />
-      )}
     </div>
   );
 };
