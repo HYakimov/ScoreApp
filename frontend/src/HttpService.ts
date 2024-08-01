@@ -6,72 +6,59 @@ const HttpService = {
     get: async (url: string) => {
         try {
             const response = await fetch(`${baseUrl}${url}`);
+            const responseData = await response.json();
             if (!response.ok) {
-                throw new Error("Network response was not ok");
+                throw new Error(JSON.stringify(responseData));
             }
-
-            return await response.json();
+            return await responseData;
         } catch (error) {
             console.error("There was a problem with the fetch operation:", error);
-            throw error;
         }
     },
 
     post: async (url: string, data: ScoreData) => {
-        try {
-            const response = await fetch(`${baseUrl}${url}`, {
-                method: POST,
-                headers: jsonHeader,
-                body: JSON.stringify(data)
-            });
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-        } catch (error) {
-            console.error('There was a problem with the fetch operation:', error);
+        const response = await fetch(`${baseUrl}${url}`, {
+            method: POST,
+            headers: jsonHeader,
+            body: JSON.stringify(data)
+        });
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(JSON.stringify(responseData));
         }
     },
 
     postData: async (url: string, data: FormData) => {
-        try {
-            const response = await fetch(`${baseUrl}${url}`, {
-                method: POST,
-                body: data
-            });
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-        } catch (error) {
-            console.error('There was a problem with the fetch operation:', error);
+        const response = await fetch(`${baseUrl}${url}`, {
+            method: POST,
+            body: data
+        });
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(JSON.stringify(responseData));
         }
     },
 
     put: async (url: string, data: ScoreData) => {
-        try {
-            const response = await fetch(`${baseUrl}${url}`, {
-                method: PUT,
-                headers: jsonHeader,
-                body: JSON.stringify(data)
-            });
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-        } catch (error) {
-            console.error('There was a problem with the fetch operation:', error);
+        const response = await fetch(`${baseUrl}${url}`, {
+            method: PUT,
+            headers: jsonHeader,
+            body: JSON.stringify(data)
+        });
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(JSON.stringify(responseData));
         }
     },
 
     putData: async (url: string, data: FormData) => {
-        try {
-            const response = await fetch(`${baseUrl}${url}`, {
-                method: PUT,
-                body: data
-            });
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-        } catch (error) {
-            console.error('There was a problem with the fetch operation:', error);
+        const response = await fetch(`${baseUrl}${url}`, {
+            method: PUT,
+            body: data
+        });
+        const responseData = await response.json();
+        if (!response.ok) {
+            throw new Error(JSON.stringify(responseData));
         }
     },
 
@@ -81,12 +68,12 @@ const HttpService = {
                 method: DELETE,
                 headers: jsonHeader
             })
+            const responseData = await response.json();
             if (!response.ok) {
-                throw new Error("Network response was not ok");
+                throw new Error(JSON.stringify(responseData));
             }
         } catch (error) {
             console.error("There was a problem with the fetch operation:", error);
-            throw error;
         }
     },
 
@@ -96,12 +83,12 @@ const HttpService = {
                 method: DELETE,
                 headers: jsonHeader
             })
+            const responseData = await response.json();
             if (!response.ok) {
-                throw new Error("Network response was not ok");
+                throw new Error(JSON.stringify(responseData));
             }
         } catch (error) {
             console.error("There was a problem with the fetch operation:", error);
-            throw error;
         }
     },
 
@@ -111,14 +98,13 @@ const HttpService = {
                 method: GET,
                 headers: jsonHeader,
             })
+            const responseData = await response.json();
             if (!response.ok) {
-                throw new Error("Network response was not ok");
+                throw new Error(JSON.stringify(responseData));
             }
-
             return await response.text();
         } catch (error) {
             console.error("There was a problem with the fetch operation:", error);
-            throw error;
         }
     }
 };

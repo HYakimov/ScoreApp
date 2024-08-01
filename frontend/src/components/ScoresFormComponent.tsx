@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { MainPage } from "../constants/RouteConstants";
@@ -8,13 +8,16 @@ import { competitionsSelector, scoreSelector, usersDataForCompetitionSelector } 
 import { setCompetitions } from "../store/states/CompetitionsDataSlice";
 import { setUsers } from "../store/states/UsersDataSlice";
 import { setUsersDataForCompetition } from "../store/states/UsersDataForCompetitionSlice";
+import ErrorComponent from "./ErrorComponent";
 
 const ScoresFormComponent = () => {
-    const scoreData = useSelector(scoreSelector);
-    const users = useSelector(usersDataForCompetitionSelector);
-    const competitions = useSelector(competitionsSelector);
-    const dispatch = useDispatch();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const users = useSelector(usersDataForCompetitionSelector);
+    const scoreData = useSelector(scoreSelector);
+    const competitions = useSelector(competitionsSelector);
+    const [errorMessages, setErrorMessages] = useState<{ property: string; message: string }[]>([]);
+    const [showErrorComponent, setShowErrorComponent] = useState(false);
 
     useEffect(() => {
         fetchCompetitions();
@@ -60,44 +63,61 @@ const ScoresFormComponent = () => {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        await HttpHelperService.submitScore(scoreData);
-        dispatch(setScore(initialState));
-        fetchUsers(); // for chart purpose
-        navigate(MainPage);
+        try {
+            await HttpHelperService.submitScore(scoreData);
+            dispatch(setScore(initialState));
+            fetchUsers(); // for chart purpose
+            navigate(MainPage);
+        } catch (error) {
+            if (error instanceof Error) {
+                const parsedError = JSON.parse(error.message);
+                const messages = JSON.parse(parsedError.message);
+                setErrorMessages(messages);
+                setShowErrorComponent(true);
+            }
+        }
     }
 
     return (
-        <form onSubmit={handleSubmit} className="form">
-            <div>
-                <h2>Scores Form</h2>
-            </div>
-            <div>
-                <label className="label">Score:</label>
-                <input type="number" name="value" value={scoreData.value ?? ''} onChange={handleInputChange} required className="input" />
-            </div>
-            <div>
-                <label className="label">Competition:</label>
-                <select name="competitionId" value={scoreData.competitionId ?? ''} onChange={handleSelectChange} required className="input select-input">
-                    <option value="">Select Competition</option>
-                    {competitions.map(c => (
-                        <option key={c.id} value={c.id ?? 0}>{c.name}</option>
-                    ))}
-                </select>
-            </div>
-            <div>
-                <label className="label">User:</label>
-                <select name="userId" value={scoreData.userId ?? ''} onChange={handleSelectUserChange} required className="input select-input">
-                    <option value="">Select User</option>
-                    {users.map(user => (
-                        <option key={user.id} value={user.id ?? 0}>{user.name}</option>
-                    ))}
-                </select>
-            </div>
-            <div className='btn-container'>
-                <button type="submit" className="button">Submit</button>
-                <button className="button" onClick={handleCancel}>Cancel</button>
-            </div>
-        </form>
+        <div>
+            <form onSubmit={handleSubmit} className="form">
+                <div>
+                    <h2>Scores Form</h2>
+                </div>
+                <div>
+                    <label className="label">Score:</label>
+                    <input type="number" name="value" value={scoreData.value ?? ''} onChange={handleInputChange} required className="input" />
+                </div>
+                <div>
+                    <label className="label">Competition:</label>
+                    <select name="competitionId" value={scoreData.competitionId ?? ''} onChange={handleSelectChange} required className="input select-input">
+                        <option value="">Select Competition</option>
+                        {competitions.map(c => (
+                            <option key={c.id} value={c.id ?? 0}>{c.name}</option>
+                        ))}
+                    </select>
+                </div>
+                <div>
+                    <label className="label">User:</label>
+                    <select name="userId" value={scoreData.userId ?? ''} onChange={handleSelectUserChange} required className="input select-input">
+                        <option value="">Select User</option>
+                        {users.map(user => (
+                            <option key={user.id} value={user.id ?? 0}>{user.name}</option>
+                        ))}
+                    </select>
+                </div>
+                <div className='btn-container'>
+                    <button type="submit" className="button">Submit</button>
+                    <button className="button" onClick={handleCancel}>Cancel</button>
+                </div>
+            </form>
+            {showErrorComponent && (
+                <ErrorComponent
+                    errorMessages={errorMessages}
+                    onClose={() => setShowErrorComponent(false)}
+                />
+            )}
+        </div>
     );
 }
 
