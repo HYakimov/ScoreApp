@@ -42,7 +42,7 @@ const TableComponent = () => {
   const handleEdit = (formData: FormData) => {
     dispatch(setLoading(true));
     navigate(RegistrationFormPage);
-    fetchCities(formData.countryId == null ? 0 : formData.countryId);
+    fetchCities(formData.countryId ?? 0);
     dispatch(setUserInputData({
       firstName: formData.firstName,
       lastName: formData.lastName,
@@ -73,32 +73,20 @@ const TableComponent = () => {
   }
 
   const handleDownloadCsv = async () => {
-    const csvData = await HttpHelperService.downloadCsv(page, paginationLimit, sortBy);
-    const blob = new Blob([csvData], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.style.display = 'none';
-    a.href = url;
-    a.download = 'data.csv';
-    document.body.appendChild(a);
-    a.click();
-    window.URL.revokeObjectURL(url);
+    const csvData = await HttpHelperService.downloadCsv();
+    const url = `data:text/csv;charset=utf-8,${csvData}`;
+    window.open(url, '_blank');
   }
 
   const fetchCities = async (countryId: number) => {
     dispatch(setLoading(true));
     const data = await HttpHelperService.getCities(countryId);
-    dispatch(setCities(data))
+    dispatch(setCities(data.data))
     dispatch(setLoading(false));
   }
 
-  function getBackgroundColor(scores: { scoreId: number, scoreValue: number, competitionId: number }[]) {
-    if (!scores || scores.length === 0) {
-      return 'linear-gradient(to right, hsl(0, 0%, 90%), hsl(0, 0%, 70%))';
-    }
-    const totalScore = scores.reduce((sum, score) => sum + score.scoreValue, 0);
-    const avgScore = totalScore / scores.length;
-    const hue = Math.round((avgScore / 100) * 120);
+  function getBackgroundColor(scoreValue: number) {
+    const hue = Math.round((scoreValue / 100) * 120);
     const hue2 = (hue + 60) % 360;
 
     return `linear-gradient(to right, hsl(${hue}, 100%, 50%), hsl(${hue2}, 100%, 50%))`;
@@ -116,6 +104,7 @@ const TableComponent = () => {
               <th>First Name</th>
               <th>Last Name</th>
               <th>Age</th>
+              <th>Competition</th>
               <th>Score</th>
               <th>Country</th>
               <th>City</th>
@@ -126,8 +115,8 @@ const TableComponent = () => {
           <tbody>
             {tableData.map((user, index) => (
               <tr
-                key={user.id}
-                style={{ background: getBackgroundColor(user.scores ?? []) }}
+                key={index}
+                style={{ background: getBackgroundColor(user.scoreValue ?? 1) }}
                 className={`${highlightedRow ?? ''}`}
               >
                 <td style={{ borderBottomLeftRadius: index === tableData.length - 1 ? "15px" : "0" }}>
@@ -135,7 +124,8 @@ const TableComponent = () => {
                 </td>
                 <td>{user.lastName}</td>
                 <td>{user.age}</td>
-                <td>{user.scores && user.scores.length > 0 && user.scores[0].scoreValue !== undefined ? user.scores[0].scoreValue : ''}</td>
+                <td>{user.competitionId ?? ''}</td>
+                <td>{user.scoreValue ?? ''}</td>
                 <td>{user.countryName}</td>
                 <td>{user.cityName}</td>
                 <td>{user.gender}</td>
@@ -144,7 +134,7 @@ const TableComponent = () => {
                   <FontAwesomeIcon icon={faPencilAlt} onClick={() => handleEdit(user)} style={{ cursor: "pointer" }} />
                 </td>
                 <td style={{ borderBottomRightRadius: index === tableData.length - 1 ? "15px" : "0" }}>
-                  <FontAwesomeIcon icon={faTimes} onClick={() => handleDelete(user.id == null ? 0 : user.id)} style={{ cursor: "pointer" }} />
+                  <FontAwesomeIcon icon={faTimes} onClick={() => handleDelete(user.id ?? 0)} style={{ cursor: "pointer" }} />
                 </td>
               </tr>
             ))}

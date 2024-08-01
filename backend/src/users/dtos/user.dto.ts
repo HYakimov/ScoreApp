@@ -1,5 +1,3 @@
-import { CountryService } from "src/countries/country.service"
-
 export class UserDto {
 
     id: number;
@@ -13,28 +11,25 @@ export class UserDto {
     countryName: string;
     cityId: number;
     cityName: string;
-    scores: { scoreId: number, scoreValue: number, competitionId: number }[];
-
-    static getCityName(cityId: number): string {
-        return CountryService.getCityName(cityId);
-    }
+    scoreId: number;
+    scoreValue: number;
+    competitionId: number;
 
     static create(user: any): UserDto {
         const record = new UserDto();
         record.firstName = user.firstName;
         record.lastName = user.lastName;
         record.age = user.age;
-        record.scores = user.scores ? user.scores.split(',').map(score => {
-            const [scoreId, scoreValue, competitionId] = score.split(':').map(Number);
-            return { scoreId, scoreValue, competitionId };
-        }) : [];
         record.countryName = user.countryName;
         record.countryId = user.countryId;
-        record.cityName = UserDto.getCityName(user.cityId);
+        record.cityName = user.cityName;
         record.cityId = user.cityId;
         record.gender = user.gender;
         record.email = user.email;
         record.avatarPath = user.avatarPath;
+        record.scoreId = user.scoreId;
+        record.scoreValue = user.scoreValue;
+        record.competitionId = user.competitionId;
         record.id = user.id;
 
         return record;

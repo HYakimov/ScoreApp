@@ -6,3 +6,4 @@ export const STRING_REGEX = /^[a-zA-Z]+$/;
 export const NUMERIC_REGEX = /^\d+$/;
 export const GENDER_REGEX = /^(male|female)$/;
 export const AGE_REGEX = /^(?:1[0-4][0-9]|150|[1-9][0-9]?)$/;
+export const SCORE_REGEX = /^(?:100|[1-9][0-9]?)$/;

@@ -13,7 +13,9 @@ const initialState: FormData = {
     email: '',
     avatarPath: '',
     id: null,
-    scores: null
+    scoreId: null,
+    scoreValue: null,
+    competitionId: null
 };
 
 export const initialFormDataState: FormData = {
@@ -28,7 +30,9 @@ export const initialFormDataState: FormData = {
     email: '',
     avatarPath: '',
     id: null,
-    scores: null
+    scoreId: null,
+    scoreValue: null,
+    competitionId: null
 };
 
 const FormDataSlice = createSlice({

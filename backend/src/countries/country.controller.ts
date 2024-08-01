@@ -1,25 +1,19 @@
-import { Body, Controller, Get, HttpStatus, Param, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Post, Res } from '@nestjs/common';
 import { CountryService } from './country.service';
 import { Country } from './country.entity';
 
-@Controller()
+@Controller('countries')
 export class CountryController {
 
     constructor(private readonly countryService: CountryService) { }
 
-    @Get('countries')
+    @Get()
     async getCountires(@Res() res): Promise<void> {
         const result = await this.countryService.getCountries();
         res.status(HttpStatus.OK).json(result);
     }
 
-    @Get('cities/:id')
-    getCities(@Param('id') id: number, @Res() res): void {
-        const result = this.countryService.getCities(id);
-        res.status(HttpStatus.OK).json(result);
-    }
-
-    @Post('countries')
+    @Post()
     async create(@Body() country: Country, @Res() res): Promise<void> {
         await this.countryService.addCountry(country.name);
         res.status(HttpStatus.CREATED).send('Data saved successfully');

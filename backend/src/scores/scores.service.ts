@@ -5,7 +5,7 @@ import { Score } from './score.entity';
 import { CustomException } from 'src/exceptions';
 import { User } from 'src/users/user.entity';
 import { ScoreDto } from './dtos/score.dto';
-import { Competition } from 'src/competition/competition.entity';
+import { Competition } from 'src/competitions/competition.entity';
 import { EventsGateway } from 'src/events.gateway';
 
 @Injectable()
@@ -39,7 +39,6 @@ export class ScoresService {
             });
         }
 
-        score.getScoreValidation();
         await this.scoresRepository.save(score);
         this.eventsGateway.onNewEntryOrEdit(score.id);
     }
