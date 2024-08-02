@@ -7,7 +7,6 @@ import HttpHelperService from "../HttpHelperService";
 import { initialState, setScore } from "../store/states/ScoreDataSlice";
 import { competitionsSelector, scoreSelector, usersDataForCompetitionSelector } from "../store/selectors/selectors";
 import { setCompetitions } from "../store/states/CompetitionsDataSlice";
-import { setUsers } from "../store/states/UsersDataSlice";
 import { setUsersDataForCompetition } from "../store/states/UsersDataForCompetitionSlice";
 import InputWithErrorComponent from "./InputWithErrorComponent";
 
@@ -27,11 +26,6 @@ const ScoresFormComponent = () => {
     const fetchCompetitions = async () => {
         const data = await HttpHelperService.getCompetitions();
         dispatch(setCompetitions(data.data));
-    }
-
-    const fetchUsers = async () => {
-        const data = await HttpHelperService.getUsers();
-        dispatch(setUsers(data.data));
     }
 
     const fetchUsersForCompetition = async (competitionId: number) => {
@@ -67,7 +61,6 @@ const ScoresFormComponent = () => {
         try {
             await HttpHelperService.submitScore(scoreData);
             dispatch(setScore(initialState));
-            fetchUsers(); // for chart purpose
             navigate(MainPage);
         } catch (error) {
             if (error instanceof Error) {

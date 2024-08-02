@@ -9,11 +9,11 @@ const ChartsContainer = () => {
     const [data, setData] = useState<ChartComponentProps[]>([]);
 
     useEffect(() => {
-        fetchUsers();
+        fetchDataForCharts();
     }, []);
 
-    const fetchUsers = async () => {
-        const response = await HttpHelperService.getUsers();
+    const fetchDataForCharts = async () => {
+        const response = await HttpHelperService.getDataForCharts();
         const fetchedData = response.data.map((item: any) => {
             const scores = item.scores.map((score: any) => new ChartData(score));
             return new ChartComponentProps(item.competitionId, item.competitionName, scores);
