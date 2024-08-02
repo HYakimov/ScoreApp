@@ -14,10 +14,11 @@ const ChartsContainer = () => {
 
     const fetchDataForCharts = async () => {
         const response = await HttpHelperService.getDataForCharts();
-        const fetchedData = response.data.map((item: any) => {
-            const scores = item.scores.map((score: any) => new ChartData(score));
-            return new ChartComponentProps(item.competitionId, item.competitionName, scores);
-        });
+        const fetchedData = response.data.map((item: any) => ({
+            competitionId: item.competitionId,
+            competitionName: item.competitionName,
+            scores: item.scores.map((score: any) => new ChartData(score))
+        }));
         setData(fetchedData);
     };
 
