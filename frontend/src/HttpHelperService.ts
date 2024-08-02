@@ -13,8 +13,8 @@ const HttpHelperService = {
         return await HttpService.get(url);
     },
 
-    getDataForCharts: async () => {
-        return await HttpService.get(scores);
+    getDataForCharts: async (primaryKey: string) => {
+        return await HttpService.get(`${scores}/${primaryKey}`);
     },
 
     getCountries: async () => {

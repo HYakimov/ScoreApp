@@ -44,7 +44,26 @@ export class ScoresService {
         this.eventsGateway.onNewEntryOrEdit(score.id);
     }
 
-    async getDataForChart(): Promise<ScoresDtoForChart> {
+    async getDataForChart(primaryKey: string): Promise<ScoresDtoForChart> {
+        let primaryValue: string;
+        let secondaryKey: string;
+        let secondaryValue: string;
+
+        switch (primaryKey) {
+            case 'countryId':
+                primaryValue = 'countryName';
+                secondaryKey = 'competitionId';
+                secondaryValue = 'competitionName';
+                break;
+            case 'competitionId':
+                primaryValue = 'competitionName';
+                secondaryKey = 'countryId';
+                secondaryValue = 'countryName';
+                break;
+            default:
+                throw new Error('Invalid primary key');
+        }
+
         const data = await this.competitionRepository.query(
             `SELECT 
                 s.competitionId, 
@@ -59,7 +78,7 @@ export class ScoresService {
             GROUP BY s.competitionId, u.countryId`
         );
 
-        return ScoresDtoForChart.create(data);
+        return ScoresDtoForChart.create(data, primaryKey, primaryValue, secondaryKey, secondaryValue);
     }
 
     private async validateAndReturnUser(userId: number): Promise<User> {

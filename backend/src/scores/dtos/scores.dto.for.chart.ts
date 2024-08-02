@@ -4,27 +4,38 @@ export class ScoresDtoForChart {
 
     data: ScoreDtoForChart[];
 
-    static create(rawData: any[]): ScoresDtoForChart {
+    static create(
+        rawData: any[],
+        primaryKey: string,
+        primaryValue: string,
+        secondaryKey: string,
+        secondaryValue: string
+    ): ScoresDtoForChart {
         const record = new ScoresDtoForChart();
-        const groupedData: { [key: number]: ScoreDtoForChart } = {};
+        const groupedData: { [key: string]: ScoreDtoForChart } = {};
 
         rawData.forEach(item => {
-            if (!groupedData[item.competitionId]) {
-                groupedData[item.competitionId] = {
-                    id: item.competitionId,
-                    name: item.competitionName,
+            const primaryKeyValue = item[primaryKey];
+            const primaryValueValue = item[primaryValue];
+            const secondaryKeyValue = item[secondaryKey];
+            const secondaryValueValue = item[secondaryValue];
+
+            if (!groupedData[primaryKeyValue]) {
+                groupedData[primaryKeyValue] = {
+                    id: primaryKeyValue,
+                    name: primaryValueValue,
                     scores: [{
-                        id: item.countryId,
-                        name: item.countryName,
+                        id: secondaryKeyValue,
+                        name: secondaryValueValue,
                         averageScore: parseFloat(item.averageScore)
                     }]
                 };
             } else {
-                groupedData[item.competitionId].scores.push({
-                    id: item.countryId,
-                    name: item.countryName,
+                groupedData[primaryKeyValue].scores.push({
+                    id: secondaryKeyValue,
+                    name: secondaryValueValue,
                     averageScore: parseFloat(item.averageScore)
-                })
+                });
             }
         });
 

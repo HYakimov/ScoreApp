@@ -1,9 +1,16 @@
+.charts-page-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 150px;
+}
+
 .charts-container {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
     padding: 20px;
-    padding-top: 100px;
+    margin: 20px;
 }
 
 .chart-item {

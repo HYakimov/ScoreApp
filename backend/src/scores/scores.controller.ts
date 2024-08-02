@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Res, HttpStatus, Get } from '@nestjs/common';
+import { Controller, Post, Body, Res, HttpStatus, Get, Param } from '@nestjs/common';
 import { ScoresService } from './scores.service';
 import { ScoreDto } from './dtos/score.dto';
 
@@ -7,9 +7,9 @@ export class ScoresController {
 
     constructor(private readonly scoresService: ScoresService) { }
 
-    @Get()
-    async findAll(@Res() res): Promise<void> {
-        const result = await this.scoresService.getDataForChart();
+    @Get(':primaryKey')
+    async findAll(@Res() res, @Param('primaryKey') primaryKey): Promise<void> {
+        const result = await this.scoresService.getDataForChart(primaryKey);
         res.status(HttpStatus.OK).json(result);
     }
 
