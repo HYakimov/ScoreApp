@@ -11,18 +11,18 @@ export class ScoresDtoForChart {
         rawData.forEach(item => {
             if (!groupedData[item.competitionId]) {
                 groupedData[item.competitionId] = {
-                    competitionId: item.competitionId,
-                    competitionName: item.competitionName,
+                    id: item.competitionId,
+                    name: item.competitionName,
                     scores: [{
-                        countryId: item.countryId,
-                        countryName: item.countryName,
+                        id: item.countryId,
+                        name: item.countryName,
                         averageScore: parseFloat(item.averageScore)
                     }]
                 };
             } else {
                 groupedData[item.competitionId].scores.push({
-                    countryId: item.countryId,
-                    countryName: item.countryName,
+                    id: item.countryId,
+                    name: item.countryName,
                     averageScore: parseFloat(item.averageScore)
                 })
             }

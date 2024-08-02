@@ -1,12 +1,6 @@
-export class ChartData {
+export interface ChartData {
 
-    countryId: number;
-    countryName: string;
+    id: number;
+    name: string;
     averageScore: number;
-
-    constructor(data: any) {
-        this.countryId = data.countryId;
-        this.countryName = data.countryName;
-        this.averageScore = data.averageScore;
-    }
 }

@@ -3,7 +3,7 @@ import { Chart } from 'react-google-charts';
 import LoaderComponent from './LoaderComponent';
 import { ChartComponentProps } from '../types/ChartComponentProps';
 
-const ChartComponent: React.FC<ChartComponentProps> = ({ competitionId, competitionName, scores }) => {
+const ChartComponent: React.FC<ChartComponentProps> = ({ id, name, scores }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [dataArray, setDataArray] = useState<(string | number)[][]>([]);
     const colors = [`green`, `blue`, `red`, `orange`, `purple`, `yellow`];
@@ -16,7 +16,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({ competitionId, competit
             const transformedData = [
                 ['Country', 'Average Score', { role: 'style' }, { role: 'annotation' }] as (string | number)[],
                 ...scores.map((score, index) => [
-                    `${score.countryName}`,
+                    `${score.name}`,
                     score.averageScore,
                     getColor(index),
                     score.averageScore
@@ -28,7 +28,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({ competitionId, competit
     }, [scores]);
 
     const options = {
-        title: `${competitionName}`,
+        title: `${name}`,
         vAxis: { title: 'Average Score' },
         legend: { position: 'none' },
         chartArea: { width: '70%', height: '70%' },

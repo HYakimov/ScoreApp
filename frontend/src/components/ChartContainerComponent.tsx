@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import ChartComponent from './ChartComponent';
 import HttpHelperService from '../HttpHelperService';
-import { ChartData } from '../types/ChartData';
 import { ChartComponentProps } from '../types/ChartComponentProps';
 import '../styles/ChartContainerComponent.css';
+import { ChartData } from '../types/ChartData';
 
 const ChartsContainer = () => {
     const [data, setData] = useState<ChartComponentProps[]>([]);
@@ -14,10 +14,14 @@ const ChartsContainer = () => {
 
     const fetchDataForCharts = async () => {
         const response = await HttpHelperService.getDataForCharts();
-        const fetchedData = response.data.map((item: any) => ({
-            competitionId: item.competitionId,
-            competitionName: item.competitionName,
-            scores: item.scores.map((score: any) => new ChartData(score))
+        const fetchedData = response.data.map((item: any): ChartComponentProps => ({
+            id: item.id,
+            name: item.name,
+            scores: item.scores.map((score: any): ChartData => ({
+                id: score.id,
+                name: score.name,
+                averageScore: parseFloat(score.averageScore)
+            }))
         }));
         setData(fetchedData);
     };
@@ -27,8 +31,8 @@ const ChartsContainer = () => {
             {data.map((d, index) => (
                 <div key={index} className="chart-item">
                     <ChartComponent
-                        competitionId={d.competitionId}
-                        competitionName={d.competitionName}
+                        id={d.id}
+                        name={d.name}
                         scores={d.scores}
                     />
                 </div>

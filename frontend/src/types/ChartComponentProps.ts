@@ -2,7 +2,7 @@ import { ChartData } from "./ChartData";
 
 export interface ChartComponentProps {
 
-    competitionId: number;
-    competitionName: string;
+    id: number;
+    name: string;
     scores: ChartData[];
 }

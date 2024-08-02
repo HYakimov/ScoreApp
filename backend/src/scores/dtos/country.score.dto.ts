@@ -1,13 +1,13 @@
 export class CountryScoreDto {
 
-    countryId: number;
-    countryName: string;
+    id: number;
+    name: string;
     averageScore: number;
 
     constructor(data: any) {
-        this.countryId = data.countryId;
+        this.id = data.id;
+        this.name = data.name;
         this.averageScore = data.averageScore;
-        this.countryName = data.countryName;
     }
 
     static create(data: any): CountryScoreDto {
