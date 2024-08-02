@@ -6,7 +6,10 @@ import { ChartComponentProps } from '../types/ChartComponentProps';
 const ChartComponent: React.FC<ChartComponentProps> = ({ competitionId, competitionName, scores }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [dataArray, setDataArray] = useState<(string | number)[][]>([]);
-    const colors = [`red`, `blue`, `green`, `orange`, `purple`, `yellow`];
+    const colors = [`green`, `blue`, `red`, `orange`, `purple`, `yellow`];
+    const getColor = (index: number) => {
+        return colors[index % colors.length];
+    }
 
     useEffect(() => {
         if (scores) {
@@ -15,7 +18,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({ competitionId, competit
                 ...scores.map((score, index) => [
                     `${score.countryName}`,
                     score.averageScore,
-                    colors[index],
+                    getColor(index),
                     score.averageScore
                 ]),
             ];

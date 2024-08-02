@@ -1,4 +1,4 @@
-import '../styles/UserRegistrationFormComponent.css';
+import '../styles/FormComponent.css';
 import React, { useEffect, useState } from 'react';
 import HttpHelperService from '../HttpHelperService';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,6 +9,7 @@ import { setCities } from '../store/states/CitiesDataSlice';
 import { initialState, setUserInputData } from '../store/states/UserInputDataSlice';
 import { setFormData, initialFormDataState } from '../store/states/FormDataSlice';
 import { citiesRecordsSelector, countriesRecordsSelector, userInputSelector } from '../store/selectors/selectors';
+import InputWithErrorComponent from './InputWithErrorComponent';
 
 const UserRegistrationFormComponent: React.FC = () => {
   const dispatch = useDispatch();
@@ -18,7 +19,6 @@ const UserRegistrationFormComponent: React.FC = () => {
   const cities = useSelector(citiesRecordsSelector);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [errorMessages, setErrorMessages] = useState<{ property: string; message: string }[]>([]);
-  const showErrorMessages = () => errorMessages != null;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -87,83 +87,66 @@ const UserRegistrationFormComponent: React.FC = () => {
     dispatch(setCities(data.data));
   };
 
-  const getErrorMessageForInput = (inputName: string) => {
-    const error = errorMessages.find(p => p.property == inputName)
-    if (error != null) {
-      return error.message
-    }
-    return null;
-  }
-
   useEffect(() => {
     fetchCountries();
   }, []);
 
   return (
-    <div>
-      <form onSubmit={handleSubmit} className="form">
-        <div>
-          <h2>Form</h2>
-        </div>
-        <div>
-          <label className="label">First Name:</label>
-          <input type="text" name="firstName" value={userInputData.firstName} onChange={handleInputChange} required className="input" />
-          {showErrorMessages() && <p>{getErrorMessageForInput("firstName")}</p>}
-        </div>
-        <div>
-          <label className="label">Last Name:</label>
-          <input type="text" name="lastName" value={userInputData.lastName} onChange={handleInputChange} required className="input" />
-          {showErrorMessages() && <p>{getErrorMessageForInput("lastName")}</p>}
-        </div>
-        <div>
-          <label className="label">Age:</label>
-          <input type="number" name="age" value={userInputData.age ?? ''} onChange={handleInputChange} required className="input" />
-          {showErrorMessages() && <p>{getErrorMessageForInput("age")}</p>}
-        </div>
-        <div>
-          <label className="label">Country:</label>
-          <select name="countryId" value={userInputData.countryId ?? ''} onChange={handleSelectChangeCountry} required className="input select-input">
-            <option value="">Select Country</option>
-            {countries.map(country => (
-              <option key={country.id} value={country.id}>{country.name}</option>
-            ))}
-          </select>
-          {showErrorMessages() && <p>{getErrorMessageForInput("countryId")}</p>}
-        </div>
-        <div>
-          <label className="label">City:</label>
-          <select name="cityId" value={userInputData.cityId ?? ''} onChange={handleSelectChange} required className="input select-input">
-            <option value="">Select City</option>
-            {cities.map(city => (
-              <option key={city.id} value={city.id}>{city.name}</option>
-            ))}
-          </select>
-          {showErrorMessages() && <p>{getErrorMessageForInput("cityId")}</p>}
-        </div>
-        <div>
-          <label className="label">Gender:</label>
-          <select name="gender" value={userInputData.gender} onChange={handleSelectChange} required className="input select-input" >
-            <option value="">Select Gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-          </select>
-          {showErrorMessages() && <p>{getErrorMessageForInput("gender")}</p>}
-        </div>
-        <div>
-          <label className="label">Email:</label>
-          <input type="text" name="email" value={userInputData.email} onChange={handleInputChange} required className="input" />
-          {showErrorMessages() && <p>{getErrorMessageForInput("email")}</p>}
-        </div>
-        <div>
-          <label className="label">Avatar:</label>
-          <input type="file" accept="image/*" onChange={handleFileChange} className="input" />
-        </div>
-        <div className='btn-container'>
-          <button type="submit" className="button">Submit</button>
-          <button className="button" onClick={handleCancel}>Cancel</button>
-        </div>
-      </form>
-    </div>
+    <form onSubmit={handleSubmit} className="form">
+      <div>
+        <h2>Form</h2>
+      </div>
+      <InputWithErrorComponent name="firstName" errorMessages={errorMessages} >
+        <label className="label">First Name:</label>
+        <input type="text" name="firstName" value={userInputData.firstName} onChange={handleInputChange} required className="input" />
+      </InputWithErrorComponent>
+      <InputWithErrorComponent name="lastName" errorMessages={errorMessages} >
+        <label className="label">Last Name:</label>
+        <input type="text" name="lastName" value={userInputData.lastName} onChange={handleInputChange} required className="input" />
+      </InputWithErrorComponent>
+      <InputWithErrorComponent name="age" errorMessages={errorMessages} >
+        <label className="label">Age:</label>
+        <input type="number" name="age" value={userInputData.age ?? ''} onChange={handleInputChange} required className="input" />
+      </InputWithErrorComponent>
+      <InputWithErrorComponent name="countryId" errorMessages={errorMessages} >
+        <label className="label">Country:</label>
+        <select name="countryId" value={userInputData.countryId ?? ''} onChange={handleSelectChangeCountry} required className="input select-input">
+          <option value="">Select Country</option>
+          {countries.map(country => (
+            <option key={country.id} value={country.id}>{country.name}</option>
+          ))}
+        </select>
+      </InputWithErrorComponent>
+      <InputWithErrorComponent name="cityId" errorMessages={errorMessages} >
+        <label className="label">City:</label>
+        <select name="cityId" value={userInputData.cityId ?? ''} onChange={handleSelectChange} required className="input select-input">
+          <option value="">Select City</option>
+          {cities.map(city => (
+            <option key={city.id} value={city.id}>{city.name}</option>
+          ))}
+        </select>
+      </InputWithErrorComponent>
+      <InputWithErrorComponent name="gender" errorMessages={errorMessages} >
+        <label className="label">Gender:</label>
+        <select name="gender" value={userInputData.gender} onChange={handleSelectChange} required className="input select-input" >
+          <option value="">Select Gender</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+        </select>
+      </InputWithErrorComponent>
+      <InputWithErrorComponent name="email" errorMessages={errorMessages} >
+        <label className="label">Email:</label>
+        <input type="text" name="email" value={userInputData.email} onChange={handleInputChange} required className="input" />
+      </InputWithErrorComponent>
+      <div>
+        <label className="label">Avatar:</label>
+        <input type="file" accept="image/*" onChange={handleFileChange} className="input" />
+      </div>
+      <div className='btn-container'>
+        <button type="submit" className="button">Submit</button>
+        <button className="button" onClick={handleCancel}>Cancel</button>
+      </div>
+    </form>
   );
 };
 

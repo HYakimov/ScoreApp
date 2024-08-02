@@ -1,3 +1,4 @@
+import '../styles/FormComponent.css';
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -8,6 +9,7 @@ import { competitionsSelector, scoreSelector, usersDataForCompetitionSelector } 
 import { setCompetitions } from "../store/states/CompetitionsDataSlice";
 import { setUsers } from "../store/states/UsersDataSlice";
 import { setUsersDataForCompetition } from "../store/states/UsersDataForCompetitionSlice";
+import InputWithErrorComponent from "./InputWithErrorComponent";
 
 const ScoresFormComponent = () => {
     const navigate = useNavigate();
@@ -83,11 +85,11 @@ const ScoresFormComponent = () => {
                 <div>
                     <h2>Scores Form</h2>
                 </div>
-                <div>
+                <InputWithErrorComponent name="value" errorMessages={errorMessages} >
                     <label className="label">Score:</label>
                     <input type="number" name="value" value={scoreData.value ?? ''} onChange={handleInputChange} required className="input" />
-                </div>
-                <div>
+                </InputWithErrorComponent>
+                <InputWithErrorComponent name="competitionId" errorMessages={errorMessages}>
                     <label className="label">Competition:</label>
                     <select name="competitionId" value={scoreData.competitionId ?? ''} onChange={handleSelectChange} required className="input select-input">
                         <option value="">Select Competition</option>
@@ -95,8 +97,8 @@ const ScoresFormComponent = () => {
                             <option key={c.id} value={c.id ?? 0}>{c.name}</option>
                         ))}
                     </select>
-                </div>
-                <div>
+                </InputWithErrorComponent>
+                <InputWithErrorComponent name="userId" errorMessages={errorMessages} >
                     <label className="label">User:</label>
                     <select name="userId" value={scoreData.userId ?? ''} onChange={handleSelectUserChange} required className="input select-input">
                         <option value="">Select User</option>
@@ -104,7 +106,7 @@ const ScoresFormComponent = () => {
                             <option key={user.id} value={user.id ?? 0}>{user.name}</option>
                         ))}
                     </select>
-                </div>
+                </InputWithErrorComponent>
                 <div className='btn-container'>
                     <button type="submit" className="button">Submit</button>
                     <button className="button" onClick={handleCancel}>Cancel</button>
