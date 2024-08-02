@@ -81,6 +81,32 @@ export class ScoresService {
         return ScoresDtoForChart.create(data, primaryKey, primaryValue, secondaryKey, secondaryValue);
     }
 
+    async getOldestUsersPerCompetition(): Promise<any> {
+        const data = await this.competitionRepository.query(
+            `SELECT
+                s.competitionId,
+                cc.name AS competitionName,
+                u.id AS userId,
+                CONCAT(u.firstName, " " , u.lastName) AS fullName,
+                u.age,
+                s.value AS maxScore
+            FROM score AS s
+            JOIN user AS u ON s.userId = u.id
+            JOIN country AS c ON u.countryId = c.id
+            JOIN competition AS cc ON s.competitionId = cc.id
+            WHERE s.userId = (
+                SELECT s1.userId
+                FROM score AS s1
+                JOIN user AS u1 ON s1.userId = u1.id
+                WHERE s1.competitionId = s.competitionId
+                ORDER BY s1.value DESC, u1.age DESC
+                LIMIT 1
+            )`
+        );
+
+        console.log(data);
+    }
+
     private async validateAndReturnUser(userId: number): Promise<User> {
         const user = this.userRepository.findOne({ where: { id: userId } });
         if (!user) {

@@ -34,7 +34,7 @@ const ChartsContainer = () => {
     return (
         <div className='charts-page-container'>
             <div className="dropdown-container">
-                <label htmlFor="chart-dropdown" style={{ color: 'white' }}>Select Chart: </label>
+                <label className="dropdown-label" style={{ color: 'white' }}>Select Chart: </label>
                 <select id="chart-dropdown" value={selectedOption} onChange={handleDropdownChange}>
                     <option value="competitionId">Competition</option>
                     <option value="countryId">Country</option>

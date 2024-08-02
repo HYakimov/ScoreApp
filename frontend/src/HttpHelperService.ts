@@ -14,7 +14,7 @@ const HttpHelperService = {
     },
 
     getDataForCharts: async (primaryKey: string) => {
-        return await HttpService.get(`${scores}/${primaryKey}`);
+        return await HttpService.get(`${scores}/forChart/${primaryKey}`);
     },
 
     getCountries: async () => {

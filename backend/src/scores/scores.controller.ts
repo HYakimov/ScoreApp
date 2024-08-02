@@ -7,9 +7,15 @@ export class ScoresController {
 
     constructor(private readonly scoresService: ScoresService) { }
 
-    @Get(':primaryKey')
+    @Get('forChart/:primaryKey')
     async findAll(@Res() res, @Param('primaryKey') primaryKey): Promise<void> {
         const result = await this.scoresService.getDataForChart(primaryKey);
+        res.status(HttpStatus.OK).json(result);
+    }
+
+    @Get('oldestUsersPerCompetition')
+    async findOldestUsersPerCompetition(@Res() res): Promise<void> {
+        const result = await this.scoresService.getOldestUsersPerCompetition();
         res.status(HttpStatus.OK).json(result);
     }
 
