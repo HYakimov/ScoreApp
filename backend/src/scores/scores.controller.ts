@@ -1,15 +1,16 @@
 import { Controller, Post, Body, Res, HttpStatus, Get, Param } from '@nestjs/common';
 import { ScoresService } from './scores.service';
 import { ScoreDto } from './dtos/score.dto';
+import { ChartType } from 'src/enums/ChartType';
 
 @Controller('scores')
 export class ScoresController {
 
     constructor(private readonly scoresService: ScoresService) { }
 
-    @Get('forChart/:primaryKey')
-    async findAll(@Res() res, @Param('primaryKey') primaryKey): Promise<void> {
-        const result = await this.scoresService.getDataForChart(primaryKey);
+    @Get('forChart/:chartType')
+    async findAll(@Res() res, @Param('chartType') chartType): Promise<void> {
+        const result = await this.scoresService.getDataForChart(chartType);
         res.status(HttpStatus.OK).json(result);
     }
 

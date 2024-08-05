@@ -1,6 +1,7 @@
 import { FormData } from "./FormData";
 
 export class TableData {
+
     tableData: FormData[];
     highlightedRow: number;
 

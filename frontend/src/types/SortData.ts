@@ -1,4 +1,5 @@
 export class SortData {
+
     value: string;
 
     constructor(value: string) {

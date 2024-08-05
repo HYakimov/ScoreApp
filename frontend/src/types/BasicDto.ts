@@ -1,4 +1,5 @@
 export class BasicDto {
+
     id: number;
     name: string;
 

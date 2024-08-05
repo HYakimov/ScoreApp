@@ -6,19 +6,19 @@ export class ScoresDtoForChart {
 
     static create(
         rawData: any[],
-        primaryKey: string,
-        primaryValue: string,
-        secondaryKey: string,
-        secondaryValue: string
+        primaryId: string,
+        primaryName: string,
+        secondaryId: string,
+        secondaryName: string
     ): ScoresDtoForChart {
         const record = new ScoresDtoForChart();
         const groupedData: { [key: string]: ScoreDtoForChart } = {};
 
         rawData.forEach(item => {
-            const primaryKeyValue = item[primaryKey];
-            const primaryValueValue = item[primaryValue];
-            const secondaryKeyValue = item[secondaryKey];
-            const secondaryValueValue = item[secondaryValue];
+            const primaryKeyValue = item[primaryId];
+            const primaryValueValue = item[primaryName];
+            const secondaryKeyValue = item[secondaryId];
+            const secondaryValueValue = item[secondaryName];
 
             if (!groupedData[primaryKeyValue]) {
                 groupedData[primaryKeyValue] = {

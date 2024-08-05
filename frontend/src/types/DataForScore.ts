@@ -1,4 +1,5 @@
 export class DataForScore {
+
     userId: number | null;
     firstName: string;
     scores: { scoreId: number, scoreValue: number, competitionId: number }[] | null;

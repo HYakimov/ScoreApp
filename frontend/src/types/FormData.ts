@@ -1,4 +1,5 @@
 export class FormData {
+
     id: number | null;
     firstName: string;
     lastName: string;

@@ -8,6 +8,8 @@ import { ScoreDto } from './dtos/score.dto';
 import { Competition } from 'src/competitions/competition.entity';
 import { EventsGateway } from 'src/events.gateway';
 import { ScoresDtoForChart } from './dtos/scores.dto.for.chart';
+import { ChartType } from 'src/enums/ChartType';
+import { ScoresDtoForChartTable } from './dtos/scores.dto.for.chart.table';
 
 @Injectable()
 export class ScoresService {
@@ -44,24 +46,27 @@ export class ScoresService {
         this.eventsGateway.onNewEntryOrEdit(score.id);
     }
 
-    async getDataForChart(primaryKey: string): Promise<ScoresDtoForChart> {
-        let primaryValue: string;
-        let secondaryKey: string;
-        let secondaryValue: string;
+    async getDataForChart(chartType: ChartType): Promise<ScoresDtoForChart> {
+        let primaryId: string;
+        let primaryName: string;
+        let secondaryId: string;
+        let secondaryName: string;
 
-        switch (primaryKey) {
-            case 'countryId':
-                primaryValue = 'countryName';
-                secondaryKey = 'competitionId';
-                secondaryValue = 'competitionName';
+        switch (chartType) {
+            case ChartType.COUNTRY:
+                primaryId = 'countryId';
+                primaryName = 'countryName';
+                secondaryId = 'competitionId';
+                secondaryName = 'competitionName';
                 break;
-            case 'competitionId':
-                primaryValue = 'competitionName';
-                secondaryKey = 'countryId';
-                secondaryValue = 'countryName';
+            case ChartType.COMPETITION:
+                primaryId = 'competitionId';
+                primaryName = 'competitionName';
+                secondaryId = 'countryId';
+                secondaryName = 'countryName';
                 break;
             default:
-                throw new Error('Invalid primary key');
+                throw new Error('Invalid chart type');
         }
 
         const data = await this.competitionRepository.query(
@@ -78,10 +83,10 @@ export class ScoresService {
             GROUP BY s.competitionId, u.countryId`
         );
 
-        return ScoresDtoForChart.create(data, primaryKey, primaryValue, secondaryKey, secondaryValue);
+        return ScoresDtoForChart.create(data, primaryId, primaryName, secondaryId, secondaryName);
     }
 
-    async getOldestUsersPerCompetition(): Promise<any> {
+    async getOldestUsersPerCompetition(): Promise<ScoresDtoForChartTable> {
         const data = await this.competitionRepository.query(
             `WITH user_score (competitionId, competitionName, userId, fullName, age, maxScore, rn) AS (
                 SELECT 
@@ -98,17 +103,18 @@ export class ScoresService {
                 GROUP BY s.competitionId, u.id, u.firstName, u.lastName, u.age, c.name
             )
             SELECT 
-                su.competitionId, 
-                su.competitionName, 
-                su.userId,
-                su.fullName, 
-                su.age, 
-                su.maxScore
+                us.competitionId, 
+                us.competitionName, 
+                us.userId,
+                us.fullName, 
+                us.age, 
+                us.maxScore,
+                us.rn
             FROM competition c
-            JOIN user_score su ON su.competitionId = c.id AND su.rn = 1;`
+            JOIN user_score us ON us.competitionId = c.id AND us.rn = 1;`
         );
 
-        console.log(data);
+        return ScoresDtoForChartTable.create(data);
     }
 
     private async validateAndReturnUser(userId: number): Promise<User> {

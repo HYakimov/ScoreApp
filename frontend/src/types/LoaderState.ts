@@ -1,4 +1,5 @@
 export class LoaderState {
+
     loading: boolean;
 
     constructor(loading: boolean) {

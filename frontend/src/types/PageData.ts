@@ -1,4 +1,5 @@
 export class PageData {
+
     value: number;
     totalPages: number;
 

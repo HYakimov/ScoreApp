@@ -19,7 +19,7 @@ import ScoresFormComponent from './components/ScoresFormComponent';
 import { setLoading } from './store/states/LoadingDataSlice';
 import LoaderComponent from './components/LoaderComponent';
 import { loaderSelector } from './store/selectors/selectors';
-import ChartsContainer from './components/ChartContainerComponent';
+import StatisticsComponent from './components/StatisticsComponent';
 
 const AppContent: React.FC = () => {
   const dispatch = useDispatch();
@@ -79,7 +79,7 @@ const AppContent: React.FC = () => {
               <Route path={RegistrationFormPage} element={<UserRegistrationFormComponent />} />
               <Route path={ScoresFormPage} element={<ScoresFormComponent />} />
               <Route path={MainPage} element={<TableComponent />} />
-              <Route path={ChartPage} element={<ChartsContainer />} />
+              <Route path={ChartPage} element={<StatisticsComponent />} />
             </Routes>
           </div>
         </>
