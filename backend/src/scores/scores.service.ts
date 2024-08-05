@@ -83,25 +83,29 @@ export class ScoresService {
 
     async getOldestUsersPerCompetition(): Promise<any> {
         const data = await this.competitionRepository.query(
-            `SELECT
-                s.competitionId,
-                cc.name AS competitionName,
-                u.id AS userId,
-                CONCAT(u.firstName, " " , u.lastName) AS fullName,
-                u.age,
-                s.value AS maxScore
-            FROM score AS s
-            JOIN user AS u ON s.userId = u.id
-            JOIN country AS c ON u.countryId = c.id
-            JOIN competition AS cc ON s.competitionId = cc.id
-            WHERE s.userId = (
-                SELECT s1.userId
-                FROM score AS s1
-                JOIN user AS u1 ON s1.userId = u1.id
-                WHERE s1.competitionId = s.competitionId
-                ORDER BY s1.value DESC, u1.age DESC
-                LIMIT 1
-            )`
+            `WITH user_score (competitionId, competitionName, userId, fullName, age, maxScore, rn) AS (
+                SELECT 
+                    s.competitionId, 
+                    c.name, 
+                    u.id, 
+                    CONCAT(u.firstName, " ", u.lastName) AS fullName, 
+                    u.age, 
+                    MAX(s.value), 
+                    ROW_NUMBER() OVER(PARTITION BY s.competitionId ORDER BY MAX(s.value) DESC, u.age DESC) AS rn
+                FROM score s 
+                JOIN user u ON s.userId = u.id
+                JOIN competition c ON c.id = s.competitionId
+                GROUP BY s.competitionId, u.id, u.firstName, u.lastName, u.age, c.name
+            )
+            SELECT 
+                su.competitionId, 
+                su.competitionName, 
+                su.userId,
+                su.fullName, 
+                su.age, 
+                su.maxScore
+            FROM competition c
+            JOIN user_score su ON su.competitionId = c.id AND su.rn = 1;`
         );
 
         console.log(data);

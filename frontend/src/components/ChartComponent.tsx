@@ -6,7 +6,7 @@ import { ChartComponentProps } from '../types/ChartComponentProps';
 const ChartComponent: React.FC<ChartComponentProps> = ({ id, name, scores }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [dataArray, setDataArray] = useState<(string | number)[][]>([]);
-    const colors = [`green`, `blue`, `red`, `orange`, `purple`, `yellow`];
+    const colors = [`red`, `blue`, `green`, `orange`, `purple`, `yellow`];
     const getColor = (index: number) => {
         return colors[index % colors.length];
     }
@@ -47,8 +47,8 @@ const ChartComponent: React.FC<ChartComponentProps> = ({ id, name, scores }) => 
             ) : (
                 <Chart
                     chartType="ColumnChart"
-                    width="250px"
-                    height="200px"
+                    width="350px"
+                    height="300px"
                     data={dataArray}
                     options={options}
                 />
